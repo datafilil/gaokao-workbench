@@ -118,6 +118,21 @@
   .chart-box svg{display:block; width:100%; height:auto;}
   .legend{font-size:12px; color:var(--muted); margin-top:6px;}
 
+  .q-card{border:1px solid var(--border); border-radius:12px; background:#fff; padding:14px; margin-bottom:10px;}
+  .q-card.done-ok{border-color:#BFE5D0; background:var(--green-weak);}
+  .q-card.done-wrong{border-color:#F3C2C4; background:var(--red-weak);}
+  .q-top{display:flex; gap:6px; flex-wrap:wrap; align-items:center; margin-bottom:8px;}
+  .q-stem{font-size:15px; font-weight:600; line-height:1.7; white-space:pre-wrap; word-break:break-word;}
+  .q-opts{margin-top:10px; display:flex; flex-direction:column; gap:6px;}
+  .q-opt{display:flex; gap:8px; align-items:flex-start; font-size:14px; padding:8px 10px; border:1px solid var(--border); border-radius:9px; background:#fff; line-height:1.5;}
+  .q-opt b{color:var(--primary); flex:none;}
+  .q-answer{display:none; margin-top:10px; padding:10px 12px; border-radius:9px; background:var(--primary-weak); font-size:14px;}
+  .q-answer.show{display:block;}
+  .q-answer .ans{font-weight:700; color:var(--primary-deep);}
+  .q-analysis{font-size:13px; color:var(--muted); margin-top:4px; line-height:1.6; white-space:pre-wrap; word-break:break-word;}
+  .q-actions{display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; align-items:center;}
+  .q-flag{font-size:11px; font-weight:700; border-radius:6px; padding:1px 7px;}
+
   .subj-bar{margin-bottom:10px;}
   .subj-bar .top{display:flex; justify-content:space-between; font-size:13px; font-weight:600; margin-bottom:4px;}
   .subj-bar .track{height:8px; background:#EDF0F6; border-radius:99px; overflow:hidden;}
@@ -233,6 +248,10 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
     学习计划
   </button>
+  <button class="tab-btn" data-action="tab" data-tab="question">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    题库
+  </button>
   <button class="tab-btn" data-action="tab" data-tab="mistakes">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.5 15a9 9 0 1 1-2.1-9.4L23 10"/></svg>
     错题重做本
@@ -276,6 +295,44 @@
         <button class="chip" data-action="filter-plan" data-val="done">已完成</button>
       </div>
       <div id="planList"></div>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-question">
+    <div class="card">
+      <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>录入题目（可选）</h2>
+      <form class="f" id="qForm">
+        <div class="field col-3"><label>科目</label><select id="qfSubject"></select></div>
+        <div class="field col-3"><label>学段</label><select id="qfStage"><option>高一</option><option selected>高二</option><option>高三</option></select></div>
+        <div class="field col-6"><label>知识点 / 章节</label><input id="qfChapter" type="text" maxlength="40" placeholder="例：函数单调性"></div>
+        <div class="field col-12"><label>题干（选择题可直接把 A/B/C/D 选项写进题干）</label><textarea id="qfStem" maxlength="400" placeholder="例：函数 f(x)=x² 的奇偶性是（ ）" required></textarea></div>
+        <div class="field col-8"><label>答案</label><input id="qfAnswer" type="text" maxlength="120" placeholder="例：B / 偶函数 / 2x" required></div>
+        <div class="field col-4"><label>题型</label><select id="qfType"><option>选择</option><option>填空</option><option>简答</option></select></div>
+        <div class="field col-12"><label>解析（可选，写清思路才能真正会做）</label><textarea id="qfAnalysis" maxlength="400" placeholder="例：f(-x)=(-x)²=x²=f(x)，故为偶函数"></textarea></div>
+        <div class="form-actions"><button class="btn primary" type="submit">加入题库</button></div>
+      </form>
+    </div>
+    <div class="card">
+      <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>各科题库</h2>
+      <div class="chips" id="qChips">
+        <button class="chip active" data-action="filter-q-subj" data-val="全部">全部</button>
+        <button class="chip" data-action="filter-q-subj" data-val="语文">语文</button>
+        <button class="chip" data-action="filter-q-subj" data-val="数学">数学</button>
+        <button class="chip" data-action="filter-q-subj" data-val="英语">英语</button>
+        <button class="chip" data-action="filter-q-subj" data-val="物理">物理</button>
+        <button class="chip" data-action="filter-q-subj" data-val="化学">化学</button>
+        <button class="chip" data-action="filter-q-subj" data-val="生物">生物</button>
+      </div>
+      <div class="chips" id="qStatusChips">
+        <button class="chip active" data-action="filter-q-status" data-val="all">全部</button>
+        <button class="chip" data-action="filter-q-status" data-val="0">未做</button>
+        <button class="chip" data-action="filter-q-status" data-val="1">做对</button>
+        <button class="chip" data-action="filter-q-status" data-val="2">做错</button>
+      </div>
+      <div class="btns" style="margin-bottom:12px">
+        <button class="btn small" data-action="import-builtin-q">导入内置基础题库</button>
+      </div>
+      <div id="qList"></div>
     </div>
   </section>
 
@@ -412,6 +469,9 @@
   <button class="active" data-action="tab" data-tab="plan">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>计划
   </button>
+  <button data-action="tab" data-tab="question">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>题库
+  </button>
   <button data-action="tab" data-tab="mistakes">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.5 15a9 9 0 1 1-2.1-9.4L23 10"/></svg>错题
   </button>
@@ -514,6 +574,72 @@ var CHAPTERS = [
   ['高二','英语','应用文写作'],['高二','英语','读后续写'],['高二','英语','听力训练']
 ];
 
+/* ---------- 内置基础题库（各科高一/高二核心基础，答案已核对） ---------- */
+var BUILTIN_QUESTIONS = [
+  // 数学
+  {subject:'数学',stage:'高一',chapter:'集合与常用逻辑用语',stem:'已知 A = {1,2,3,4}，B = {3,4,5}，则 A ∩ B =（ ）',options:['{1,2}','{3,4}','{5}','{1,2,5}'],answer:'B',analysis:'交集是两集合的公共元素，A 与 B 都含 3、4。'},
+  {subject:'数学',stage:'高一',chapter:'函数单调性与奇偶性',stem:'函数 f(x) = x³ 的奇偶性是（ ）',options:['奇函数','偶函数','非奇非偶函数','既是奇函数又是偶函数'],answer:'A',analysis:'f(-x)=(-x)³=-x³=-f(x)，故为奇函数。'},
+  {subject:'数学',stage:'高一',chapter:'指数与指数函数',stem:'2⁻² 的值是（ ）',options:['-4','4','1/4','-1/4'],answer:'C',analysis:'2⁻² = 1/2² = 1/4，负指数表示倒数。'},
+  {subject:'数学',stage:'高一',chapter:'对数与对数函数',stem:'log₃9 的值是（ ）',options:['2','3','6','1/2'],answer:'A',analysis:'因为 3²=9，所以 log₃9 = 2。'},
+  {subject:'数学',stage:'高一',chapter:'三角函数概念与诱导公式',stem:'sin30° 的值是（ ）',options:['√3/2','1/2','√2/2','1'],answer:'B',analysis:'特殊角三角函数值：sin30° = 1/2。'},
+  {subject:'数学',stage:'高二',chapter:'等差等比数列',stem:'等差数列 2，5，8，11，… 的公差是（ ）',options:['2','3','5','8'],answer:'B',analysis:'相邻两项之差 = 5-2 = 8-5 = 3，即公差 d=3。'},
+  {subject:'数学',stage:'高二',chapter:'导数概念与运算',stem:'函数 f(x) = x² 的导函数 f\'(x) =（ ）',options:['x','2x','x²','2'],answer:'B',analysis:'幂函数求导：(xⁿ)\' = n·xⁿ⁻¹，故 (x²)\' = 2x。'},
+  {subject:'数学',stage:'高一',chapter:'复数',stem:'虚数单位 i² 的值是（ ）',options:['1','-1','i','-i'],answer:'B',analysis:'由定义 i² = -1。'},
+  {subject:'数学',stage:'高一',chapter:'平面向量线性运算',stem:'已知向量 a=(1,2)，b=(2,4)，则 a 与 b 的关系是（ ）',options:['平行（共线）','垂直','相等','无关'],answer:'A',analysis:'b = 2a，两向量成倍数关系，故平行（共线）。'},
+  {subject:'数学',stage:'高一',chapter:'函数概念与三要素',stem:'一元二次方程 x² - 5x + 6 = 0 的两根之和是（ ）',options:['5','-5','6','-6'],answer:'A',analysis:'韦达定理：两根之和 = -b/a = 5。'},
+  // 物理
+  {subject:'物理',stage:'高一',chapter:'运动的描述',stem:'国际单位制中，质量的基本单位是（ ）',options:['克','千克','吨','牛顿'],answer:'B',analysis:'质量基本单位是千克（kg），牛顿是力的单位。'},
+  {subject:'物理',stage:'高一',chapter:'运动的描述',stem:'描述物体运动快慢的物理量是（ ）',options:['加速度','速度','位移','路程'],answer:'B',analysis:'速度描述快慢，加速度描述速度变化的快慢。'},
+  {subject:'物理',stage:'高一',chapter:'牛顿运动定律',stem:'物体保持静止或匀速直线运动状态的性质叫（ ）',options:['惯性','摩擦力','重力','弹力'],answer:'A',analysis:'惯性是物体保持原有运动状态的性质（牛顿第一定律）。'},
+  {subject:'物理',stage:'高一',chapter:'相互作用',stem:'质量为 m 的物体所受重力 G =（ ）（g 为重力加速度）',options:['m/g','mg','g/m','m+g'],answer:'B',analysis:'重力 G = mg，方向竖直向下。'},
+  {subject:'物理',stage:'高一',chapter:'牛顿运动定律',stem:'牛顿第二定律的表达式是（ ）',options:['F = ma','F = mv','W = Fs','P = W/t'],answer:'A',analysis:'牛顿第二定律：F = ma，力=质量×加速度。'},
+  {subject:'物理',stage:'高一',chapter:'功和功率',stem:'力 F 与位移 s 同向时，力做的功 W =（ ）',options:['F/s','Fs','F+s','F-s'],answer:'B',analysis:'W = Fs cosθ，同向时 θ=0，cos0=1，故 W=Fs。'},
+  {subject:'物理',stage:'高一',chapter:'功和功率',stem:'功率的定义式 P =（ ）',options:['W·t','W/t','F·s','m·v'],answer:'B',analysis:'功率 P = W/t，表示做功的快慢。'},
+  {subject:'物理',stage:'高一',chapter:'动能定理',stem:'质量为 m、速度为 v 的物体，动能 Ek =（ ）',options:['mv','(1/2)mv²','mv²','mgh'],answer:'B',analysis:'动能 Ek = ½mv²。'},
+  {subject:'物理',stage:'高一',chapter:'匀变速直线运动',stem:'加速度的定义式 a =（ ）',options:['Δv/Δt','Δs/Δt','v·t','F·m'],answer:'A',analysis:'加速度 a = Δv/Δt，是速度的变化率。'},
+  {subject:'物理',stage:'高一',chapter:'圆周运动',stem:'匀速圆周运动中，物体所受合外力的方向（ ）',options:['沿切线方向','指向圆心','沿速度方向','与速度方向相反'],answer:'B',analysis:'匀速圆周运动合外力提供向心力，方向始终指向圆心。'},
+  // 化学
+  {subject:'化学',stage:'高一',chapter:'物质的量与计算',stem:'物质的量的单位是（ ）',options:['克','摩尔','升','摩尔/升'],answer:'B',analysis:'物质的量单位是摩尔（mol），摩尔/升是浓度单位。'},
+  {subject:'化学',stage:'高一',chapter:'物质的量与计算',stem:'阿伏伽德罗常数 NA 约为（ ）mol⁻¹',options:['6.02×10²³','3.01×10²³','1.60×10⁻¹⁹','9.8'],answer:'A',analysis:'NA ≈ 6.02×10²³ mol⁻¹。'},
+  {subject:'化学',stage:'高一',chapter:'氧化还原反应',stem:'化学反应中，元素化合价升高的反应叫（ ）',options:['氧化反应','还原反应','中和反应','复分解反应'],answer:'A',analysis:'口诀「升失氧」：化合价升高、失电子、被氧化（氧化反应）。'},
+  {subject:'化学',stage:'高一',chapter:'物质的分类与转化',stem:'酸在水溶液中电离出的阳离子全部是（ ）',options:['OH⁻','H⁺','Na⁺','Cl⁻'],answer:'B',analysis:'酸的定义：电离出的阳离子全部是 H⁺。'},
+  {subject:'化学',stage:'高一',chapter:'原子结构与元素周期律',stem:'元素周期表中，同一周期从左到右，元素的金属性（ ）',options:['增强','减弱','不变','无规律'],answer:'B',analysis:'同周期从左到右金属性减弱、非金属性增强。'},
+  {subject:'化学',stage:'高一',chapter:'化学键与分子结构',stem:'氯化钠（NaCl）中存在的化学键是（ ）',options:['共价键','离子键','金属键','氢键'],answer:'B',analysis:'NaCl 由 Na⁺ 和 Cl⁻ 构成，靠离子键结合。'},
+  {subject:'化学',stage:'高一',chapter:'物质的量与计算',stem:'1 mol 任何物质所含的粒子数约为（ ）',options:['6.02×10²³ 个','3.01×10²³ 个','22.4 个','1 个'],answer:'A',analysis:'1 mol 物质含 NA ≈ 6.02×10²³ 个粒子。'},
+  {subject:'化学',stage:'高一',chapter:'物质的量与计算',stem:'标准状况（0℃、101 kPa）下，1 mol 气体的体积约为（ ）',options:['22.4 L','11.2 L','44.8 L','1 L'],answer:'A',analysis:'标况下气体摩尔体积约 22.4 L/mol。'},
+  {subject:'化学',stage:'高二',chapter:'电化学（原电池/电解池）',stem:'原电池中，负极发生的反应是（ ）',options:['氧化反应','还原反应','中和反应','沉淀反应'],answer:'A',analysis:'原电池负极失电子、发生氧化反应。'},
+  {subject:'化学',stage:'高二',chapter:'化学平衡',stem:'化学反应达到平衡时，正反应速率与逆反应速率的关系是（ ）',options:['正 > 逆','正 < 逆','相等','都为零'],answer:'C',analysis:'化学平衡的本质：正逆反应速率相等（且不为零）。'},
+  // 生物
+  {subject:'生物',stage:'高一',chapter:'细胞结构与细胞器',stem:'除病毒外，生物体结构和功能的基本单位是（ ）',options:['细胞','组织','器官','分子'],answer:'A',analysis:'细胞是生物体结构和功能的基本单位。'},
+  {subject:'生物',stage:'高一',chapter:'细胞的分子组成',stem:'蛋白质的基本组成单位是（ ）',options:['核苷酸','氨基酸','葡萄糖','脂肪酸'],answer:'B',analysis:'蛋白质由氨基酸脱水缩合而成。'},
+  {subject:'生物',stage:'高二',chapter:'DNA结构与复制',stem:'DNA 的基本组成单位是（ ）',options:['脱氧核苷酸','核糖核苷酸','氨基酸','碱基'],answer:'A',analysis:'DNA 由 4 种脱氧核苷酸构成。'},
+  {subject:'生物',stage:'高一',chapter:'光合作用',stem:'光合作用的主要场所是（ ）',options:['线粒体','叶绿体','细胞核','核糖体'],answer:'B',analysis:'光合作用在叶绿体中进行。'},
+  {subject:'生物',stage:'高一',chapter:'细胞呼吸',stem:'有氧呼吸的主要场所是（ ）',options:['线粒体','叶绿体','细胞质基质','高尔基体'],answer:'A',analysis:'有氧呼吸第二、三阶段在线粒体中进行。'},
+  {subject:'生物',stage:'高一',chapter:'酶与ATP',stem:'酶的化学本质是（ ）',options:['蛋白质或 RNA','糖类','脂质','无机盐'],answer:'A',analysis:'绝大多数酶是蛋白质，少数是 RNA。'},
+  {subject:'生物',stage:'高一',chapter:'细胞结构与细胞器',stem:'遗传信息主要储存在（ ）中',options:['蛋白质','DNA','RNA','糖类'],answer:'B',analysis:'DNA 是主要的遗传物质，储存遗传信息。'},
+  {subject:'生物',stage:'高二',chapter:'减数分裂与受精',stem:'减数分裂产生的配子中，染色体数目是体细胞的（ ）',options:['一半','相同','两倍','四倍'],answer:'A',analysis:'减数分裂染色体数目减半。'},
+  {subject:'生物',stage:'高一',chapter:'细胞结构与细胞器',stem:'植物细胞与动物细胞最主要的区别是植物细胞有（ ）',options:['细胞壁','细胞膜','细胞核','细胞质'],answer:'A',analysis:'植物细胞有细胞壁，动物细胞没有。'},
+  {subject:'生物',stage:'高二',chapter:'内环境稳态',stem:'人体内环境稳态是指内环境的理化性质（ ）',options:['保持相对稳定','恒定不变','pH 恒为 7','温度恒为 37℃'],answer:'A',analysis:'稳态是内环境理化性质保持相对稳定（动态平衡）。'},
+  // 语文
+  {subject:'语文',stage:'高一',chapter:'文言文实词推断',stem:'「学而时习之，不亦说乎」出自（ ）',options:['《论语》','《孟子》','《大学》','《中庸》'],answer:'A',analysis:'出自《论语·学而》。'},
+  {subject:'语文',stage:'高一',chapter:'古代诗歌鉴赏',stem:'下列诗句中描写「春天」的是（ ）',options:['接天莲叶无穷碧','千山鸟飞绝','春眠不觉晓','停车坐爱枫林晚'],answer:'C',analysis:'「春眠不觉晓」出自孟浩然《春晓》，写春；其余分别写夏、冬、秋。'},
+  {subject:'语文',stage:'高一',chapter:'古代诗歌鉴赏',stem:'「沉舟侧畔千帆过，病树前头万木春」的作者是（ ）',options:['李白','杜甫','刘禹锡','白居易'],answer:'C',analysis:'出自刘禹锡《酬乐天扬州初逢席上见赠》。'},
+  {subject:'语文',stage:'高一',chapter:'语言文字运用',stem:'下列哪一项使用了「比喻」修辞手法？（ ）',options:['月亮像白玉盘','风声雨声读书声','山重水复疑无路','出淤泥而不染'],answer:'A',analysis:'「月亮像白玉盘」把月亮比作白玉盘，是明喻。'},
+  {subject:'语文',stage:'高一',chapter:'文言文实词推断',stem:'「先天下之忧而忧，后天下之乐而乐」出自（ ）',options:['《岳阳楼记》','《醉翁亭记》','《出师表》','《桃花源记》'],answer:'A',analysis:'出自范仲淹《岳阳楼记》。'},
+  {subject:'语文',stage:'高一',chapter:'语言文字运用',stem:'下列词语中书写完全正确的一项是（ ）',options:['川流不息','川流不熄','穿流不息','穿流不熄'],answer:'A',analysis:'正确写法是「川流不息」（形容像河水一样连续不断）。'},
+  {subject:'语文',stage:'高一',chapter:'素材积累与运用',stem:'《红楼梦》的作者是（ ）',options:['曹雪芹','罗贯中','施耐庵','吴承恩'],answer:'A',analysis:'《红楼梦》作者曹雪芹（前八十回）。'},
+  {subject:'语文',stage:'高一',chapter:'文言文实词推断',stem:'「温故而知新，可以为师矣」中「故」的意思是（ ）',options:['旧的知识','原因','故意','故事'],answer:'A',analysis:'「温故」指温习旧的（已学过的）知识。'},
+  // 英语
+  {subject:'英语',stage:'高一',chapter:'语法基础',stem:'She ___ to school every day.（ ）',options:['go','goes','going','gone'],answer:'B',analysis:'主语 She 是第三人称单数，一般现在时动词加 -s，用 goes。'},
+  {subject:'英语',stage:'高一',chapter:'语法基础',stem:'I ___ my homework yesterday.（ ）',options:['do','does','did','done'],answer:'C',analysis:'yesterday 表示过去，用一般过去时 did。'},
+  {subject:'英语',stage:'高一',chapter:'语法基础',stem:'There ___ a book and two pens on the desk.（ ）',options:['is','are','be','am'],answer:'A',analysis:'There be 句型遵循「就近原则」，最近的主语 a book 是单数，用 is。'},
+  {subject:'英语',stage:'高一',chapter:'词汇基础',stem:'单词 happy 的名词形式是（ ）',options:['happily','happiness','happiest','happier'],answer:'B',analysis:'happy(形容词)→happiness(名词，快乐/幸福)；happily 是副词。'},
+  {subject:'英语',stage:'高一',chapter:'语法基础',stem:'— ___ do you go to school? — By bike.（ ）',options:['What','How','When','Where'],answer:'B',analysis:'答语 By bike 表示方式，用 How 提问。'},
+  {subject:'英语',stage:'高一',chapter:'词汇基础',stem:'下列哪个单词是「形容词」？（ ）',options:['run','beautiful','quickly','happiness'],answer:'B',analysis:'beautiful（美丽的）是形容词；run 动词，quickly 副词，happiness 名词。'},
+  {subject:'英语',stage:'高一',chapter:'语法基础',stem:'He is taller ___ me.（ ）',options:['than','then','as','to'],answer:'A',analysis:'比较级 + than：taller than me 比我高。'},
+  {subject:'英语',stage:'高一',chapter:'语法基础',stem:'— Would you like some tea? — Yes, ___.（ ）',options:['please','I am','I don\'t','sorry'],answer:'A',analysis:'礼貌接受邀请常用「Yes, please.」。'}
+];
+
 function $(s){ return document.querySelector(s); }
 function $$(s){ return Array.prototype.slice.call(document.querySelectorAll(s)); }
 function pad(n){ return n < 10 ? '0' + n : '' + n; }
@@ -527,10 +653,11 @@ function esc(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace
 function load(key, def){ try{ var v = localStorage.getItem(PREFIX + key); return v ? JSON.parse(v) : def; }catch(e){ return def; } }
 function persist(key, val){ try{ localStorage.setItem(PREFIX + key, JSON.stringify(val)); }catch(e){ toast('本地存储写入失败'); } }
 
-var tasks = [], mistakes = [], holes = [], tests = [], days = {};
+var tasks = [], mistakes = [], holes = [], tests = [], questions = [], days = {};
 var meta = load('meta', {}) || {};
 if (!meta.goalMinutes) meta.goalMinutes = 240;
 var planFilter = 'today', mistFilter = 'due', holeFilter = 'all', chartFilter = 'all';
+var qSubjFilter = '全部', qStatusFilter = 'all';
 
 /* ---------- GitHub 数据层 ---------- */
 var GH_OWNER = 'datafilil';
@@ -547,7 +674,7 @@ var cloudMode = ghConfigured();
 
 function saveCacheLocal(){
   persist('tasks', tasks); persist('mistakes', mistakes); persist('holes', holes);
-  persist('tests', tests); persist('days', days); persist('meta', meta);
+  persist('tests', tests); persist('questions', questions); persist('days', days); persist('meta', meta);
 }
 function saveCache(){
   saveCacheLocal();
@@ -569,12 +696,12 @@ function ghPull(){
       if (!text) return 0;
       var data = JSON.parse(text);
       tasks = data.tasks || []; mistakes = data.mistakes || [];
-      holes = data.holes || []; tests = data.tests || [];
+      holes = data.holes || []; tests = data.tests || []; questions = data.questions || [];
       days = data.days || {}; meta = data.meta || {};
       if (!meta.goalMinutes) meta.goalMinutes = 240;
       saveCacheLocal();
       meta.lastSync = new Date().toISOString();
-      return tasks.length + mistakes.length + holes.length + tests.length;
+      return tasks.length + mistakes.length + holes.length + tests.length + questions.length;
     }).catch(function(){ return -1; });
   }
   return fetch(GH_API + '/contents/' + GH_PATH, {
@@ -589,20 +716,20 @@ function ghPull(){
     var raw = decodeURIComponent(escape(atob(res.content.replace(/\n/g, ''))));
     var data = JSON.parse(raw);
     tasks = data.tasks || []; mistakes = data.mistakes || [];
-    holes = data.holes || []; tests = data.tests || [];
+    holes = data.holes || []; tests = data.tests || []; questions = data.questions || [];
     days = data.days || {}; meta = data.meta || {};
     if (!meta.goalMinutes) meta.goalMinutes = 240;
     saveCacheLocal();
     meta.lastSync = new Date().toISOString();
-    return tasks.length + mistakes.length + holes.length + tests.length;
+    return tasks.length + mistakes.length + holes.length + tests.length + questions.length;
   }).catch(function(){ return -1; });
 }
 function ghPush(){
   if (!ghConfigured()) { updateSync(); return; }
   if (ghBusy) { ghSchedule(); return; }
   ghBusy = true; updateSync();
-  var data = { app:'gaokao-workbench', v:3, ts:Date.now(),
-    tasks:tasks, mistakes:mistakes, holes:holes, tests:tests, days:days, meta:meta };
+    var data = { app:'gaokao-workbench', v:3, ts:Date.now(),
+    tasks:tasks, mistakes:mistakes, holes:holes, tests:tests, questions:questions, days:days, meta:meta };
   var b64;
   try { b64 = btoa(unescape(encodeURIComponent(JSON.stringify(data)))); }
   catch(e){ ghBusy = false; updateSync(); return; }
@@ -679,6 +806,11 @@ function seed(){
     { id: uid(), subject:'化学', type:'综合套卷', name:'高一综合卷（一）', score:68, full:100, date:addDays(t,-1), sample:true },
     { id: uid(), subject:'生物', type:'章节小测', name:'细胞结构检测', score:80, full:100, date:t, sample:true }
   ];
+  questions = BUILTIN_QUESTIONS.map(function(q){
+    return { id: uid(), subject:q.subject, stage:q.stage, chapter:q.chapter, stem:q.stem,
+      options:q.options || [], answer:q.answer, analysis:q.analysis || '', type:'选择',
+      builtin:true, done:0 };
+  });
   days = {};
   var sm = [50, 80, 0, 120, 65, 40];
   for (var i = 6; i >= 1; i--) {
@@ -1017,6 +1149,85 @@ function renderTestChart(){
   $('#testChart').innerHTML = html;
 }
 
+/* ---------- 题库 ---------- */
+function renderQuestions(){
+  var list = questions.slice();
+  if (qSubjFilter !== '全部') list = list.filter(function(q){ return q.subject === qSubjFilter; });
+  if (qStatusFilter !== 'all') list = list.filter(function(q){ return String(q.done) === qStatusFilter; });
+  var order = { '高一': 0, '高二': 1, '高三': 2 };
+  list.sort(function(a, b){ return (order[a.stage] - order[b.stage]) || String(a.subject).localeCompare(String(b.subject), 'zh'); });
+  if (!list.length) {
+    $('#qList').innerHTML = '<div class="empty">' + (questions.length ? '没有符合当前筛选的题目' : '题库是空的，点「导入内置基础题库」或在上方录入题目') + '</div>';
+    return;
+  }
+  var letters = ['A','B','C','D','E','F'];
+  var html = '';
+  list.forEach(function(q){
+    var cls = q.done === 1 ? ' done-ok' : (q.done === 2 ? ' done-wrong' : '');
+    var flag = q.done === 1 ? '<span class="q-flag" style="background:var(--green-weak);color:var(--green)">已做对</span>'
+      : q.done === 2 ? '<span class="q-flag" style="background:var(--red-weak);color:var(--red)">做错·已进错题本</span>' : '';
+    var opts = '';
+    if (q.options && q.options.length) {
+      var ohtml = '';
+      q.options.forEach(function(o, i){ ohtml += '<div class="q-opt"><b>' + letters[i] + '.</b><span>' + esc(o) + '</span></div>'; });
+      opts = '<div class="q-opts">' + ohtml + '</div>';
+    }
+    var builtinTag = q.builtin ? '<span class="tag gray">内置</span>' : '';
+    html += '<div class="q-card' + cls + '">' +
+      '<div class="q-top"><span class="tag blue">' + esc(q.subject) + '</span><span class="tag gray">' + esc(q.stage || '') + '</span><span class="tag gray">' + esc(q.chapter || '') + '</span><span class="tag gray">' + esc(q.type || '选择') + '</span>' + builtinTag + flag + '</div>' +
+      '<div class="q-stem">' + esc(q.stem) + '</div>' + opts +
+      '<div class="q-answer" id="qans-' + q.id + '"><span class="ans">答案：' + esc(q.answer) + '</span>' +
+        (q.analysis ? '<div class="q-analysis">' + esc(q.analysis) + '</div>' : '') + '</div>' +
+      '<div class="q-actions">' +
+        '<button class="btn small" data-action="q-reveal" data-id="' + q.id + '">显示答案</button>' +
+        '<button class="btn small" data-action="q-right" data-id="' + q.id + '" style="color:var(--green);border-color:#BFE5D0">我答对了</button>' +
+        '<button class="btn small" data-action="q-wrong" data-id="' + q.id + '" style="color:var(--red);border-color:#F3C2C4">我答错了</button>' +
+        '<button class="btn small danger" data-action="q-del" data-id="' + q.id + '">删</button>' +
+      '</div></div>';
+  });
+  $('#qList').innerHTML = html;
+}
+function toggleAnswer(id){
+  var el = $('#qans-' + id);
+  if (el) el.classList.toggle('show');
+}
+function judgeQuestion(id, ok){
+  var q = findById(questions, id);
+  if (!q) return;
+  if (ok) {
+    q.done = 1;
+    logDay(5, 1);
+    toast('做对了，保持手感');
+  } else {
+    var firstWrong = q.done !== 2;
+    q.done = 2;
+    logDay(5, 1);
+    if (firstWrong) {
+      var topic = (q.chapter ? q.chapter + ' · ' : '') + String(q.stem).slice(0, 24);
+      mistakes.push({ id: uid(), subject:q.subject, topic: topic, reason:'题库做错', note:String(q.analysis || q.answer || '').slice(0, 80), level:0, nextDate:addDays(today(), 1), total:0, correct:0, mastered:false, created:today() });
+      toast('答错，已自动登记进错题本，明天安排第一轮重做');
+    } else {
+      toast('已记录做错状态（之前已进错题本）');
+    }
+  }
+  saveCache();
+  renderQuestions();
+}
+function importBuiltinQuestions(){
+  var exist = {};
+  questions.forEach(function(q){ if (q.builtin) exist[q.subject + '|' + q.chapter + '|' + q.stem] = true; });
+  var add = [];
+  BUILTIN_QUESTIONS.forEach(function(q){
+    var key = q.subject + '|' + q.chapter + '|' + q.stem;
+    if (!exist[key]) add.push({ id: uid(), subject:q.subject, stage:q.stage, chapter:q.chapter, stem:q.stem, options:q.options || [], answer:q.answer, analysis:q.analysis || '', type:'选择', builtin:true, done:0 });
+  });
+  if (!add.length) { toast('内置基础题库已全部在列表中'); return; }
+  add.forEach(function(it){ questions.push(it); });
+  saveCache();
+  renderQuestions();
+  toast('已导入 ' + add.length + ' 道内置基础题');
+}
+
 /* ---------- 家长看板 ---------- */
 function renderParent(){
   var t = today();
@@ -1290,7 +1501,7 @@ function importChapters(){
 }
 
 function exportData(){
-  var data = { app: 'gaokao-workbench', version: 2, exportedAt: new Date().toISOString(), tasks: tasks, mistakes: mistakes, holes: holes, tests: tests, days: days };
+  var data = { app: 'gaokao-workbench', version: 3, exportedAt: new Date().toISOString(), tasks: tasks, mistakes: mistakes, holes: holes, tests: tests, questions: questions, days: days };
   var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   var a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
@@ -1305,10 +1516,10 @@ function importData(file){
     try {
       var data = JSON.parse(reader.result);
       if (!data || !Array.isArray(data.tasks) || !Array.isArray(data.mistakes) || !Array.isArray(data.holes)) throw new Error('format');
-      var n = data.tasks.length + data.mistakes.length + data.holes.length + (Array.isArray(data.tests) ? data.tests.length : 0);
+      var n = data.tasks.length + data.mistakes.length + data.holes.length + (Array.isArray(data.tests) ? data.tests.length : 0) + (Array.isArray(data.questions) ? data.questions.length : 0);
       openModal('导入恢复', '将用备份文件覆盖当前全部数据（当前数据会丢失），共 ' + n + ' 条。确定继续吗？', '覆盖导入', true, function(){
         tasks = data.tasks; mistakes = data.mistakes; holes = data.holes;
-        tests = Array.isArray(data.tests) ? data.tests : []; days = data.days || {};
+        tests = Array.isArray(data.tests) ? data.tests : []; questions = Array.isArray(data.questions) ? data.questions : []; days = data.days || {};
         saveCache(); closeModal();
         toast('导入成功，共恢复 ' + n + ' 条数据');
         renderAll();
@@ -1336,7 +1547,7 @@ function clearAll(){
   openModal('清空全部数据', '所有任务、错题、漏洞清单、测试成绩和学习记录将被删除，且无法恢复（除非之前导出过备份）。', '清空全部', true, function(){
     openModal('再次确认', '真的要清空吗？此操作不可恢复。', '确认清空', true, function(){
       closeModal();
-      tasks = []; mistakes = []; holes = []; tests = []; days = {};
+      tasks = []; mistakes = []; holes = []; tests = []; questions = []; days = {};
       saveCache(); renderAll();
       toast('已清空全部数据');
     });
@@ -1360,6 +1571,13 @@ document.addEventListener('click', function(e){
   else if (a === 'filter-mist') { mistFilter = el.getAttribute('data-val'); $$('#mistChips .chip').forEach(function(c){ c.classList.toggle('active', c === el); }); renderMistakes(); }
   else if (a === 'filter-hole') { holeFilter = el.getAttribute('data-val'); $$('#holeChips .chip').forEach(function(c){ c.classList.toggle('active', c === el); }); renderHoles(); }
   else if (a === 'filter-chart') { chartFilter = el.getAttribute('data-val'); $$('#chartChips .chip').forEach(function(c){ c.classList.toggle('active', c === el); }); renderTestChart(); }
+  else if (a === 'filter-q-subj') { qSubjFilter = el.getAttribute('data-val'); $$('#qChips .chip').forEach(function(c){ c.classList.toggle('active', c === el); }); renderQuestions(); }
+  else if (a === 'filter-q-status') { qStatusFilter = el.getAttribute('data-val'); $$('#qStatusChips .chip').forEach(function(c){ c.classList.toggle('active', c === el); }); renderQuestions(); }
+  else if (a === 'q-reveal') toggleAnswer(id);
+  else if (a === 'q-right') judgeQuestion(id, true);
+  else if (a === 'q-wrong') judgeQuestion(id, false);
+  else if (a === 'q-del') { var q1 = removeById(questions, id); if (q1) { saveCache(); toast('已删除题目'); renderQuestions(); } }
+  else if (a === 'import-builtin-q') importBuiltinQuestions();
   else if (a === 'checkin') doCheckin();
   else if (a === 'save-goal') {
     var g = parseInt($('#goalInput').value, 10);
@@ -1424,11 +1642,21 @@ $('#testForm').addEventListener('submit', function(e){
   toast('成绩已登记'); renderAll();
 });
 $('#importFile').addEventListener('change', function(){ if (this.files && this.files[0]) { importData(this.files[0]); this.value = ''; } });
+$('#qForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  var stem = $('#qfStem').value.trim();
+  if (!stem) return;
+  var it = { id: uid(), subject: $('#qfSubject').value, stage: $('#qfStage').value, chapter: $('#qfChapter').value.trim() || '未分类',
+    stem: stem, options: [], answer: $('#qfAnswer').value.trim() || '（见解析）', analysis: $('#qfAnalysis').value.trim(), type: $('#qfType').value, builtin:false, done:0 };
+  questions.push(it); saveCache();
+  this.reset(); $('#qfSubject').value = '数学';
+  toast('已加入题库'); renderQuestions();
+});
 
 /* ---------- 渲染总入口 ---------- */
 function renderAll(){
   renderHeader(); renderCheckin(); renderToday(); renderPlan(); renderMistakes();
-  renderHoles(); renderTests(); renderParent(); renderStats(); renderHint(); updateSync();
+  renderHoles(); renderTests(); renderQuestions(); renderParent(); renderStats(); renderHint(); updateSync();
 }
 
 function fillSelect(sel, arr, def){
@@ -1438,6 +1666,7 @@ fillSelect($('#pfSubject'), SUBJECTS, '数学');
 fillSelect($('#mfSubject'), SUBJECTS, '数学');
 fillSelect($('#hfSubject'), SUBJECTS, '数学');
 fillSelect($('#tfSubject'), SUBJECTS, '数学');
+fillSelect($('#qfSubject'), SUBJECTS, '数学');
 fillSelect($('#mfReason'), REASONS, '概念不清');
 $('#pfDate').value = today(); $('#tfDate').value = today();
 
@@ -1446,7 +1675,7 @@ var cached = load('tasks', null);
 if (cached !== null) {
   tasks = cached || [];
   mistakes = load('mistakes', []); holes = load('holes', []);
-  tests = load('tests', []); days = load('days', {});
+  tests = load('tests', []); questions = load('questions', []); days = load('days', {});
 }
 renderAll();
 
