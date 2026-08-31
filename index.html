@@ -1,15 +1,16 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>高考自学工作台</title>
-<meta name="theme-color" content="#2B5CE6">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="高考工作台">
-<link rel="manifest" href='data:application/json,{"name":"高考自学工作台","short_name":"高考台","start_url":".","display":"standalone","background_color":"#F4F6FA","theme_color":"#2B5CE6"}'>
-<!-- 高考自学工作台：单文件全内联，数据存在 GitHub 仓库 data.json 中（多设备同步）；未设置 Token 时降级为 localStorage 本地缓存。 -->
-<style>
+<html data-page-node-id="uJU0joiFbsyXYjfVgn0UPI" lang="zh-CN">
+<head data-page-node-id="i1PO2QQrVD2SDoWOb67lRP">
+<script data-page-node-id="BPW8xIIuvCEyMbURNX4ULG" src="/page/page_comm/inject.js"></script>
+<meta data-page-node-id="J5M5M9BX6njwBDRWVMiW4a" charset="UTF-8">
+<meta data-page-node-id="36VtTdUNFZKXC98AFCe4gc" content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport">
+<title data-page-node-id="0F9M6g8RfbNYNrEs2kueXw" data-pnid-children="8dFuJgdDserVOTiopS6edq">高考自学工作台</title>
+<meta data-page-node-id="9d3A6BNFT1tInrmUS6vgJj" content="#2B5CE6" name="theme-color">
+<meta data-page-node-id="lSHV2ubU966KcXszShLZUI" content="yes" name="apple-mobile-web-app-capable">
+<meta data-page-node-id="7nVEvNkSxq5anprG5DCEle" content="高考工作台" name="apple-mobile-web-app-title">
+<link data-page-node-id="pDlO3NxvpPdMqiOL3z6ETI" href="data:application/json,{"name":"高考自学工作台","short_name":"高考台","start_url":".","display":"standalone","background_color":"#F4F6FA","theme_color":"#2B5CE6"}" rel="manifest">
+<!--pnid:WfidTteBGJEpSQxvGvJ0aZ--><!-- 高考自学工作台：单文件全内联，数据存在 GitHub 仓库 data.json 中（多设备同步）；未设置 Token 时降级为 localStorage 本地缓存。 -->
+<style data-page-node-id="vThaG1eEXhDpyKqz8LVpti" data-pnid-children="DFw4zHwMF58RfBLW4CzA7E">
   :root{
     --bg:#F4F6FA; --card:#FFFFFF; --text:#1C2333; --muted:#6B7280;
     --primary:#2B5CE6; --primary-weak:#EAF0FE; --primary-deep:#1E46B8;
@@ -186,340 +187,340 @@
   }
 </style>
 </head>
-<body>
+<body data-page-node-id="ssoS2l8nbqn8nXL8gqA1P3">
 
-<header class="top">
-  <div>
-    <h1>高考自学工作台</h1>
-    <div class="sub" id="todayDate"></div>
+<header data-page-node-id="edDZpH05qIxccwjiURNtGG" class="top">
+  <div data-page-node-id="L0IKuPyTbh8ABr8aoKbU64">
+    <h1 data-page-node-id="Wb7TZCTmPimaID0ULNnEoF"><!--pnid:OKCQdJ5OB9WdMItAC6Fb8B-->高考自学工作台</h1>
+    <div data-page-node-id="K7GSioFC6iuQlvsaB6kHqW" class="sub" id="todayDate"></div>
   </div>
-  <div class="top-right">
-    <div class="streak" title="连续打卡天数">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c.7 3.6 4.8 5.1 5 9.6.1 3-2.1 5.4-5 5.4s-5.1-2.4-5-5.4c.1-2.1 1.2-3.4 2.3-5.2.4 1.6 1.1 2.5 2.5 3.1-.9-2.6-.4-5.2.2-7.5zM8.6 14.8c-.2 2 1.3 3.7 3.4 3.7 2 0 3.6-1.7 3.4-3.7-.1-1.3-.9-2.3-1.8-3.4-.3 1.2-1 2-2.1 2.4.3-1.5.1-2.8-.6-4.2-1.3 1.3-2.1 3.1-2.3 5.2z"/></svg>
-      <span id="streakNum">0</span> 天连学
+  <div data-page-node-id="9b6gyVyvTCqSO1VIPxrPkr" class="top-right">
+    <div data-page-node-id="SG0B5QsP0BPzIsVHiGW7J7" class="streak" title="连续打卡天数">
+      <svg data-page-node-id="bWPKA1n5goyVE3L04T69a2" fill="currentColor" viewBox="0 0 24 24"><path data-page-node-id="GryzZHz8Qho8u7KFCiOd69" d="M12 2c.7 3.6 4.8 5.1 5 9.6.1 3-2.1 5.4-5 5.4s-5.1-2.4-5-5.4c.1-2.1 1.2-3.4 2.3-5.2.4 1.6 1.1 2.5 2.5 3.1-.9-2.6-.4-5.2.2-7.5zM8.6 14.8c-.2 2 1.3 3.7 3.4 3.7 2 0 3.6-1.7 3.4-3.7-.1-1.3-.9-2.3-1.8-3.4-.3 1.2-1 2-2.1 2.4.3-1.5.1-2.8-.6-4.2-1.3 1.3-2.1 3.1-2.3 5.2z"/></svg>
+      <span data-page-node-id="jrezyuCHsaAp3r72cNomAx" id="streakNum"><!--pnid:Nl6KVscB9vTQybVxNDLyYN-->0</span><!--pnid:tUcFo2zquS7aDBhO3omfZB--> 天连学
     </div>
-    <div class="ring-wrap" id="ringWrap"></div>
+    <div data-page-node-id="RGTkjphJXtrF3riFcjwWRK" class="ring-wrap" id="ringWrap"></div>
   </div>
 </header>
 
-<div class="hint-banner" id="hintBanner">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-  <span id="hintText">数据已积累 30 条，建议导出 JSON 备份一份</span>
-  <button class="x" data-action="dismiss-hint" aria-label="关闭提示">×</button>
+<div data-page-node-id="eyCGJCp1orGY27IEMSlKd1" class="hint-banner" id="hintBanner">
+  <svg data-page-node-id="PZD549V4ZZrPthibbOpPPc" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path data-page-node-id="hQmeh2rhRzwKA2DMxxVXCX" d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><line data-page-node-id="0WUfsfy98WeHBhvwIZ81tC" x1="12" x2="12" y1="9" y2="13"/><line data-page-node-id="btzDrUnhEt0AkAc4I9Z36R" x1="12" x2="12.01" y1="17" y2="17"/></svg>
+  <span data-page-node-id="v6oWxjApVfVdSGBh33wqNy" id="hintText"><!--pnid:8vBEe3TJlc7ZAglIjmTvJj-->数据已积累 30 条，建议导出 JSON 备份一份</span>
+  <button data-page-node-id="TwpPm5da9O4ZcWGzNvobqy" aria-label="关闭提示" class="x" data-action="dismiss-hint"><!--pnid:fJU74mqTO3biOA28CYl5bh-->×</button>
 </div>
 
-<div class="card bar">
-  <div class="badge" id="syncBadge"><span class="dot"></span><span id="syncText">正在连接 GitHub…</span></div>
-  <div class="btns">
-    <button class="btn small" data-action="export">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+<div data-page-node-id="6xj3UeSejDMQX86ANmKzVh" class="card bar">
+  <div data-page-node-id="L4nGs11NpsNrxLh0vtOAh2" class="badge" id="syncBadge"><span data-page-node-id="xvuWXsmommhMj5pUstZJii" class="dot"></span><span data-page-node-id="ZxfjvY6ONXtr1y4KRcgI3T" id="syncText"><!--pnid:LMSY6c9JgUI635A0MWv0BF-->正在连接 GitHub…</span></div>
+  <div data-page-node-id="H77kJTbxIbY6BTqj7lq0i1" class="btns">
+    <button data-page-node-id="18eqK7jrPi1O6hHlKK3MUH" class="btn small" data-action="export">
+      <svg data-page-node-id="t9PtabrhUPZHmnxAk0fVZq" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path data-page-node-id="rynB8dNFBTFX03Vu7rb70T" d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline data-page-node-id="9YIrKCxvd4KwN9hx21csKA" points="7 10 12 15 17 10"/><line data-page-node-id="blKFt7nNTWa4tVD6LMpb8j" x1="12" x2="12" y1="15" y2="3"/></svg><!--pnid:O2yQemxbEUJYIxePIlZck1-->
       导出 JSON
     </button>
-    <button class="btn small" data-action="import">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+    <button data-page-node-id="Uj8p0eWHQDaj7lycSYc3RI" class="btn small" data-action="import">
+      <svg data-page-node-id="G6CcmjaYA1IMAngyDQcGBC" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path data-page-node-id="mZ7nMd43AtttgJc8XTSaVT" d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline data-page-node-id="bnhitR4nfOs5OjAx6mtQmO" points="17 8 12 3 7 8"/><line data-page-node-id="MjU65WibSDjSnUctudt8Xa" x1="12" x2="12" y1="3" y2="15"/></svg><!--pnid:eThY9T9KUaXO9pb4po81ef-->
       导入恢复
     </button>
-    <button class="btn small" data-action="clear-sample">清空示例</button>
-    <button class="btn small danger" data-action="clear-all">清空全部</button>
-    <button class="btn small" data-action="gh-setup" title="GitHub 同步设置">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+    <button data-page-node-id="YfoPYmVmDmuH1YLQNsSUnA" class="btn small" data-action="clear-sample"><!--pnid:nwZccJCzrZsJY4tl0cS5Ms-->清空示例</button>
+    <button data-page-node-id="uPZ9nCUNHiNJT1bNSczVBa" class="btn small danger" data-action="clear-all"><!--pnid:tKVWyCex7H5TUOQpgPg0d8-->清空全部</button>
+    <button data-page-node-id="59qleNj5sDnOc9Ws3apove" class="btn small" data-action="gh-setup" title="GitHub 同步设置">
+      <svg data-page-node-id="w7msT8UlDqztUcl85R6mEO" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path data-page-node-id="AOeZ6yZhKTNBYDpNPdBfiE" d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg><!--pnid:J6tuSEWPV8Vlmb1NNLzd0A-->
       GitHub 设置
     </button>
   </div>
 </div>
-<input type="file" id="importFile" accept=".json,application/json" style="display:none">
+<input data-page-node-id="AdRvzPbWcA9mjkv6N6uvBg" accept=".json,application/json" id="importFile" type="file" style="display:none">
 
-<div class="card bar">
-  <div class="badge" id="checkinStatus"></div>
-  <div class="btns">
-    <input class="ci-input" id="ciMinutes" type="number" min="5" max="960" step="5" placeholder="学习分钟" inputmode="numeric" aria-label="今日实际学习分钟数">
-    <button class="btn small primary" data-action="checkin">打卡</button>
+<div data-page-node-id="deuZNLwZWBceEsCIqSJfVQ" class="card bar">
+  <div data-page-node-id="oJ9Nw4wVJFCHLC0RuEtsEK" class="badge" id="checkinStatus"></div>
+  <div data-page-node-id="syut1n9v1gt8WM1B6Wq5UJ" class="btns">
+    <input data-page-node-id="dzU3I3r8HhMDfDVyIzyeap" aria-label="今日实际学习分钟数" class="ci-input" id="ciMinutes" inputmode="numeric" max="960" min="5" placeholder="学习分钟" step="5" type="number">
+    <button data-page-node-id="UBO5Rw91EeVEljgIOUBvW5" class="btn small primary" data-action="checkin"><!--pnid:G4z5MansyicATeZjJ5vPgn-->打卡</button>
   </div>
 </div>
-<div class="card" style="padding:12px 16px">
-  <div class="goal-row">
-    <span class="muted">每日目标时长</span>
-    <input id="goalInput" type="number" min="30" max="960" step="10" aria-label="每日目标学习分钟">
-    <span class="muted">分钟</span>
-    <button class="btn small" data-action="save-goal">保存</button>
+<div data-page-node-id="qesofZKOoRGtOkZDPAT03H" class="card" style="padding:12px 16px">
+  <div data-page-node-id="w5gD2btaz2Ts4CizHbDCRJ" class="goal-row">
+    <span data-page-node-id="cs7qxUpJBEjsjrfy42SNNN" class="muted"><!--pnid:0Jn9MUdfG6Jfblr0wMZ4HY-->每日目标时长</span>
+    <input data-page-node-id="LXoXe9EBqKVFpULk4yFc1P" aria-label="每日目标学习分钟" id="goalInput" max="960" min="30" step="10" type="number">
+    <span data-page-node-id="HkxG74QA831iuQyjI3gW9U" class="muted"><!--pnid:1SN9cfSm3729LwrjEzrlCV-->分钟</span>
+    <button data-page-node-id="5QSwzc8Rk0IbUJbuHuzqAb" class="btn small" data-action="save-goal"><!--pnid:X1mrdxNS86fqqW58vQfGij-->保存</button>
   </div>
-  <div class="progress-line">
-    <div class="lab"><span id="goalNow">今日 0 分钟</span><span id="goalPct">0%</span></div>
-    <div class="track"><div class="fill" id="goalFill" style="width:0%"></div></div>
+  <div data-page-node-id="P5v11BYkpWE8ZA9B22bU8c" class="progress-line">
+    <div data-page-node-id="OzXMz36RvmhGuVkbCJ9nXv" class="lab"><span data-page-node-id="I43IcciNWCenfor01vHkxS" id="goalNow"><!--pnid:aMRiMEf8Xhggl7AQd12GQs-->今日 0 分钟</span><span data-page-node-id="nSTWI8EZqE1PzynUAw4sRe" id="goalPct"><!--pnid:FtwTIeVOrb1zq8cQ9rTkPx-->0%</span></div>
+    <div data-page-node-id="3bWLSyL5yClrl2jS9P6q7K" class="track"><div data-page-node-id="CUfzFTg3tbjSySq1RmsPRo" class="fill" id="goalFill" style="width:0%"></div></div>
   </div>
 </div>
 
-<section class="card" id="today">
-  <h2>
-    <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-    今天要处理 <span class="muted" id="todayCount"></span>
+<section data-page-node-id="OSNBhCL8zvGmeuB6Z2PfXu" class="card" id="today">
+  <h2 data-page-node-id="wy9RBFPqRvQIpJdOLyAwTP">
+    <svg data-page-node-id="vd8WYY0s1uBbUWMGN1tx2g" class="ic" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><circle data-page-node-id="aW1YDHkBKI7zs2bLhTxboV" cx="12" cy="12" r="10"/><polyline data-page-node-id="G0HqHa9iJjcsbwR21uJ71n" points="12 6 12 12 16 14"/></svg><!--pnid:JphPMB663strqgjntrerAg-->
+    今天要处理 <span data-page-node-id="usEdFKlGmfURP0VmKB12ga" class="muted" id="todayCount"></span>
   </h2>
-  <div id="todayBody"></div>
+  <div data-page-node-id="TgewhwzaOZQukvK6CvWLa0" id="todayBody"></div>
 </section>
 
-<nav class="tabs" id="deskTabs">
-  <button class="tab-btn active" data-action="tab" data-tab="plan">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+<nav data-page-node-id="89gP0cVVFRZQKxsXfcZPjj" class="tabs" id="deskTabs">
+  <button data-page-node-id="o1vvRDsEPBV3E3X5C3JsOR" class="tab-btn active" data-action="tab" data-tab="plan">
+    <svg data-page-node-id="hHlDtDJeUGaBGlgKbk3sgW" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><rect data-page-node-id="6V2j6MnGtIJVbL1ldlLjUn" height="18" rx="2" width="18" x="3" y="4"/><line data-page-node-id="qIC1AcEfyc2MqYRvPrvMf6" x1="16" x2="16" y1="2" y2="6"/><line data-page-node-id="iYiyKwXq8zuABgqrZYtd30" x1="8" x2="8" y1="2" y2="6"/><line data-page-node-id="jb9kfhVRdpxApzqChEirwx" x1="3" x2="21" y1="10" y2="10"/></svg><!--pnid:dnGtJkFiDYjyJ5xCvAAWuX-->
     学习计划
   </button>
-  <button class="tab-btn" data-action="tab" data-tab="question">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+  <button data-page-node-id="0Dkmhp7UpsX45G1ip0sPgK" class="tab-btn" data-action="tab" data-tab="question">
+    <svg data-page-node-id="3tJhB975KEjjwVoWZixGJM" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path data-page-node-id="jEPcQF8rQAlcE8533H615t" d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path data-page-node-id="WT9Gmjgc4lWYkvyYHHvpqI" d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><!--pnid:9cT34K9A7EFFn9pKARf6Eo-->
     题库
   </button>
-  <button class="tab-btn" data-action="tab" data-tab="mistakes">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.5 15a9 9 0 1 1-2.1-9.4L23 10"/></svg>
+  <button data-page-node-id="jAQY0CKpeRxylTkRKb8niS" class="tab-btn" data-action="tab" data-tab="mistakes">
+    <svg data-page-node-id="iQCexccwCkcqDR4gMuyTcs" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><polyline data-page-node-id="g2nCOXxG2NzopogPR36z35" points="23 4 23 10 17 10"/><path data-page-node-id="PZRNOLLhyw5EEl5SohRi17" d="M20.5 15a9 9 0 1 1-2.1-9.4L23 10"/></svg><!--pnid:zMgVNKGpuQdOVeYXZnT9um-->
     错题重做本
   </button>
-  <button class="tab-btn" data-action="tab" data-tab="holes">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+  <button data-page-node-id="7F5FU1o9Sz0UFL9o4iQzPE" class="tab-btn" data-action="tab" data-tab="holes">
+    <svg data-page-node-id="GorS3LV5uF6rPuh0ijQNyt" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path data-page-node-id="w2usWpvuiUAL55iOaXLUxm" d="M9 11l3 3L22 4"/><path data-page-node-id="6VQXBUIR3VR8v1Jw7APBm9" d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><!--pnid:gfnJWCmx6dZGEmoX63pSZL-->
     知识漏洞清单
   </button>
-  <button class="tab-btn" data-action="tab" data-tab="tests">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+  <button data-page-node-id="O3XApZJCTQSzo43nhczOx2" class="tab-btn" data-action="tab" data-tab="tests">
+    <svg data-page-node-id="yC98lQY7hv9fCZCeshPKGu" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path data-page-node-id="5jGS63teVRXPWb40mXNQ0A" d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline data-page-node-id="S2Y8ib3MFHH6V1pAMKUeL3" points="14 2 14 8 20 8"/></svg><!--pnid:sswYbByD5Lf7UGGfiyRNL2-->
     测试记录
   </button>
-  <button class="tab-btn" data-action="tab" data-tab="parent">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+  <button data-page-node-id="1PtoVp6gUCyxRA0uUs854T" class="tab-btn" data-action="tab" data-tab="parent">
+    <svg data-page-node-id="nkBu0GToM4xVWUn4JQMuwx" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path data-page-node-id="BNEUukz6JBBBdq8pqVXTWd" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle data-page-node-id="WOzfmCcE1Zaxvvlf9voVJL" cx="12" cy="12" r="3"/></svg><!--pnid:SgcwXYaqsEInAHktdkkmNi-->
     家长看板
   </button>
-  <button class="tab-btn" data-action="tab" data-tab="stats">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+  <button data-page-node-id="WaCRqMbjdcxgz2b3LflJD3" class="tab-btn" data-action="tab" data-tab="stats">
+    <svg data-page-node-id="shzuT6tnDCNykRH1rXuHI7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><line data-page-node-id="bUbl4rYWplXckJZHvDHdQU" x1="18" x2="18" y1="20" y2="10"/><line data-page-node-id="7mzzZdv4y5cEepDlwlqZHL" x1="12" x2="12" y1="20" y2="4"/><line data-page-node-id="oS7lusW4qTwYSe5gSFy8KH" x1="6" x2="6" y1="20" y2="14"/></svg><!--pnid:03RPohFWReTyJlmNthxt2W-->
     学习统计
   </button>
 </nav>
 
-<main>
-  <section class="panel active" id="panel-plan">
-    <div class="card">
-      <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>添加学习任务</h2>
-      <form class="f" id="planForm">
-        <div class="field col-3"><label>科目</label><select id="pfSubject"></select></div>
-        <div class="field col-9"><label>学习内容</label><input id="pfContent" type="text" maxlength="60" placeholder="例：高一·函数单调性 专项20题" required></div>
-        <div class="field col-3"><label>预计时长（分钟）</label><input id="pfMinutes" type="number" min="5" max="600" step="5" value="40" required></div>
-        <div class="field col-3"><label>日期</label><input id="pfDate" type="date" required></div>
-        <div class="field col-3"><label>优先级</label><select id="pfPriority"><option value="P0">P0 紧急</option><option value="P1" selected>P1 重要</option><option value="P2">P2 常规</option></select></div>
-        <div class="form-actions"><button class="btn primary" type="submit">添加任务</button></div>
+<main data-page-node-id="dy1MXv1FPdu5UPspa2b10H">
+  <section data-page-node-id="FBwL8x8tgdRxzPzhD1RP0O" class="panel active" id="panel-plan">
+    <div data-page-node-id="tIPl10wMuhSGvV6KIHbvAd" class="card">
+      <h2 data-page-node-id="ekz3sthf3rXJ09VN3KgfMP"><svg data-page-node-id="wYhI1XoKz873ea90iCCnBg" class="ic" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><line data-page-node-id="m1RpkyBsPaoDX9QPYygQJx" x1="12" x2="12" y1="5" y2="19"/><line data-page-node-id="varxssBexeWMZd0bnWsYmi" x1="5" x2="19" y1="12" y2="12"/></svg><!--pnid:0AiuBGWO26x8qoJ8CJHCG9-->添加学习任务</h2>
+      <form data-page-node-id="hi3eELSbTV2EiG0w7Itxsc" class="f" id="planForm">
+        <div data-page-node-id="6Dig0VgGPSmMsdFpO9G7P8" class="field col-3"><label data-page-node-id="DPTqhJgGVuTATV7NqbvIl2"><!--pnid:KJ5c2owROeZXTLIXPdSNW3-->科目</label><select data-page-node-id="aYaXKZKGPqLHoOIjv5UZDy" id="pfSubject"></select></div>
+        <div data-page-node-id="hVWbGow8GKEcS9NbjPcN12" class="field col-9"><label data-page-node-id="izaC2yZt7O13NdeRWfxZAV"><!--pnid:HcPofOD7vsx9S7k8nZAQeX-->学习内容</label><input data-page-node-id="ZQGThRocFchIHfI5xLHDOI" id="pfContent" maxlength="60" placeholder="例：高一·函数单调性 专项20题" required type="text"></div>
+        <div data-page-node-id="lrW0DKhUwcS5AMlxuft3WI" class="field col-3"><label data-page-node-id="qqPMl8oBX6dhpEfq0nQO36"><!--pnid:yqxQD7xiWkxLkLwevZxTk7-->预计时长（分钟）</label><input data-page-node-id="4umxlxkRZ4bUQDyyNqvUVI" id="pfMinutes" max="600" min="5" required step="5" type="number" value="40"></div>
+        <div data-page-node-id="RjbKKn2sgZtxeD9auKj2pg" class="field col-3"><label data-page-node-id="yvK18qcxr3AcURd4GwsIeA"><!--pnid:Dq41rm95QM55hpRK2XslWc-->日期</label><input data-page-node-id="SFVEr0cukTJtgbeAmUdW7w" id="pfDate" required type="date"></div>
+        <div data-page-node-id="GPnMaDM5SxjHap5mUDfn3r" class="field col-3"><label data-page-node-id="G1oE7O9xoLqiAVZCPdPzDA"><!--pnid:rovw9QyZC5uJLp501R3yho-->优先级</label><select data-page-node-id="LGLgaTJhXuoy4pb25RVRre" id="pfPriority"><option data-page-node-id="UVnRCmLEopgtNLAVgNMv38" value="P0"><!--pnid:Oe2kmwEJc6xT0YUIQ5v5cs-->P0 紧急</option><option data-page-node-id="v1jJCYTmezggq22AWIpMUi" selected value="P1"><!--pnid:CUhDznBZgVUdUkCtAGnV8U-->P1 重要</option><option data-page-node-id="ZlzxfQ8yh5tCvPHZKy0jwH" value="P2"><!--pnid:NSaCCLccZyyQ7jeKYeT0aG-->P2 常规</option></select></div>
+        <div data-page-node-id="iQcGsVTU9T9wUroMNfTpFv" class="form-actions"><button data-page-node-id="72xMb0Y8AJJAqr8Hi2RbjV" class="btn primary" type="submit"><!--pnid:CHVuJjVHyfw2zkehMsuvVf-->添加任务</button></div>
       </form>
     </div>
-    <div class="card">
-      <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>任务列表</h2>
-      <div class="chips" id="planChips">
-        <button class="chip active" data-action="filter-plan" data-val="today">今天（含逾期顺延）</button>
-        <button class="chip" data-action="filter-plan" data-val="pending">全部未完成</button>
-        <button class="chip" data-action="filter-plan" data-val="done">已完成</button>
+    <div data-page-node-id="BK35SDEm3YbBOyYaiyGZFC" class="card">
+      <h2 data-page-node-id="VaMYfqcj5irse97XjCv7VH"><svg data-page-node-id="8uHjNLGzYoa9nOYfHzo38o" class="ic" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><line data-page-node-id="q6UfJeJFWAMCC7A0YJQfGY" x1="8" x2="21" y1="6" y2="6"/><line data-page-node-id="ZqNDNKSsmH0O3BFw8MphVH" x1="8" x2="21" y1="12" y2="12"/><line data-page-node-id="6fNVUwpR4ms9MhWV47OblN" x1="8" x2="21" y1="18" y2="18"/><line data-page-node-id="xzJa0uBehAuUDwtOxYm520" x1="3" x2="3.01" y1="6" y2="6"/><line data-page-node-id="bNdlcX9YP2fB9gI6SKAkLc" x1="3" x2="3.01" y1="12" y2="12"/><line data-page-node-id="QeNwCXSairIfbNTmx6vdAq" x1="3" x2="3.01" y1="18" y2="18"/></svg><!--pnid:20aJC41sEgyXzy5bSbSzP7-->任务列表</h2>
+      <div data-page-node-id="pbULm8bi4BnnxDydC1QzBE" class="chips" id="planChips">
+        <button data-page-node-id="pNwqPL4JiffCVDpto9FuIF" class="chip active" data-action="filter-plan" data-val="today"><!--pnid:I8FjjYDk4UGaXBl9RSX4Zr-->今天（含逾期顺延）</button>
+        <button data-page-node-id="LyVkngNuoWVBkP1JgAJe5n" class="chip" data-action="filter-plan" data-val="pending"><!--pnid:Mm1XRohJdQR4yl7fc6dhM4-->全部未完成</button>
+        <button data-page-node-id="4veD2twt7ngylXmuCRD1ZN" class="chip" data-action="filter-plan" data-val="done"><!--pnid:38JR6P0TLQLGLV0oBJlbGK-->已完成</button>
       </div>
-      <div id="planList"></div>
+      <div data-page-node-id="16T0kII22G8JqUiRcqOuCU" id="planList"></div>
     </div>
   </section>
 
-  <section class="panel" id="panel-question">
-    <div class="card">
-      <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>各科题库</h2>
-      <div class="q-stats" id="qStats"></div>
-      <div class="chips" id="qChips">
-        <button class="chip active" data-action="filter-q-subj" data-val="全部">全部</button>
-        <button class="chip" data-action="filter-q-subj" data-val="语文">语文</button>
-        <button class="chip" data-action="filter-q-subj" data-val="数学">数学</button>
-        <button class="chip" data-action="filter-q-subj" data-val="英语">英语</button>
-        <button class="chip" data-action="filter-q-subj" data-val="物理">物理</button>
-        <button class="chip" data-action="filter-q-subj" data-val="化学">化学</button>
-        <button class="chip" data-action="filter-q-subj" data-val="生物">生物</button>
+  <section data-page-node-id="wGy6ucmGUEkrs8w5lETjuT" class="panel" id="panel-question">
+    <div data-page-node-id="PxJoMIEkBHZtxPdFo0b6Gf" class="card">
+      <h2 data-page-node-id="MYbAaEjG9gHsloDFhqBc9C"><svg data-page-node-id="hzRwmXm2rSTkexjFJxhw4l" class="ic" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path data-page-node-id="H3a70Q92yCRKIRKGtBvIDj" d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path data-page-node-id="PTzpjXiqDKrdBpOjj1dVpt" d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><!--pnid:XVQmlQQS2dcaUetlLJ6iq1-->各科题库</h2>
+      <div data-page-node-id="H9UTxNMdLxYhZ3Bzk70hc4" class="q-stats" id="qStats"></div>
+      <div data-page-node-id="oFuZtgB0AeXxvhoADFHbVu" class="chips" id="qChips">
+        <button data-page-node-id="InkwCCxjrwE88uUKari7OS" class="chip active" data-action="filter-q-subj" data-val="全部"><!--pnid:EaT0CefBRiIDK0jkiIcEou-->全部</button>
+        <button data-page-node-id="Q3HJxXByCVjynu0Tf8DEZY" class="chip" data-action="filter-q-subj" data-val="语文"><!--pnid:Qcyd5qWmjSPNPsfuDhoHvM-->语文</button>
+        <button data-page-node-id="kgRw41CfRbJnACGXQqd4ki" class="chip" data-action="filter-q-subj" data-val="数学"><!--pnid:VlIrZuD6HoO7DZd5jyo08N-->数学</button>
+        <button data-page-node-id="GIyGtEP3y3W9jS8qOoiqOe" class="chip" data-action="filter-q-subj" data-val="英语"><!--pnid:v23skHQIIViJDYbuGy3Iki-->英语</button>
+        <button data-page-node-id="e9CAPzJLBDjtoSfmPVj9zQ" class="chip" data-action="filter-q-subj" data-val="物理"><!--pnid:33e82GwT9Fhm7qEOHtsY3N-->物理</button>
+        <button data-page-node-id="TtglFHpZ92TH7obneUHM6w" class="chip" data-action="filter-q-subj" data-val="化学"><!--pnid:VHKQNXvEfuxWD40h0fbRlC-->化学</button>
+        <button data-page-node-id="GoGk9UzgxszfGxJeAh9PD3" class="chip" data-action="filter-q-subj" data-val="生物"><!--pnid:vYqAgoSQYuCNnPamyyCd8L-->生物</button>
       </div>
-      <div class="chips" id="qStatusChips">
-        <button class="chip active" data-action="filter-q-status" data-val="all">全部</button>
-        <button class="chip" data-action="filter-q-status" data-val="0">未做</button>
-        <button class="chip" data-action="filter-q-status" data-val="1">做对</button>
-        <button class="chip" data-action="filter-q-status" data-val="2">做错</button>
+      <div data-page-node-id="ZAPATBS6t32fxTbMbP8kKV" class="chips" id="qStatusChips">
+        <button data-page-node-id="lry9OvpJybOvUr1STKUeWN" class="chip active" data-action="filter-q-status" data-val="all"><!--pnid:XJBPUYD31rCzj6N4Blov4q-->全部</button>
+        <button data-page-node-id="DIASuHtdRS5KXOAbmrSnxx" class="chip" data-action="filter-q-status" data-val="0"><!--pnid:MhHRrBxomTFRfvCr6zvIwr-->未做</button>
+        <button data-page-node-id="HzSaPOPQHn2LkP0rijj09S" class="chip" data-action="filter-q-status" data-val="1"><!--pnid:cp8couIB3rPlFLx73Pop2l-->做对</button>
+        <button data-page-node-id="b2ZI0AmTQPwjMK9khHDWBp" class="chip" data-action="filter-q-status" data-val="2"><!--pnid:IECNmbYw3Yg9NeKYI08z8w-->做错</button>
       </div>
-      <div class="btns" style="margin-bottom:12px">
-        <button class="btn small" data-action="import-builtin-q">导入内置题库（含高考真题）</button>
+      <div data-page-node-id="lyJpaWcSTJdPvL6e0gD1cM" class="btns" style="margin-bottom:12px">
+        <button data-page-node-id="78keSxb2xulfzX31TEkHjd" class="btn small" data-action="import-builtin-q"><!--pnid:z66rWhnNAQRJjTVQDwnWoK-->导入内置题库（含高考真题）</button>
       </div>
-      <div id="qList"></div>
+      <div data-page-node-id="CIhKT2HbzrCWiKZhRLgcAk" id="qList"></div>
     </div>
   </section>
 
-  <section class="panel" id="panel-mistakes">
-    <div class="card">
-      <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>登记错题</h2>
-      <form class="f" id="mistakeForm">
-        <div class="field col-3"><label>科目</label><select id="mfSubject"></select></div>
-        <div class="field col-9"><label>知识点 / 题目简述</label><input id="mfTopic" type="text" maxlength="60" placeholder="例：二次函数含参最值讨论" required></div>
-        <div class="field col-6"><label>做错的原因</label><select id="mfReason"></select></div>
-        <div class="field col-6"><label>正确思路（一句话总结）</label><input id="mfNote" type="text" maxlength="80" placeholder="例：先判对称轴与区间的位置关系再分情况"></div>
-        <div class="form-actions"><button class="btn primary" type="submit">登记（明天起安排重做）</button></div>
+  <section data-page-node-id="C1OEtZBzOFsO31P9iwS9a2" class="panel" id="panel-mistakes">
+    <div data-page-node-id="tbHFabngyLG4uz9hxx0ULX" class="card">
+      <h2 data-page-node-id="E8xHCXih9h8Rv9gvqBkJWD"><svg data-page-node-id="bSlEzUtxT5n1e93svdbEoS" class="ic" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><line data-page-node-id="86Xp5MlygJlzddCfVtJevB" x1="12" x2="12" y1="5" y2="19"/><line data-page-node-id="8Z8zG1GywlMZxkUlh2dojI" x1="5" x2="19" y1="12" y2="12"/></svg><!--pnid:Y06VsDO5h2r6PxjESdY18A-->登记错题</h2>
+      <form data-page-node-id="tPXgkxIj5LqFShCRwpeWxK" class="f" id="mistakeForm">
+        <div data-page-node-id="5BuvizZrlrL9h7OUUGVtnm" class="field col-3"><label data-page-node-id="pCO1k81J4ajbYqWaSOPdUp"><!--pnid:1uGsZP4ZxBaDS2pXzQ4bhV-->科目</label><select data-page-node-id="NwZz8E5xhuM7A5R7rPPpx0" id="mfSubject"></select></div>
+        <div data-page-node-id="L75pkdgWMr5CKllLuUNK35" class="field col-9"><label data-page-node-id="MfzjS9RL9f3WeEi92TtCl1"><!--pnid:jdDlAnJJAi3xeJDMbyJ7C2-->知识点 / 题目简述</label><input data-page-node-id="L7P7SrFI774yNGU293zlra" id="mfTopic" maxlength="60" placeholder="例：二次函数含参最值讨论" required type="text"></div>
+        <div data-page-node-id="2dHAv07TTykkwxTfaMvl5V" class="field col-6"><label data-page-node-id="B8Y76qpxxkxHuOIDnXdF58"><!--pnid:c0suQOYZrILwv6X9h68qlu-->做错的原因</label><select data-page-node-id="QN0m5kjFT7dnbyeQxiqTHV" id="mfReason"></select></div>
+        <div data-page-node-id="d7AM89G16KfGOIYKSvcClM" class="field col-6"><label data-page-node-id="nbdjTIKS10rQPNM1ZbzUl7"><!--pnid:9iL81pdRmMpirVRWYwkzFg-->正确思路（一句话总结）</label><input data-page-node-id="jm1quUMuqgwgvO4Im22okk" id="mfNote" maxlength="80" placeholder="例：先判对称轴与区间的位置关系再分情况" type="text"></div>
+        <div data-page-node-id="jaFPJ44cxCoqt83EgB4m75" class="form-actions"><button data-page-node-id="S0hmZb4r4I7n4X6sirVcgR" class="btn primary" type="submit"><!--pnid:UXtPGPbinq9JTVc689kQl0-->登记（明天起安排重做）</button></div>
       </form>
-      <p class="muted" style="margin-top:10px">重做间隔：1 → 2 → 4 → 7 → 15 → 30 → 60 天。答对升级间隔，答错退回 1 天，连过 7 轮标记「已掌握」。写清正确思路，才能真正避免低质量重复。</p>
+      <p data-page-node-id="s09nR7gFYqmygLoX12mpfD" class="muted" style="margin-top:10px"><!--pnid:e2jOIwR7mbAT5Ea5VMdEFW-->重做间隔：1 → 2 → 4 → 7 → 15 → 30 → 60 天。答对升级间隔，答错退回 1 天，连过 7 轮标记「已掌握」。写清正确思路，才能真正避免低质量重复。</p>
     </div>
-    <div class="card">
-      <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.5 15a9 9 0 1 1-2.1-9.4L23 10"/></svg>错题列表</h2>
-      <div class="chips" id="mistChips">
-        <button class="chip active" data-action="filter-mist" data-val="due">待复习</button>
-        <button class="chip" data-action="filter-mist" data-val="mastered">已掌握</button>
-        <button class="chip" data-action="filter-mist" data-val="all">全部</button>
+    <div data-page-node-id="e7CQ4PF13JIFpZttZ1Ren9" class="card">
+      <h2 data-page-node-id="xWTKbemQ0Hxq0P7utyBG0a"><svg data-page-node-id="5CXFjXkYErpxezxKjWhQ2K" class="ic" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><polyline data-page-node-id="tHemLTx7fH7uBWNwvkvxq9" points="23 4 23 10 17 10"/><path data-page-node-id="49eLqmZcuX0qV8EFf5yQWO" d="M20.5 15a9 9 0 1 1-2.1-9.4L23 10"/></svg><!--pnid:AwBHoxViYnpR5n3aYtB9kg-->错题列表</h2>
+      <div data-page-node-id="ZqmzqiNCYCiGO8efyzsME1" class="chips" id="mistChips">
+        <button data-page-node-id="bImIqwdV4eSHYFxpTSRPRH" class="chip active" data-action="filter-mist" data-val="due"><!--pnid:OoIQ9KopAbvxOgts1WlvhR-->待复习</button>
+        <button data-page-node-id="uD4HwnGq18QPTKoV3pKU2N" class="chip" data-action="filter-mist" data-val="mastered"><!--pnid:DfeRSv9iM29vio6fH1YEdT-->已掌握</button>
+        <button data-page-node-id="0S8fpkaQUGfeYZ3vIcbLdV" class="chip" data-action="filter-mist" data-val="all"><!--pnid:9Dyuf76LOC8t1xVejQacnE-->全部</button>
       </div>
-      <div id="mistList"></div>
+      <div data-page-node-id="jdEeffXuXn1L8g3YWPbzWp" id="mistList"></div>
     </div>
   </section>
 
-  <section class="panel" id="panel-holes">
-    <div class="card">
-      <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>登记知识漏洞</h2>
-      <form class="f" id="holeForm">
-        <div class="field col-3"><label>学段</label><select id="hfStage"><option>高一</option><option selected>高二</option><option>高三</option></select></div>
-        <div class="field col-3"><label>科目</label><select id="hfSubject"></select></div>
-        <div class="field col-6"><label>知识点</label><input id="hfTopic" type="text" maxlength="60" placeholder="例：三角函数诱导公式" required></div>
-        <div class="field col-4"><label>当前状态</label><select id="hfStatus"><option value="0" selected>未学</option><option value="1">在学</option><option value="2">已掌握</option></select></div>
-        <div class="form-actions"><button class="btn primary" type="submit">加入清单</button></div>
+  <section data-page-node-id="U7QQcRkjuLZLHs3BqsKNLp" class="panel" id="panel-holes">
+    <div data-page-node-id="5wMZvF7j3NSJcEpm1UrZvt" class="card">
+      <h2 data-page-node-id="lSXtMugKcwfXY4aeXaPLvL"><svg data-page-node-id="ncK52SNXE9bg415rFghdWT" class="ic" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><line data-page-node-id="JBE9OOHHSl18Zc7VOzZUec" x1="12" x2="12" y1="5" y2="19"/><line data-page-node-id="tVuiGkTSCIc5TZHwpIPVrx" x1="5" x2="19" y1="12" y2="12"/></svg><!--pnid:xN3Ar0DXTn5pdO8HYHZph7-->登记知识漏洞</h2>
+      <form data-page-node-id="YaiTDcQAIdFu8k8YeOdEgZ" class="f" id="holeForm">
+        <div data-page-node-id="nfl0jBK1HNLgRqPasNmBJE" class="field col-3"><label data-page-node-id="qhnyRfCGDynqOvRxD8tGwG"><!--pnid:GrCAHEMzv5lehhoz56la6R-->学段</label><select data-page-node-id="dDvwtGLEhfCg3jjJiaO0B6" id="hfStage"><option data-page-node-id="VVN0YaAQBstJgtpR2lQGKl"><!--pnid:OZugUqh5GZuSNzO0vm0piG-->高一</option><option data-page-node-id="SnHDjdLpRmXWKnNSHjSh0p" selected><!--pnid:n5irUU2ihrXYJSgL8ex2qv-->高二</option><option data-page-node-id="8H7uFt3GyPDOMA65xPcXWj"><!--pnid:aRyHZIdG5hlk5lf8ZeYFm9-->高三</option></select></div>
+        <div data-page-node-id="8ziswdmhPvaIa9TOumajev" class="field col-3"><label data-page-node-id="5VfJoJSeVM3Sm5C0qgxYRX"><!--pnid:ITsIBEynfmybQ41BCD5ByK-->科目</label><select data-page-node-id="eQCzOKosrNJpyEWZa9yI03" id="hfSubject"></select></div>
+        <div data-page-node-id="s7iyXnx7wcBgbpnYuVWq3M" class="field col-6"><label data-page-node-id="GiQNJ4jCl9RdCarKXqTSzl"><!--pnid:HaS5Y7aZDn0C9FcVBRc3BD-->知识点</label><input data-page-node-id="f0aQSjHJKiDvWwRJbPIaIA" id="hfTopic" maxlength="60" placeholder="例：三角函数诱导公式" required type="text"></div>
+        <div data-page-node-id="RD6aLV65ykbgVZwbuMAmS9" class="field col-4"><label data-page-node-id="pSjzguelOVMtvcW8MsBfhd"><!--pnid:JzN46IRxf9zqQKLH4WfSVG-->当前状态</label><select data-page-node-id="aCOz3coTtzZKvlfm8afIyW" id="hfStatus"><option data-page-node-id="oChFGw1SNUAOm9tRqiNsUt" selected value="0"><!--pnid:94fA5pZvo0lyxFwr5mHgJl-->未学</option><option data-page-node-id="F9m3MD4n7OXebnJSDTbXqd" value="1"><!--pnid:hoBjaEoQ6FFL19eMeLkPiL-->在学</option><option data-page-node-id="71yoOUbk34giwbfDOcRVd2" value="2"><!--pnid:JMgcDeT285TYEiLXHkypWX-->已掌握</option></select></div>
+        <div data-page-node-id="WVCPYq8wEFBTke9yAVajA4" class="form-actions"><button data-page-node-id="foGiaCcjKiUTkH7rj8k2cp" class="btn primary" type="submit"><!--pnid:MhYkHvoZw7OvxpZf49pCIi-->加入清单</button></div>
       </form>
-      <div class="btns" style="margin-top:12px">
-        <button class="btn small" data-action="import-chapters">一键导入高中核心章节清单</button>
+      <div data-page-node-id="HXpcBby9sQD0BBibt1z4fN" class="btns" style="margin-top:12px">
+        <button data-page-node-id="gaWTM5yoFXdj5OwDebnO2m" class="btn small" data-action="import-chapters"><!--pnid:4VV11S1hDDb0y4sPbLO654-->一键导入高中核心章节清单</button>
       </div>
     </div>
-    <div class="card">
-      <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>科目掌握进度</h2>
-      <div id="subjProgress"></div>
+    <div data-page-node-id="TaPs3Wiizekn2ejwVOXHWl" class="card">
+      <h2 data-page-node-id="veXjF1KZlrCJ2etuoRrJwT"><svg data-page-node-id="RUKbDz89nkC5rUEOCkky3s" class="ic" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path data-page-node-id="NhPeak25SmLvyPRW7qWL1w" d="M9 11l3 3L22 4"/><path data-page-node-id="QFCyjs0SoiwdzozDuw29ai" d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><!--pnid:dKXmfJoCVEB41n0Pk8dZPC-->科目掌握进度</h2>
+      <div data-page-node-id="fwtRL09Pg8pzPXxgu7JTvm" id="subjProgress"></div>
     </div>
-    <div class="card">
-      <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>漏洞清单</h2>
-      <div class="chips" id="holeChips">
-        <button class="chip active" data-action="filter-hole" data-val="all">全部</button>
-        <button class="chip" data-action="filter-hole" data-val="0">未学</button>
-        <button class="chip" data-action="filter-hole" data-val="1">在学</button>
-        <button class="chip" data-action="filter-hole" data-val="2">已掌握</button>
+    <div data-page-node-id="ZAuYQQhoQIy6OJEMkfWara" class="card">
+      <h2 data-page-node-id="fbL97ETkDwU3DZcDmPjTgx"><svg data-page-node-id="9mDODjOz0kQcPCMEVBJtyQ" class="ic" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><line data-page-node-id="oJfFWPFj3pl49rM7ZHVPFZ" x1="8" x2="21" y1="6" y2="6"/><line data-page-node-id="YkdnCzJ9Ma7df0lro0zHgf" x1="8" x2="21" y1="12" y2="12"/><line data-page-node-id="wwvQ0lISzZgIidYe8lxFE3" x1="8" x2="21" y1="18" y2="18"/><line data-page-node-id="jlTE3KqpV2a0tqo9dELHmU" x1="3" x2="3.01" y1="6" y2="6"/><line data-page-node-id="IlfuTyoaq2XNNFTv3s2Qcg" x1="3" x2="3.01" y1="12" y2="12"/><line data-page-node-id="LmJCQhsIinvH8bAqwZiBwk" x1="3" x2="3.01" y1="18" y2="18"/></svg><!--pnid:05VSxqBelHR6jSI7132mgg-->漏洞清单</h2>
+      <div data-page-node-id="EN3opachZHPqBDWLPuwMv1" class="chips" id="holeChips">
+        <button data-page-node-id="ZY04CTzyVWn3JnLIZ1whu1" class="chip active" data-action="filter-hole" data-val="all"><!--pnid:oxQOCc4qxtnBGXUYiE5JK4-->全部</button>
+        <button data-page-node-id="p4wmuuT4TycSjOnWh0OQML" class="chip" data-action="filter-hole" data-val="0"><!--pnid:KtBQ72lYSnDUb0brRrGyE0-->未学</button>
+        <button data-page-node-id="mror6Kjn0ZPG1ipNAmvj2X" class="chip" data-action="filter-hole" data-val="1"><!--pnid:lGI9imr69KoFTIKAbAh1Yc-->在学</button>
+        <button data-page-node-id="93grAGTodohZ9Nzhn6mXhG" class="chip" data-action="filter-hole" data-val="2"><!--pnid:4jtUTSF70pZpE3bwoVj9Ao-->已掌握</button>
       </div>
-      <div id="holeList"></div>
+      <div data-page-node-id="MdqcJ4h6nfDHOglIvGhtr4" id="holeList"></div>
     </div>
   </section>
 
-  <section class="panel" id="panel-tests">
-    <div class="card">
-      <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>登记测试成绩</h2>
-      <form class="f" id="testForm">
-        <div class="field col-3"><label>科目</label><select id="tfSubject"></select></div>
-        <div class="field col-3"><label>测试类型</label><select id="tfType"><option>章节小测</option><option>综合套卷</option><option>月考模拟</option><option>高考真题</option></select></div>
-        <div class="field col-6"><label>测试名称</label><input id="tfName" type="text" maxlength="60" placeholder="例：三角函数专项测" required></div>
-        <div class="field col-3"><label>得分</label><input id="tfScore" type="number" min="0" max="750" placeholder="0" required></div>
-        <div class="field col-3"><label>满分</label><input id="tfFull" type="number" min="1" max="750" value="100" required></div>
-        <div class="field col-3"><label>日期</label><input id="tfDate" type="date" required></div>
-        <div class="form-actions"><button class="btn primary" type="submit">登记成绩</button></div>
+  <section data-page-node-id="N8as0wWBelWamNQoyFi5JX" class="panel" id="panel-tests">
+    <div data-page-node-id="Pdc8K3R9HA2SP1kfMhcUAt" class="card">
+      <h2 data-page-node-id="89TwVN6Ve8u4BrOg18a4KA"><svg data-page-node-id="HDBbd7TfUrbacVWheI8YtC" class="ic" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path data-page-node-id="n8HRlreqzclN91wtQsREto" d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline data-page-node-id="tL4fEPJRz7DsYHUoGL77xN" points="14 2 14 8 20 8"/></svg><!--pnid:uyWQiI56TTmUy1klR4jYiV-->登记测试成绩</h2>
+      <form data-page-node-id="vQv05TvJHWhJVJDBreUFh2" class="f" id="testForm">
+        <div data-page-node-id="a3SnFjX83vr9ytqn3nWy25" class="field col-3"><label data-page-node-id="mL5GEiJRO7Ac8XmieGSqc8"><!--pnid:O9MpAoM0ZVdxC9iEFZbbHK-->科目</label><select data-page-node-id="wbah2vWplGi76m3KnOXCh0" id="tfSubject"></select></div>
+        <div data-page-node-id="B7ezrElrNHeIfg7oseJgr0" class="field col-3"><label data-page-node-id="uHEyTP70cx5OSv0YSQ5PG6"><!--pnid:0xY9GX0D4TJwWUEuOmtpi2-->测试类型</label><select data-page-node-id="EdDy3iUmpbFYde45tjed5x" id="tfType"><option data-page-node-id="V4gxmnZb6CiTkVXZOQ9XeA"><!--pnid:8szklOrS8juEm3ctxDaXLH-->章节小测</option><option data-page-node-id="z18pZFw6ZBLtVu1Wt913h8"><!--pnid:3TD2Yxo0LDoD90wiB0UPPY-->综合套卷</option><option data-page-node-id="gmtVFOjRzvBDhT1G2KEJ1z"><!--pnid:0AMtlk3JwxNsu5aglL2HXQ-->月考模拟</option><option data-page-node-id="RXlMtX27NgPUzQvIjPx4J9"><!--pnid:ebRxXlfEVzD9C0KRjr7jag-->高考真题</option></select></div>
+        <div data-page-node-id="b9gLsJoWFiGia6LFm65KPL" class="field col-6"><label data-page-node-id="pleQtS0bpUdg3Q2zIa3yeZ"><!--pnid:S9wVQlZkkOBpYLFWiHtBLq-->测试名称</label><input data-page-node-id="R5aYuLKwbrTP6SPm3VPIQX" id="tfName" maxlength="60" placeholder="例：三角函数专项测" required type="text"></div>
+        <div data-page-node-id="jUPjgupIoui6RgTR9AUBVE" class="field col-3"><label data-page-node-id="CCJENq87pSfzZIkamnnDZX"><!--pnid:HhE2oIGddPxoX5SceciLxW-->得分</label><input data-page-node-id="xASA2wYIAouH74F5h95EOs" id="tfScore" max="750" min="0" placeholder="0" required type="number"></div>
+        <div data-page-node-id="TQI9Mk4KsxOHInV8bUk92w" class="field col-3"><label data-page-node-id="ExR8sKRqSuyErvpFf9xlrs"><!--pnid:50JxbXTX56pO5rathf1746-->满分</label><input data-page-node-id="5P8KoWeUBkhRShuAoT1sdP" id="tfFull" max="750" min="1" required type="number" value="100"></div>
+        <div data-page-node-id="JSiwl09DGOhz6uE7aGcsEw" class="field col-3"><label data-page-node-id="ktVJpd1vhmgpQ8v7nEHntN"><!--pnid:jW5xbUewbzd7Jf8iUYdCvo-->日期</label><input data-page-node-id="INLEOwKnhdjUJqFaKcTIVn" id="tfDate" required type="date"></div>
+        <div data-page-node-id="VJFjFfjn2bDYJZZHSA2wj7" class="form-actions"><button data-page-node-id="iGNQdFepLClB3bAgAnub0Y" class="btn primary" type="submit"><!--pnid:wMBDVNAzTfUnjtZ1oUNrrU-->登记成绩</button></div>
       </form>
-      <p class="muted" style="margin-top:10px">小测通过（≥80%）→ 去漏洞清单把对应知识点标「已掌握」；不通过 → 登记进错题本安排重做。这是查漏补缺的闭环。</p>
+      <p data-page-node-id="Ds9cA8bwPqqSyJ6QlWgaST" class="muted" style="margin-top:10px"><!--pnid:0bWsBqpcppTyYt5gRyvDg1-->小测通过（≥80%）→ 去漏洞清单把对应知识点标「已掌握」；不通过 → 登记进错题本安排重做。这是查漏补缺的闭环。</p>
     </div>
-    <div class="card">
-      <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>得分率趋势</h2>
-      <div class="chips" id="chartChips">
-        <button class="chip active" data-action="filter-chart" data-val="all">全部</button>
-        <button class="chip" data-action="filter-chart" data-val="语文">语文</button>
-        <button class="chip" data-action="filter-chart" data-val="数学">数学</button>
-        <button class="chip" data-action="filter-chart" data-val="英语">英语</button>
-        <button class="chip" data-action="filter-chart" data-val="物理">物理</button>
-        <button class="chip" data-action="filter-chart" data-val="化学">化学</button>
-        <button class="chip" data-action="filter-chart" data-val="生物">生物</button>
+    <div data-page-node-id="1RoP6zhSVP4NQgUB67sB60" class="card">
+      <h2 data-page-node-id="4mlxt1W0KR1kqTyYqDQwFA"><svg data-page-node-id="4rgYTS0dDrmEhpEPaMshuQ" class="ic" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><line data-page-node-id="65jOkOFGHaYLVQnGxkF6S7" x1="18" x2="18" y1="20" y2="10"/><line data-page-node-id="88TqPUAQwQpCkVdUbPWviP" x1="12" x2="12" y1="20" y2="4"/><line data-page-node-id="nyQwVzad6rUG9c08xLH1DI" x1="6" x2="6" y1="20" y2="14"/></svg><!--pnid:MNUvqlSwROUSepalgHd1LW-->得分率趋势</h2>
+      <div data-page-node-id="KCt7AFbdL3yVHUKGWoV4iK" class="chips" id="chartChips">
+        <button data-page-node-id="wgFce88TsbsT2iDNtqU7qJ" class="chip active" data-action="filter-chart" data-val="all"><!--pnid:0FVRy5KJyyeeMRSYkF4xwm-->全部</button>
+        <button data-page-node-id="WiUg8OuxUYR8I5LTkZIPzy" class="chip" data-action="filter-chart" data-val="语文"><!--pnid:JYOGGAfgI7yYZjqLlWeJgf-->语文</button>
+        <button data-page-node-id="2jDpQOGGg4inTH43asuF2H" class="chip" data-action="filter-chart" data-val="数学"><!--pnid:P3sirVNczMT9iFxymj7JOM-->数学</button>
+        <button data-page-node-id="VZwJRDTRSUyV5pYFNfAG4e" class="chip" data-action="filter-chart" data-val="英语"><!--pnid:kC5ooKBDOY7U4Q8t9kk9bl-->英语</button>
+        <button data-page-node-id="p4lI1pIIkLukuIdWNr6Y7n" class="chip" data-action="filter-chart" data-val="物理"><!--pnid:cNerXrgCB2MK6HMZjj0rrE-->物理</button>
+        <button data-page-node-id="C68r5GCxUFCmsTO4vbBg0W" class="chip" data-action="filter-chart" data-val="化学"><!--pnid:Vu6aUGRfiFKLRqCahxbv0k-->化学</button>
+        <button data-page-node-id="IQqi8JhMd2yJ2ETK5SFiXw" class="chip" data-action="filter-chart" data-val="生物"><!--pnid:BZ9DxPiS1akHacvE94K4Le-->生物</button>
       </div>
-      <div class="chart-box" id="testChart"></div>
-      <div class="legend">得分率 = 得分 ÷ 满分；虚线为 60% 及格线 / 80% 优良线</div>
+      <div data-page-node-id="Px3QdgxDh4AcT0JUNfu5jX" class="chart-box" id="testChart"></div>
+      <div data-page-node-id="JofimL2KRpdO7jsvrPQjPQ" class="legend"><!--pnid:hX0ytKbql7RmsdED6Sdmki-->得分率 = 得分 ÷ 满分；虚线为 60% 及格线 / 80% 优良线</div>
     </div>
-    <div class="card">
-      <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/></svg>测试记录</h2>
-      <div id="testList"></div>
-    </div>
-  </section>
-
-  <section class="panel" id="panel-parent">
-    <div class="card">
-      <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>家长看板（只读）</h2>
-      <div class="muted" id="parentUpdate"></div>
-    </div>
-    <div class="stat-grid" id="parentStats"></div>
-    <div class="card">
-      <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><line x1="12" y1="9" x2="12" y2="13"/></svg>需要关注</h2>
-      <div id="parentAlerts"></div>
-    </div>
-    <div class="card">
-      <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>近 7 天学习时长</h2>
-      <div class="chart-box" id="parentWeek"></div>
-    </div>
-    <div class="card">
-      <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/></svg>今天做了什么</h2>
-      <div id="parentToday"></div>
-    </div>
-    <div class="card">
-      <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>最近测试成绩</h2>
-      <div id="parentTests"></div>
-    </div>
-    <div class="card">
-      <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/></svg>各科补基础进度</h2>
-      <div id="parentHoles"></div>
+    <div data-page-node-id="AOhebBzyIgLOEXv7fGiVnD" class="card">
+      <h2 data-page-node-id="CLSzO2G0SZYx9mXbJUVrmZ"><svg data-page-node-id="iUFrQA8XE3YfUaZwBZ9r1t" class="ic" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><line data-page-node-id="BzYAuZS2M3KbP6ZUlUmyil" x1="8" x2="21" y1="6" y2="6"/><line data-page-node-id="cSaYtiSpWxEViW2OyyMc8e" x1="8" x2="21" y1="12" y2="12"/><line data-page-node-id="AI9pChWVqnZGozTmM1FVUN" x1="8" x2="21" y1="18" y2="18"/></svg><!--pnid:vc0ZMGPPfIRQZPjRuZl141-->测试记录</h2>
+      <div data-page-node-id="NR14XfSpLxyC0O01tS8JRP" id="testList"></div>
     </div>
   </section>
 
-  <section class="panel" id="panel-stats">
-    <div class="stat-grid" id="statGrid"></div>
-    <div class="card">
-      <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>近 35 天打卡热力图</h2>
-      <div class="chart-box" id="heatmap"></div>
-      <div class="legend">颜色越深 = 当日学习时长越长</div>
+  <section data-page-node-id="9WEskYkgCaV99srtN0Lz73" class="panel" id="panel-parent">
+    <div data-page-node-id="sI9nEhZznLgpEt7CYC2sr9" class="card">
+      <h2 data-page-node-id="qwNdkF22YozrqeR4LpP56B"><svg data-page-node-id="2xlY878w4xJ06dx4fvLu61" class="ic" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path data-page-node-id="dnqkrApqX6u2eybeN4T7vZ" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle data-page-node-id="ZMORSZWZkXeCx4I4iHAfjH" cx="12" cy="12" r="3"/></svg><!--pnid:h7vV4gQUbgOROusE46RzlW-->家长看板（只读）</h2>
+      <div data-page-node-id="PFaZTW8KkEA0tlXt00BFXQ" class="muted" id="parentUpdate"></div>
     </div>
-    <div class="card">
-      <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>近 14 天学习时长（分钟/天）</h2>
-      <div class="chart-box" id="barChart"></div>
+    <div data-page-node-id="PVWyQWtcnA94iT356vvAK0" class="stat-grid" id="parentStats"></div>
+    <div data-page-node-id="OYlcLe44QvmzQsrDIIxzrZ" class="card">
+      <h2 data-page-node-id="w6PzOQVcoC99XqCicbXtRZ"><svg data-page-node-id="6yGDvOAm0FyY1EbY18FLF6" class="ic" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path data-page-node-id="UGtCt6p4IDZ5OBB3zifirk" d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><line data-page-node-id="4rSajkES9rbGIZ2zRqgiu0" x1="12" x2="12" y1="9" y2="13"/></svg><!--pnid:AXypfaBXcblv6FJCSBLcb3-->需要关注</h2>
+      <div data-page-node-id="2aoSg8mrGJnRVykkPqyx6W" id="parentAlerts"></div>
+    </div>
+    <div data-page-node-id="t3212b3D5gBE16k74SywgH" class="card">
+      <h2 data-page-node-id="KzIJaJzHp4aJx1rJUpeDpM"><svg data-page-node-id="60JU949X8rR52YG3Sj8hnw" class="ic" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><line data-page-node-id="vxWvRLB5v6erJkbkl3S6dJ" x1="18" x2="18" y1="20" y2="10"/><line data-page-node-id="8WQxOheOvLIBnbf9Keyf5Y" x1="12" x2="12" y1="20" y2="4"/><line data-page-node-id="DhZQw5N2BxLTYomsDRLiIi" x1="6" x2="6" y1="20" y2="14"/></svg><!--pnid:YD8C7GnjRgatGfPe0zCWpO-->近 7 天学习时长</h2>
+      <div data-page-node-id="T9SsGIJp22kd9Dtq0AjHTq" class="chart-box" id="parentWeek"></div>
+    </div>
+    <div data-page-node-id="jMuuNkHOPslN5nzyIk1JMd" class="card">
+      <h2 data-page-node-id="JqNkJvLNkx4IfCIKnKmYqn"><svg data-page-node-id="Nakpsh0InwHUodJba3mBF5" class="ic" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><line data-page-node-id="wbRDUbuENnkJHNXIvjXLDg" x1="8" x2="21" y1="6" y2="6"/><line data-page-node-id="QARJczy8NoXa7GXx0ABW6J" x1="8" x2="21" y1="12" y2="12"/><line data-page-node-id="lOXSkLWUr5k5Oop3dqIYEY" x1="8" x2="21" y1="18" y2="18"/></svg><!--pnid:sgwimDGWCLJtlTgukXB5cs-->今天做了什么</h2>
+      <div data-page-node-id="LQIS9ptFXgQp5bC9LwYOsj" id="parentToday"></div>
+    </div>
+    <div data-page-node-id="uhb2rFddw57Osb0Hl84s3F" class="card">
+      <h2 data-page-node-id="hhCCJmYhovHMFfkhAp0Kir"><svg data-page-node-id="VrYadPxyp761KtEncmbQ9F" class="ic" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path data-page-node-id="qKEvy2OmNzc4ZSM4SbYDzS" d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline data-page-node-id="zNql7mnSJlIN21EQ01jXdW" points="14 2 14 8 20 8"/></svg><!--pnid:hJt1XZNItDkodaNIccwPOz-->最近测试成绩</h2>
+      <div data-page-node-id="EZNfVZ9CkHhStouHLZ8twl" id="parentTests"></div>
+    </div>
+    <div data-page-node-id="qAzACNmisaGPTuXCVmd0x5" class="card">
+      <h2 data-page-node-id="Hx4CQgegQEp5jv4rMQZ2TE"><svg data-page-node-id="VRDHGkB3F76Cu1pHo2pPTS" class="ic" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path data-page-node-id="TGlV5BiKaa7osP8Oi8CYs6" d="M9 11l3 3L22 4"/></svg><!--pnid:2PDC2pASXN90ix678aUVZM-->各科补基础进度</h2>
+      <div data-page-node-id="0yaIfuGvrz9f5G49D5iVyb" id="parentHoles"></div>
+    </div>
+  </section>
+
+  <section data-page-node-id="9kM7xG8f7wG2va7oBXc39I" class="panel" id="panel-stats">
+    <div data-page-node-id="CMRO3aNd3gkyTq03Q4eRlF" class="stat-grid" id="statGrid"></div>
+    <div data-page-node-id="6V2sqGxPKKTeBp9PJELXft" class="card">
+      <h2 data-page-node-id="iSa7FXyOP4v1UTRgPgDQFG"><svg data-page-node-id="a1DwPYVZCKsNM2qs00CGEG" class="ic" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><rect data-page-node-id="bRAVqpNCVgqqVTgnxHFOS1" height="18" rx="2" width="18" x="3" y="4"/><line data-page-node-id="Uy8LRdcsXcWdMuJRYcyV6q" x1="16" x2="16" y1="2" y2="6"/><line data-page-node-id="K1x16d4GcbErEESDGGJ7FX" x1="8" x2="8" y1="2" y2="6"/><line data-page-node-id="AEQXGAy3WvGkjYNfeVOwXp" x1="3" x2="21" y1="10" y2="10"/></svg><!--pnid:gRyp0v5WfA1BzBDKB7HmRo-->近 35 天打卡热力图</h2>
+      <div data-page-node-id="2VJp1bPzBrpD5A7SJ1Cv30" class="chart-box" id="heatmap"></div>
+      <div data-page-node-id="5eqjAu8XlqWyqyu2dSJUEs" class="legend"><!--pnid:YQacaiZ4VSlfiFize968Kx-->颜色越深 = 当日学习时长越长</div>
+    </div>
+    <div data-page-node-id="T1hbXhQ9Wuki9uua6SLctM" class="card">
+      <h2 data-page-node-id="Gy1R5WepRq5uPzgt0x8qxl"><svg data-page-node-id="E1Xpvi4omczIsPTjvPoSO0" class="ic" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><line data-page-node-id="NlKKWaVevhPPTg6coLvhez" x1="18" x2="18" y1="20" y2="10"/><line data-page-node-id="SykaAJPreyHmX54zU0jw6M" x1="12" x2="12" y1="20" y2="4"/><line data-page-node-id="nEMIScBriAwn6EIaVubsi1" x1="6" x2="6" y1="20" y2="14"/></svg><!--pnid:xfwKnktGQUnzfCTirXY5Jl-->近 14 天学习时长（分钟/天）</h2>
+      <div data-page-node-id="F9EaIGfYiIfFfaw8LQ8waU" class="chart-box" id="barChart"></div>
     </div>
   </section>
 </main>
 
-<nav class="bottom-nav" id="bottomNav">
-  <button class="active" data-action="tab" data-tab="plan">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>计划
+<nav data-page-node-id="ERzk1XsTAHtl9OyN1rtxAf" class="bottom-nav" id="bottomNav">
+  <button data-page-node-id="FxLSIW7IYiDoDrSZUSXRyq" class="active" data-action="tab" data-tab="plan">
+    <svg data-page-node-id="g7gCy5UmM0wqgsVYvf4Gwn" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><rect data-page-node-id="KIdNdVvRTeey4BYqsqizfZ" height="18" rx="2" width="18" x="3" y="4"/><line data-page-node-id="cF6NSdCpwq25uFX06GPVYo" x1="16" x2="16" y1="2" y2="6"/><line data-page-node-id="snehJ7gLpMktnmB5PMUPja" x1="8" x2="8" y1="2" y2="6"/><line data-page-node-id="sSiq0bhMitySdTNAgWVUSa" x1="3" x2="21" y1="10" y2="10"/></svg><!--pnid:V716UfYmWdhXW6eu2kgKVQ-->计划
   </button>
-  <button data-action="tab" data-tab="question">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>题库
+  <button data-page-node-id="eSUDF2OcraMSwY7fiyt4CB" data-action="tab" data-tab="question">
+    <svg data-page-node-id="8EH6bc9PgvEYdLY2jNkXCp" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path data-page-node-id="m8VNe0A1zry9G6zx9SrzZw" d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path data-page-node-id="ncOJobyF6GQ9bBuBfx6Ptm" d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><!--pnid:188rkMoVYNLYo9XDSDucpp-->题库
   </button>
-  <button data-action="tab" data-tab="mistakes">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.5 15a9 9 0 1 1-2.1-9.4L23 10"/></svg>错题
+  <button data-page-node-id="GLxHLBc1WqKuhhTD8U0kt1" data-action="tab" data-tab="mistakes">
+    <svg data-page-node-id="m7MVMqb1CiXb4ohlTGMqi2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><polyline data-page-node-id="MMZR9jmS52QiF6aNZckTXt" points="23 4 23 10 17 10"/><path data-page-node-id="UFbI8G86cJYDYWH0v17GOc" d="M20.5 15a9 9 0 1 1-2.1-9.4L23 10"/></svg><!--pnid:HW8zdxN6uPMeesl2nCyxxm-->错题
   </button>
-  <button data-action="tab" data-tab="holes">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/></svg>漏洞
+  <button data-page-node-id="j49uQ4w4xUh2T1uQ1HuQs6" data-action="tab" data-tab="holes">
+    <svg data-page-node-id="6WVHGVVZnD5gr6vcP5FRZW" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path data-page-node-id="8R2SzOT03pPX5sI6PbVsXP" d="M9 11l3 3L22 4"/></svg><!--pnid:s864lG3NXTbiaJE8l5rk6S-->漏洞
   </button>
-  <button data-action="tab" data-tab="tests">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>测试
+  <button data-page-node-id="KccTFgFcirfWGVOAmgP9Fc" data-action="tab" data-tab="tests">
+    <svg data-page-node-id="4eKZbSSW3fnGwBnvojqqzX" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path data-page-node-id="lmQBqWHIbrxoP1EH77noOw" d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline data-page-node-id="13lF8VvWD4UShtaoJZQOPd" points="14 2 14 8 20 8"/></svg><!--pnid:xaAqcgdJE4x50RA1Swwkc2-->测试
   </button>
-  <button data-action="tab" data-tab="parent">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>看板
+  <button data-page-node-id="aRho5NbCoG2UPWDk6yzMlo" data-action="tab" data-tab="parent">
+    <svg data-page-node-id="6BpljFmAjAnG8lHOJJNC9V" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path data-page-node-id="tM6y7XJFgvP8H2TCXVKcf2" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle data-page-node-id="4LsSDfdAGiRkDIYzeV1etQ" cx="12" cy="12" r="3"/></svg><!--pnid:ByO6llgjePaFckIq9yjuNs-->看板
   </button>
-  <button data-action="tab" data-tab="stats">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>统计
+  <button data-page-node-id="xTurHKAJ94MKl8aSDv69en" data-action="tab" data-tab="stats">
+    <svg data-page-node-id="roXnHaC4QpjxJQ3VVE9XGm" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><line data-page-node-id="N2xSa8tQy1l3BR9Frg2uLL" x1="18" x2="18" y1="20" y2="10"/><line data-page-node-id="GF6QkWLSf8Tv7sWqDIfJ4D" x1="12" x2="12" y1="20" y2="4"/><line data-page-node-id="bTwfZMRM55SPqrHWWuh3jD" x1="6" x2="6" y1="20" y2="14"/></svg><!--pnid:9E75f3aPGFXR59ZN5RAPiN-->统计
   </button>
 </nav>
 
-<div class="modal-mask" id="modalMask">
-  <div class="modal">
-    <h3 id="modalTitle"></h3>
-    <p id="modalMsg"></p>
-    <div class="btns">
-      <button class="btn ghost" data-action="modal-cancel">取消</button>
-      <button class="btn" id="modalOk"></button>
+<div data-page-node-id="gxglmmDIWpNv6qHnXUAUVH" class="modal-mask" id="modalMask">
+  <div data-page-node-id="tVDrTp0Re8WlmY4TWErR2F" class="modal">
+    <h3 data-page-node-id="PaS6AVfIlh0z7lmNgUcQfc" id="modalTitle"></h3>
+    <p data-page-node-id="egDITmHc1arVU00XAsh0MR" id="modalMsg"></p>
+    <div data-page-node-id="sSDFRUDFDdIvqboob8CJdk" class="btns">
+      <button data-page-node-id="JvEK7HSkAU42gEf46qMVZf" class="btn ghost" data-action="modal-cancel"><!--pnid:iBBYgTqrnTo0ODlfB6fYtz-->取消</button>
+      <button data-page-node-id="dTjzC0iNltxddBfpXp9KuO" class="btn" id="modalOk"></button>
     </div>
   </div>
 </div>
 
-<div class="modal-mask" id="ghSetupMask">
-  <div class="modal" style="max-width:420px">
-    <h3>设置 GitHub Token</h3>
-    <p style="margin-bottom:12px">数据存在 GitHub <strong>私有仓库</strong> <code>datafilil/gaokao-workbench-data</code> 的 <code>data.json</code> 中，父子各填一次 Token 即可长期使用。</p>
-    <p style="margin-bottom:8px;font-size:13px;color:var(--muted)">1. 打开 GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic) → Generate new token</p>
-    <p style="margin-bottom:8px;font-size:13px;color:var(--muted)">2. Scopes 勾选 <strong>repo</strong>（覆盖数据读写权限）</p>
-    <p style="margin-bottom:12px;font-size:13px;color:var(--muted)">3. 复制生成的 Token 粘贴到下方</p>
-    <input type="password" id="ghTokenInput" placeholder="ghp_xxxx..." style="width:100%;font-size:16px;padding:10px;border:1px solid var(--border);border-radius:9px;margin-bottom:12px;font-family:monospace">
-    <div class="btns">
-      <button class="btn ghost" data-action="gh-setup-cancel" onclick="document.getElementById('ghSetupMask').classList.remove('show')">取消</button>
-      <button class="btn primary" data-action="gh-save">保存并连接</button>
+<div data-page-node-id="WxjHXSfnaHYzPaytNXoIof" class="modal-mask" id="ghSetupMask">
+  <div data-page-node-id="AE131P0YwaC8DzicqueUWZ" class="modal" style="max-width:420px">
+    <h3 data-page-node-id="pmN6eEE0Y9gr22VV6m31TW"><!--pnid:fMF6WDp14HTppvab2F0I8m-->设置 GitHub Token</h3>
+    <p data-page-node-id="fNNw8RLgmz42JEZixUMUiM" style="margin-bottom:12px"><!--pnid:sSw7crUsMBwl9xHJCPWC3H-->数据存在 GitHub <strong data-page-node-id="uwnaPw1iLnBYfINWeUe1eq"><!--pnid:L6R0hui9OgdbasQMB7C4W3-->私有仓库</strong> <code data-page-node-id="RvWQQ0vpBbQ1i7JdcpHnec"><!--pnid:2MWKsIx089TDobF05GGgKh-->datafilil/gaokao-workbench-data</code><!--pnid:fC3OiG7mOWFKKfydftTfVA--> 的 <code data-page-node-id="xpPGDv8pbHSjzr9ppwm4fd"><!--pnid:lZKVC4A2Hxlm3XCsJNMURP-->data.json</code><!--pnid:k9i6BFmFFIcEwYh9yyWHnP--> 中，父子各填一次 Token 即可长期使用。</p>
+    <p data-page-node-id="Z5XgLy3Ao31sKd8Hs2jCu0" style="margin-bottom:8px; font-size:13px; color:var(--muted)"><!--pnid:WWXJy0IU3a13gtJkrwnMu0-->1. 打开 GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic) → Generate new token</p>
+    <p data-page-node-id="HcnzS0lu23vZ2kjL5fNf63" style="margin-bottom:8px; font-size:13px; color:var(--muted)"><!--pnid:73GHTSqi9IbhzXJXZ4EbOn-->2. Scopes 勾选 <strong data-page-node-id="Ecqp6te16jH32vckXsVdka"><!--pnid:mIsuIhhhwkIqUgEh063SQ3-->repo</strong><!--pnid:LoVPPqh1DtP568EoIMHU8S-->（覆盖数据读写权限）</p>
+    <p data-page-node-id="QyYUfqoc6JeeJmwv3Y5ThC" style="margin-bottom:12px; font-size:13px; color:var(--muted)"><!--pnid:Zcz9lQjUeqWPGKuVSIDrpT-->3. 复制生成的 Token 粘贴到下方</p>
+    <input data-page-node-id="nwGgNmFnRgxVOhc3bPpFj8" id="ghTokenInput" placeholder="ghp_xxxx..." type="password" style="width:100%; font-size:16px; padding:10px; border:1px solid var(--border); border-radius:9px; margin-bottom:12px; font-family:monospace">
+    <div data-page-node-id="B8EuhTZBGUq93FLn72mWQO" class="btns">
+      <button data-page-node-id="FlAlSlv4fZWgmRnQRCJVaP" class="btn ghost" data-action="gh-setup-cancel" onclick="document.getElementById('ghSetupMask').classList.remove('show')"><!--pnid:x1g3TehGHXQvAeboArS6hq-->取消</button>
+      <button data-page-node-id="EQk4VhPqXATgRRqNFiOzTj" class="btn primary" data-action="gh-save"><!--pnid:tBpSbuvrogsAp7x4uEuk0f-->保存并连接</button>
     </div>
   </div>
 </div>
 
-<div id="toast"></div>
+<div data-page-node-id="COlvXBCG7V63p1CZkTNkGt" id="toast"></div>
 
-<script>
+<script data-page-node-id="TstgzTRs3zNK5KyLgeSRA9" data-pnid-children="CCh35I3v9AI5kFUXPqwymz">
 (function(){
 'use strict';
 
@@ -677,6 +678,19 @@ var BUILTIN_QUESTIONS = [
   {subject:'物理',stage:'高三',chapter:'圆周运动',stem:'将可视为质点的小球沿光滑冰坑内壁推出，使小球在水平面内做匀速圆周运动。已知圆周运动半径 R=0.4 m，小球所在位置处的切面与水平面夹角 θ=45°，小球质量 0.1 kg，重力加速度 g=10 m/s²。关于该小球，下列说法正确的有（ ）',options:['角速度为 5 rad/s','线速度大小为 4 m/s','向心加速度大小为 10 m/s²','所受支持力大小为 1 N'],answer:'AC',multi:true,analysis:'受力分析，向心力 F向=mgtan45°=mRω²，解得 ω=5 rad/s，A 对；v=ωR=2 m/s，B 错；a向=ω²R=10 m/s²，C 对；支持力 N=mg/cos45°=√2 N，D 错。',exam:true},
   {subject:'物理',stage:'高三',chapter:'电磁感应·安培力',stem:'一种精确测量质量的装置：竖直平面内，质量恒为 M 的称重框架由托盘和矩形线圈组成，线圈的一边始终处于垂直线圈平面的匀强磁场中。测量分两个步骤：步骤①，托盘内放置待测物块（质量 m），线圈中通大小为 I 的电流，使称重框架受力平衡；步骤②，线圈处于断开状态，取下物块，保持线圈不动，磁场以速率 v 匀速向下运动，测得线圈中感应电动势为 E。重力加速度为 g。下列说法正确的有（ ）',options:['线圈电阻为 E/I','I 越大，表明 m 越大','v 越大，则 E 越小','m = EI/(vg) - M'],answer:'BD',multi:true,analysis:'E 是断开时切割磁感线产生的感应电动势，E/I 并非线圈电阻，A 错；平衡条件 (M+m)g=BIL，I 越大 m 越大，B 对；E=BLv，v 越大 E 越大，C 错；联立 (M+m)g=BIL 与 E=BLv 得 m=EI/(vg)-M，D 对。',exam:true},
   {subject:'物理',stage:'高三',chapter:'力的平衡·冲量',stem:'无人机在空中作业时，受到一个方向不变、大小随时间变化的拉力，经飞控系统实时调控，在拉力、空气作用力和重力作用下沿水平方向做匀速直线运动。已知拉力与水平面成 30° 角，其大小 F 随时间 t 的变化关系为 F=F₀-kt（F₀、k 均为大于 0 的常量），无人机质量为 m，重力加速度为 g。在 0 到 T 时间段内（T 是满足 F>0 的任一时刻），下列说法正确的有（ ）',options:['受到空气作用力的方向会变化','受到拉力的冲量大小为 (F₀ - kT/2)·T','受到重力和拉力的合力的冲量大小为 mgT + (F₀ - kT/2)·T','T 时刻受到空气作用力的大小为 √[3/4·(F₀-kT)² + (mg - (F₀-kT)/2)²]'],answer:'AB',multi:true,analysis:'无人机做匀速直线运动，空气作用力与重力、拉力的合力等大反向，随 F 减小该合力方向改变，A 对；拉力冲量为 F–t 图线下面积 I=(F₀-kT/2)T，B 对；C、D 表达式与严格推导不符，均错。',exam:true}
+,
+  {subject:"物理",stage:"高三",chapter:"实验·力学与光学",stem:"下列是《普通高中物理课程标准》列出的三个必做实验的部分步骤，请完成实验操作和计算。（1）\"探究加速度与物体受力、物体质量的关系\"实验中，木板右端垫高的目的是____；纸带上每相邻两计数点间有四个点未画出，相邻计数点间距（从左到右）为 2.01、4.88、7.72、10.59、13.43、16.29 cm，打点计时器频率 50 Hz，则小车加速度大小为____m/s²（结果保留 3 位有效数字）。（2）\"长度的测量及其测量工具的选用\"实验中，用 50 分度游标卡尺测量圆柱体长度，主尺读数为 4.1 cm，游标第 4 条刻度线与主尺对齐，则读数为____cm。（3）\"用双缝干涉实验测量光的波长\"实验中，打开并调节____，使光束沿遮光筒的轴线把光屏照亮；取下光屏，装上单缝、双缝和测量头，缓慢调节单缝的角度直到目镜中观察到____。",answer:"（1）平衡摩擦力；2.86 m/s²  （2）4.108 cm  （3）光源；干涉条纹",analysis:"（1）木板右端垫高是为了平衡摩擦力；由逐差法 a=[(16.29+13.43+10.59)-(7.72+4.88+2.01)]×10⁻²/(9×0.1²) m/s²≈2.86 m/s²（每相邻计数点间隔 0.02 s，5 个间隔为 0.1 s）。（2）4.1 cm+4×0.02 mm=4.108 cm。（3）打开并调节光源；缓慢调节单缝角度直到目镜中观察到干涉条纹。",type:"实验",exam:true},
+  {subject:"物理",stage:"高三",chapter:"实验·电路与光控",stem:"某科技小组制作光源跟踪演示装置，实现太阳能电池板正对光源。图甲是光照方向检测电路，器材有：电源 E（电动势 3 V）、电压表 V1、V2（量程 3 V、15 V，内阻无穷大）、滑动变阻器 R、两个相同的光敏电阻 RG1、RG2、开关 S、手电筒等；图乙为实物图（部分已连接），电池板上垂直安装半透明隔板，隔板两侧装光敏电阻。（1）请在虚线框中完成滑动变阻器 R、电源 E、开关 S 和电压表 V1 间的连线（连线略）。（2）① 闭合 S 前，R 的滑片应置于____端；② 用手电筒光斜照射使 RG1 表面光照强度比 RG2 小，闭合 S 后缓慢移动滑片，V1 示数如图丙所示（量程 3 V），读数 U1=____V，V2 示数 U2=1.17 V，可知表面光照强度较小的光敏电阻阻值较____（填\"较大\"或\"较小\"）。（3）闭合 S 并启动控制单元，此时 U1<U2，电动机带动电池板____（填\"逆时针\"或\"顺时针\"）转动，直至____时停止，电池板正对手电筒。",answer:"（1）连线略  （2）① b 端（阻值最大处）；② 1.60 V，较大  （3）逆时针；U1=U2",analysis:"（2）① 为保护电路，滑片先置于阻值最大处即 b 端。② 量程 3 V、最小刻度 0.1 V，读数为 1.60 V；U1>U2 说明 RG1>RG2，故表面光照强度较小的光敏电阻阻值较大。（3）U1<U2 说明 RG1 表面光照强度比 RG2 大，电动机带动电池板逆时针转动，直至 U1=U2 时停止，电池板正对手电筒。",type:"实验",exam:true},
+  {subject:"物理",stage:"高三",chapter:"热学·理想气体",stem:"差压阀可控制气体进行单向流动，广泛应用于减震系统。A、B 两个导热良好的气缸通过差压阀连接，A 内轻质活塞的上方与大气连通，B 内气体体积不变。当 A 内气体压强减去 B 内气体压强大于 Δp 时差压阀打开，A 内气体缓慢进入 B 中；当该差值小于或等于 Δp 时差压阀关闭。环境温度 T1=300 K 时，A 内气体体积 VA1=4.0×10⁻² m³，B 内气体压强 pB1 等于大气压强 p0。已知活塞横截面积 S=0.10 m²，Δp=0.11p0，p0=1.0×10⁵ Pa，g=10 m/s²，A、B 内气体可视为理想气体，忽略活塞与气缸间摩擦及差压阀、连接管内气体体积。当环境温度降到 T2=270 K 时，求：（1）B 内气体压强 pB2；（2）A 内气体体积 VA2；（3）在活塞上缓慢倒入铁砂，使 B 内气体压强回到 p0 并保持不变，求已倒入铁砂的质量 m。",answer:"（1）pB2=9×10⁴ Pa  （2）VA2=3.6×10⁻² m³  （3）m=1.1×10² kg",analysis:"（1）假设差压阀未打开，B 内气体做等容变化，pB2=p0·T2/T1=1.0×10⁵×270/300=9×10⁴ Pa。（2）A 内气体做等压变化，VA2=VA1·T2/T1=4.0×10⁻²×270/300=3.6×10⁻² m³；因 p0-pB2=1.0×10⁴ Pa<Δp=1.1×10⁴ Pa，差压阀确实未打开，假设成立。（3）稳定时 A 内压强 pA′=p0+mg/S，B 内 pB′=p0，差压阀恰好关闭，pA′-pB′=Δp，即 mg/S=0.11p0，解得 m=0.11×1.0×10⁵×0.10/10=1.1×10² kg。",type:"解答",exam:true},
+  {subject:"物理",stage:"高三",chapter:"力学·动量与冲量",stem:"汽车的安全带和安全气囊是有效保护乘客的装置。（1）安全带通过感应车的加速度自动锁定，其原理简化模型：在水平路面上刹车的过程中，敏感球沿底座斜面上滑直到与车达到共同的加速度 a，同时顶起敏感臂使之处于水平状态并卡住卷轴外齿轮、锁定安全带。此时敏感臂对敏感球的压力大小为 FN，敏感球质量为 m，重力加速度为 g，忽略敏感球所受摩擦，求斜面倾角的正切值 tanθ。（2）安全气囊性能测试中，可视为质点的头锤（质量 M=30 kg）从离气囊表面高度 H=3.2 m 处自由落体，与气囊碰撞；以头锤到气囊表面为计时起点，气囊对头锤竖直方向作用力 F 随时间 t 变化近似为：F 在 0~0.1 s 内从 0 线性增大到 6600 N 后立即减小到 0（三角形）。g=10 m/s²，求：① 碰撞过程中 F 的冲量大小和方向；② 碰撞结束后头锤上升的最大高度。",answer:"（1）tanθ=ma/(mg+FN)  （2）① 330 N·s，方向竖直向上；② 0.2 m",analysis:"（1）敏感球受重力 mg、敏感臂向下的压力 FN、斜面支持力 N，由牛顿第二定律 (mg+FN)tanθ=ma，得 tanθ=ma/(mg+FN)。（2）① 冲量 IF=½×0.1×6600=330 N·s，方向竖直向上；② 落地速度 v0=√(2gH)=8 m/s，由动量定理（向上为正）IF-mgt=mv-(-mv0)，即 330-30×10×0.1=30v+30×8，解得 v=2 m/s，上升最大高度 h=v²/(2g)=0.2 m。",type:"解答",exam:true},
+  {subject:"物理",stage:"高三",chapter:"电磁学·带电粒子",stem:"如图甲，两块平行正对的金属板水平放置，板间加上如图乙所示幅值为 U0、周期为 t0 的交变电压。金属板左侧存在一水平向右的恒定匀强电场，右侧分布着垂直纸面向外的匀强磁场，磁感应强度大小为 B。一带电粒子在 t=0 时刻从左侧电场某处由静止释放，在 t=t0 时刻从下板左端边缘位置水平向右进入金属板间的电场内，在 t=2t0 时刻第一次离开金属板间的电场、水平向右进入磁场，并在 t=3t0 时刻从下板右端边缘位置再次水平进入金属板间的电场。已知金属板的板长是板间距离的 π/3 倍，粒子质量为 m，忽略粒子所受重力和场的边缘效应。求：（1）判断带电粒子的电性并求其所带电荷量 q；（2）金属板的板间距离 D 和带电粒子在 t=t0 时刻的速度大小 v；（3）从 t=0 时刻开始到带电粒子最终碰到上金属板的过程中，电场力对粒子做的功 W。",answer:"（1）带正电；q=πm/(Bt₀)  （2）D=√(3πt₀U₀/(8B))，v=π√(πU₀/(24Bt₀))  （3）W=πmU₀(π²+16)/(48Bt₀)",analysis:"（1）粒子在左侧电场中由静止做加速运动，带正电；磁场中做匀速圆周运动，周期 T=2t0=2πm/(qB)，得 q=πm/(Bt₀)。（2）板长 L=πD/3=vt0，竖直方向出电场时速度为零，竖直位移 y=2×(1/2)a(0.5t0)²，a=qU0/(Dm)，磁场中 y=2r=2mv/(qB)，联立解得 D=√(3πt₀U₀/(8B))，v=π√(πU₀/(24Bt₀))。（3）全过程只有左侧加速电场与最后 0.5t0 内的偏转电场做功，W=½mv²+qU0·(D/3)，代入得 W=πmU₀(π²+16)/(48Bt₀)。",type:"解答",exam:true},
+  {subject:"物理",stage:"高三",chapter:"实验·力学测量",stem:"（1）在\"长度的测量及其测量工具的选用\"实验中，用螺旋测微器测量小球直径，固定刻度读数为 8 mm，可动刻度读数为 26.0 格，则小球直径为____mm。（2）实验小组利用小车碰撞实验测量吸能材料的性能：① 选取两辆相同的小车，分别安装宽度为 1.00 cm 的遮光条；② 调节螺母使轨道甲、乙连接处适当升高，将小车在轨道乙上释放，若测得小车通过光电门 A 和 B 的____，证明已平衡小车在轨道甲上所受摩擦力及其他阻力；③ 先将小车 1 静置于光电门 A 和 B 中间，再将小车 2 在 M 点由静止释放，测得小车 2 通过光电门 A 的时间为 t2，碰撞后小车 1 通过光电门 B 的时间为 t1，若 t2____t1（填\"=\"、\"＞\"或\"＜\"），可将两小车碰撞视为弹性碰撞；④ 将吸能材料紧贴于小车 2 前端重复实验，测得小车 2 通过光电门 A 时间为 10.00 ms，碰撞后小车 1、2 通过光电门 B 时间分别为 15.00 ms、30.00 ms，不计吸能材料质量，碰撞后两小车总动能与碰撞前小车 2 动能的比值为____（结果保留 2 位有效数字）。",answer:"（1）8.260 mm  （2）② 时间相等 ③ =（t2=t1） ④ 0.56",analysis:"（1）8 mm+26.0×0.01 mm=8.260 mm。（2）② 平衡阻力后小车在轨道甲上做匀速直线运动，通过两光电门的时间相等。③ 质量相等的小车弹性碰撞交换速度，碰撞后小车 1 速度等于碰前小车 2 速度，故 t2=t1。④ 碰前 v0=d/Δt0=1×10⁻²/(10×10⁻³)=1 m/s，碰后 v1=d/Δt1=1×10⁻²/(15×10⁻³)=2/3 m/s，v2=d/Δt2=1×10⁻²/(30×10⁻³)=1/3 m/s，动能比=(½mv1²+½mv2²)/(½mv0²)=(4/9+1/9)/1=5/9≈0.56。",type:"实验",exam:true},
+  {subject:"物理",stage:"高三",chapter:"实验·电磁学测量",stem:"科技小组制作涡流制动演示装置。图(a)是电磁铁磁感应强度测量电路，器材有：电源 E（电动势 15 V，内阻不计）、电流表 A（量程 0.6 A、3 A，内阻不计）、滑动变阻器 RP（最大阻值 100 Ω）、定值电阻 R0（10 Ω）、开关 S、磁传感器和测试仪、电磁铁（线圈电阻 16 Ω）等；图(b)为实物图（部分已连接）。（1）① 由器材参数可得电路中的最大电流为____A（结果保留 2 位有效数字），为减小测量误差，电流表量程选择 0.6 A 挡；② 请在虚线框中完成 RP、R0 和 A 间的连线（连线略）。（2）① 滑片 P 置于 b 端，目的是使电路中的电流____，保护电路安全；② 缓慢移动滑片后闭合 S，电流表读数（0.6 A 量程）为____A；③ 根据部分实验数据描绘 B–I 图线，取两点（0.18 A，5.6 mT）、（0.50 A，15.2 mT），其斜率为____mT/A（结果保留 2 位有效数字）。（3）制动时间 t 测量表明 B 越大、t 越小。",answer:"（1）① 0.58 A ② 连线略  （2）① 最小 ② 0.48 A ③ 30 mT/A",analysis:"（1）① 滑动变阻器阻值为零时电流最大，I=E/(R0+R线圈)=15/(10+16)=0.58 A。② 连线略（电流表串联在 RP、R0 支路中，电磁铁与电源串联）。（2）① b 端使 RP 阻值最大、电流最小，保护电路。② 读数为 0.48 A。③ 斜率 k=(15.2-5.6)/(0.50-0.18)=9.6/0.32=30 mT/A。",type:"实验",exam:true},
+  {subject:"物理",stage:"高三",chapter:"热学·气体与压强",stem:"如图是某铸造原理示意图：往气室注入空气增加压强，使金属液沿升液管进入已预热的铸型室，待铸型室内金属液冷却凝固后获得铸件。柱状铸型室通过排气孔与大气相通。大气压强 p0=1.0×10⁵ Pa，铸型室底面积 S1=0.2 m²、高度 h1=0.2 m，底面与注气前气室内金属液面高度差 H=0.15 m，柱状气室底面积 S2=0.8 m²，注气前气室内气体压强为 p0，金属液密度 ρ=5.0×10³ kg/m³，g=10 m/s²，空气可视为理想气体，不计升液管的体积。求：（1）金属液刚好充满铸型室时，气室内金属液面下降的高度 h2 和气室内气体压强 p1；（2）若在注气前关闭排气孔使铸型室密封，且注气过程中铸型室内温度不变，求注气后铸型室内金属液高度为 h3=0.04 m 时，气室内气体压强 p2。",answer:"（1）h2=0.05 m，p1=1.2×10⁵ Pa  （2）p2=1.35×10⁵ Pa",analysis:"（1）由体积关系 S1h1=S2h2，得 h2=0.2×0.2/0.8=0.05 m；此时下方气室内压强 p1=p0+ρg(h1+H+h2)=1.0×10⁵+5.0×10³×10×(0.2+0.15+0.05)=1.2×10⁵ Pa。（2）铸型室内气体初态压强 p0、体积 S1h1，末态体积 S1(h1-h3)=S1×0.16 m³，由玻意耳定律 p′S1×0.16=p0S1×0.2，得 p′=1.25×10⁵ Pa；下方液面再下降 h4=S1h3/S2=0.2×0.04/0.8=0.01 m，故 p2=p′+ρg(H+h3+h4)=1.25×10⁵+5.0×10³×10×(0.15+0.04+0.01)=1.35×10⁵ Pa。",type:"解答",exam:true},
+  {subject:"物理",stage:"高三",chapter:"力学·功与功率",stem:"用开瓶器取出紧塞在瓶口的软木塞时，先将拔塞钻旋入木塞内，随后下压把手，使齿轮绕固定支架上的转轴转动，通过齿轮啮合带动与木塞相固定的拔塞钻向上运动。从 0 时刻开始，顶部与瓶口齐平的木塞从静止开始向上做匀加速直线运动，木塞所受摩擦力 f 随位移大小 x 的变化关系为 f=f0(1-x/h)，其中 f0 为常量，h 为圆柱形木塞的高，木塞质量为 m、底面积为 S、加速度为 a，齿轮半径为 r，重力加速度为 g，瓶外气压减瓶内气压为 Δp 且近似不变，瓶子始终静止在桌面上。（提示：可用 f–x 图线下的\"面积\"表示 f 所做的功）求：（1）木塞离开瓶口的瞬间，齿轮的角速度 ω；（2）拔塞的全过程，拔塞钻对木塞做的功 W；（3）拔塞过程中，拔塞钻对木塞作用力的瞬时功率 P 随时间 t 变化的表达式。",answer:"（1）ω=√(2ah)/r  （2）W=mah+mgh+½f0h+ΔpSh  （3）P=(ma+mg+ΔpS+f0)at−f0a²t³/(2h)",analysis:"（1）木塞末速度 v=√(2ah) 等于齿轮线速度，故 ω=v/r=√(2ah)/r。（2）摩擦力做功 Wf=−½f0h（f–x 图线下面积），对木塞由动能定理 W+Wf−mgh−ΔpSh=½mv²−0，得 W=½mv²+mgh+ΔpSh+½f0h=mah+mgh+½f0h+ΔpSh。（3）由牛顿第二定律 F−mg−f−ΔpS=ma，得 F=ma+mg+f0(1−x/h)+ΔpS，代入 x=½at²、v=at，P=Fv=(ma+mg+ΔpS+f0)at−f0a²t³/(2h)。",type:"解答",exam:true},
+  {subject:"物理",stage:"高三",chapter:"电磁学·带电粒子",stem:"如图是研究颗粒碰撞荷电特性装置的简化图。两块水平绝缘平板与两块竖直的平行金属平板相接，金属平板之间接高压电源产生匀强电场。一带电颗粒从上方绝缘平板左端 A 点处，由静止开始向右下方运动，与下方绝缘平板在 B 点处碰撞，碰撞时电荷量改变，反弹后离开下方绝缘平板瞬间，颗粒的速度与所受合力垂直，其水平分速度与碰前瞬间相同，竖直分速度大小变为碰前瞬间的 k 倍（k<1）。已知颗粒质量为 m，两绝缘平板间的距离为 h，两金属平板间的距离为 d，B 点与左平板的距离为 l，电源电压为 U，重力加速度为 g，忽略空气阻力和电场的边缘效应。求：（1）颗粒碰撞前的电荷量 q；（2）颗粒在 B 点碰撞后的电荷量 Q；（3）颗粒从 A 点开始运动到第二次碰撞过程中，电场力对它做的功 W。",answer:"（1）q=mgdl/(Uh)  （2）Q=kmgdh/(Ul)  （3）若第二次碰撞在下方绝缘板：W=mg(l²/h+4k²h+4k⁴h³/l²)；若在右侧金属板：W=mg(l²/h+kh(d-l)/l)",analysis:"（1）竖直方向自由落体 h=½gt²，水平方向匀加速 l=½at²，a=qU/(md)，联立解得 q=mgdl/(Uh)。（2）碰前 vy=√(2gh)、vx=√(2al)，碰后竖直分速度 vy′=kvy，速度与合力垂直时 tanθ=vy′/vx=(UQ/d)/mg，联立解得 Q=kmgdh/(Ul)。（3）因 k<1，颗粒不能返回上板。若第二次撞下板：水平位移 l′=4kl+4k³h²/l，W=qUl/d+QUl′/d=mg(l²/h+4k²h+4k⁴h³/l²)；若 l+l′>d 则撞右侧金属板，W=qUl/d+QU(d-l)/d=mg(l²/h+kh(d-l)/l)。",type:"解答",exam:true},
+  {subject:"物理",stage:"高三",chapter:"力学·弹簧与图像",stem:"（原题为 F–y / y–t 图像选择题，此处以判断形式呈现）轻质弹簧竖直放置、下端固定，木块从弹簧正上方 H 高度处由静止释放。以木块释放点为原点，取竖直向下为正方向，木块位移为 y、所受合外力为 F、运动时间为 t。忽略空气阻力，弹簧在弹性限度内。关于木块从释放到第一次回到原点的过程中，下列说法正确的是（ ）",options:["F–y 图像：下落 H 内 F=mg 恒定，接触弹簧后 F 先减小到 0 再反向增大（正确图像）","F–y 图像：全程 F=mg 恒定不变","y–t 图像：全程斜率（速度）一直增大","y–t 图像：全程为一段抛物线"],answer:"A",analysis:"下落 H 高度前木块只受重力，F=mg 恒定；接触弹簧后合力 F=mg-k(y-H)，随 y 增大先减小到 0 再反向增大，故 F–y 图像为 A 项（先水平后线性下降再反向线性上升），B 错。y–t 图像：下落 H 内匀加速（斜率渐增的抛物线），接触弹簧后先加速后减速，斜率先增后减，故 C、D 均错。",type:"选择",exam:true},
+  {subject:"物理",stage:"高三",chapter:"力学·动量与图像",stem:"（原题为 v–t 图像选择题，此处以判断形式呈现）光滑水平面上，小球 M、N 分别在水平恒力 F1、F2 作用下由静止开始沿同一直线相向运动，在 t1 时刻发生正碰后各自反向运动。已知 F1、F2 始终大小相等、方向相反。从开始运动到碰撞后第 1 次速度减为 0 的过程中，关于两小球 v–t 图像，下列说法正确的是（ ）",options:["图像中 M、N 加速度大小之比为 2:3（质量之比 3:2），碰撞后速度反向且同时减为 0（正确图像）","图像中 M、N 加速度大小之比为 1:1","碰撞后 M、N 速度大小之比为 1:1","碰撞后 M、N 不同时减为 0"],answer:"A",analysis:"由 a=F/m，两球受力大小相等，故加速度与质量成反比。由图线斜率比 4:6=2:3 得质量比 3:2。设质量 3m、2m，碰前速度 4v、6v，系统合外力为零、动量守恒：3m·4v-2m·6v=3mv1+2mv2，可得碰后速度大小之比 v1:v2=2:3，且加速度比仍为 2:3，故停止时间之比 1:1（两球同时减为 0），A 对，B、C、D 错。",type:"选择",exam:true}
 ];
 
 function $(s){ return document.querySelector(s); }
@@ -847,7 +861,7 @@ function seed(){
   ];
   questions = BUILTIN_QUESTIONS.map(function(q){
     return { id: uid(), subject:q.subject, stage:q.stage, chapter:q.chapter, stem:q.stem,
-      options:q.options || [], answer:q.answer, analysis:q.analysis || '', type:'选择',
+      options:q.options || [], answer:q.answer, analysis:q.analysis || '', type:q.type || (q.multi ? '多选' : (q.options && q.options.length ? '选择' : '解答')), exam:q.exam === true, multi:q.multi === true,
       builtin:true, done:0 };
   });
   days = {};
@@ -1377,7 +1391,7 @@ function importBuiltinQuestions(){
   var add = [];
   BUILTIN_QUESTIONS.forEach(function(q){
     var key = q.subject + '|' + q.chapter + '|' + q.stem;
-    if (!exist[key]) add.push({ id: uid(), subject:q.subject, stage:q.stage, chapter:q.chapter, stem:q.stem, options:q.options || [], answer:q.answer, analysis:q.analysis || '', type: q.multi ? '多选' : '选择', builtin:true, exam: q.exam === true, multi: q.multi === true, done:0 });
+    if (!exist[key]) add.push({ id: uid(), subject:q.subject, stage:q.stage, chapter:q.chapter, stem:q.stem, options:q.options || [], answer:q.answer, analysis:q.analysis || '', type: q.type || (q.multi ? '多选' : (q.options && q.options.length ? '选择' : '解答')), builtin:true, exam: q.exam === true, multi: q.multi === true, done:0 });
   });
   if (!add.length) { toast('内置题库已全部在列表中'); return; }
   add.forEach(function(it){ questions.push(it); });
