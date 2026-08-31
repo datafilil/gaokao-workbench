@@ -1,0 +1,1487 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>高考自学工作台</title>
+<meta name="theme-color" content="#2B5CE6">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="高考工作台">
+<link rel="manifest" href='data:application/json,{"name":"高考自学工作台","short_name":"高考台","start_url":".","display":"standalone","background_color":"#F4F6FA","theme_color":"#2B5CE6"}'>
+<!-- 高考自学工作台：单文件全内联，数据存在 GitHub 仓库 data.json 中（多设备同步）；未设置 Token 时降级为 localStorage 本地缓存。 -->
+<style>
+  :root{
+    --bg:#F4F6FA; --card:#FFFFFF; --text:#1C2333; --muted:#6B7280;
+    --primary:#2B5CE6; --primary-weak:#EAF0FE; --primary-deep:#1E46B8;
+    --red:#E5484D; --red-weak:#FDECEC;
+    --green:#1F9D61; --green-weak:#E7F6EE;
+    --amber:#B45309; --amber-weak:#FEF3E2;
+    --border:#E5E8F0; --radius:14px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg); color:var(--text); font-size:15px; line-height:1.6;
+    padding:16px 16px calc(96px + env(safe-area-inset-bottom));
+    max-width:880px; margin:0 auto;
+  }
+  .card{background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:14px;}
+  .card h2{font-size:16px; font-weight:700; display:flex; align-items:center; gap:8px; margin-bottom:12px;}
+  .card h2 .ic{width:20px; height:20px; color:var(--primary); flex:none;}
+  .muted{color:var(--muted); font-size:13px;}
+
+  header.top{display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:14px; flex-wrap:wrap;}
+  header.top h1{font-size:22px; font-weight:800; letter-spacing:.5px;}
+  header.top .sub{color:var(--muted); font-size:13px; margin-top:2px;}
+  .top-right{display:flex; align-items:center; gap:12px;}
+  .streak{display:flex; align-items:center; gap:6px; background:var(--amber-weak); color:var(--amber); font-weight:700; border-radius:999px; padding:6px 14px; font-size:14px;}
+  .streak svg{width:18px; height:18px;}
+  .ring-wrap{position:relative; width:64px; height:64px; flex:none;}
+  .ring-wrap .ring-text{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:13px; font-weight:700; line-height:1.1;}
+  .ring-wrap .ring-text small{font-size:9px; color:var(--muted); font-weight:500;}
+
+  .bar{display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; padding:12px 16px;}
+  .badge{display:flex; align-items:center; gap:6px; font-size:12px; color:var(--muted);}
+  .badge .dot{width:8px; height:8px; border-radius:50%; background:var(--amber); flex:none;}
+  .badge .dot.ok{background:var(--green);} .badge .dot.err{background:var(--red);} .badge .dot.run{background:var(--primary);}
+  .btns{display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
+  .ci-input{width:110px; min-height:44px; font-size:16px; padding:0 10px; border:1px solid var(--border); border-radius:10px; background:#fff; color:var(--text); font-family:inherit;}
+  .btn{display:inline-flex; align-items:center; justify-content:center; gap:6px; min-height:44px; padding:0 16px; border-radius:10px; border:1px solid var(--border); background:var(--card); color:var(--text); font-size:14px; font-weight:600; cursor:pointer; -webkit-tap-highlight-color:transparent;}
+  .btn svg{width:16px; height:16px;}
+  .btn:active{transform:scale(.97);}
+  .btn.primary{background:var(--primary); border-color:var(--primary); color:#fff;}
+  .btn.small{min-height:36px; padding:0 12px; font-size:13px; border-radius:8px;}
+  .btn.danger{color:var(--red); border-color:#F3C2C4; background:#fff;}
+  .btn.ghost{border-color:transparent; background:transparent; color:var(--muted);}
+
+  .hint-banner{display:none; align-items:center; gap:10px; background:var(--amber-weak); border:1px solid #F3D9A8; color:var(--amber); border-radius:12px; padding:10px 14px; margin-bottom:14px; font-size:13px;}
+  .hint-banner.show{display:flex;}
+  .hint-banner svg{width:18px; height:18px; flex:none;}
+  .hint-banner .x{margin-left:auto; background:none; border:none; color:var(--amber); font-size:18px; cursor:pointer; min-height:44px; min-width:44px;}
+
+  #today .grp-title{font-size:13px; font-weight:700; margin:10px 0 6px; display:flex; align-items:center; gap:6px;}
+  #today .grp-title svg{width:15px; height:15px;}
+  .grp-title.overdue{color:var(--red);}
+  .grp-title.duetoday{color:var(--primary);}
+  .grp-title.upcoming{color:var(--muted);}
+  .row{display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:12px; border:1px solid var(--border); margin-bottom:8px; background:#fff;}
+  .row.overdue{border-color:#F3C2C4; background:var(--red-weak);}
+  .row .body{flex:1; min-width:0;}
+  .row .title{font-weight:600; font-size:14px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .row .meta{font-size:12px; color:var(--muted); margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .tag{display:inline-block; font-size:11px; font-weight:700; border-radius:6px; padding:1px 7px; margin-right:6px; vertical-align:1px;}
+  .tag.red{background:var(--red-weak); color:var(--red);}
+  .tag.blue{background:var(--primary-weak); color:var(--primary-deep);}
+  .tag.gray{background:#EEF1F6; color:var(--muted);}
+  .tag.green{background:var(--green-weak); color:var(--green);}
+  .tag.amber{background:var(--amber-weak); color:var(--amber);}
+  .row .acts{display:flex; gap:6px; flex:none;}
+  .btn-done{width:44px; height:44px; border-radius:10px; border:1px solid var(--green); background:var(--green-weak); color:var(--green); cursor:pointer; display:flex; align-items:center; justify-content:center;}
+  .btn-done svg{width:18px; height:18px;}
+  .btn-right{width:44px; height:44px; border-radius:10px; border:1px solid var(--green); background:var(--green-weak); color:var(--green); font-weight:700; font-size:13px; cursor:pointer;}
+  .btn-wrong{width:44px; height:44px; border-radius:10px; border:1px solid var(--red); background:var(--red-weak); color:var(--red); font-weight:700; font-size:13px; cursor:pointer;}
+  .empty{padding:18px 0; text-align:center; color:var(--muted); font-size:13px;}
+
+  .tabs{display:flex; gap:8px; margin:18px 0 14px; flex-wrap:wrap;}
+  .tabs .tab-btn{display:inline-flex; align-items:center; gap:7px; min-height:44px; padding:0 16px; border-radius:999px; border:1px solid var(--border); background:#fff; color:var(--muted); font-size:14px; font-weight:600; cursor:pointer;}
+  .tabs .tab-btn svg{width:17px; height:17px;}
+  .tabs .tab-btn.active{background:var(--primary); border-color:var(--primary); color:#fff;}
+  main section.panel{display:none;}
+  main section.panel.active{display:block;}
+
+  form.f{display:grid; grid-template-columns:repeat(12,1fr); gap:10px;}
+  .field{display:flex; flex-direction:column; gap:4px;}
+  .field label{font-size:12px; color:var(--muted); font-weight:600;}
+  .field input,.field select,.field textarea{
+    font-size:16px; padding:9px 10px; border:1px solid var(--border); border-radius:9px; background:#fff; color:var(--text);
+    font-family:inherit; width:100%;
+  }
+  .field textarea{resize:vertical; min-height:44px;}
+  .col-3{grid-column:span 3;} .col-4{grid-column:span 4;} .col-6{grid-column:span 6;} .col-8{grid-column:span 8;} .col-9{grid-column:span 9;} .col-12{grid-column:span 12;}
+  .form-actions{grid-column:span 12; display:flex; gap:8px; justify-content:flex-end;}
+  .chips{display:flex; gap:8px; margin:0 0 12px; flex-wrap:wrap;}
+  .chip{min-height:36px; padding:0 14px; border-radius:999px; border:1px solid var(--border); background:#fff; color:var(--muted); font-size:13px; font-weight:600; cursor:pointer;}
+  .chip.active{background:var(--primary-weak); border-color:var(--primary); color:var(--primary-deep);}
+
+  .dots{display:inline-flex; gap:3px; vertical-align:-2px; margin-left:4px;}
+  .dots i{width:8px; height:8px; border-radius:50%; background:#E3E7F0; display:inline-block;}
+  .dots i.on{background:var(--primary);}
+
+  .stat-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-bottom:14px;}
+  .stat{background:#fff; border:1px solid var(--border); border-radius:12px; padding:12px 14px;}
+  .stat .k{font-size:12px; color:var(--muted); display:flex; align-items:center; gap:5px;}
+  .stat .k svg{width:14px; height:14px;}
+  .stat .v{font-size:22px; font-weight:800; margin-top:2px;}
+  .stat .v small{font-size:12px; font-weight:600; color:var(--muted);}
+  .chart-box{width:100%; overflow-x:auto;}
+  .chart-box svg{display:block; width:100%; height:auto;}
+  .legend{font-size:12px; color:var(--muted); margin-top:6px;}
+
+  .subj-bar{margin-bottom:10px;}
+  .subj-bar .top{display:flex; justify-content:space-between; font-size:13px; font-weight:600; margin-bottom:4px;}
+  .subj-bar .track{height:8px; background:#EDF0F6; border-radius:99px; overflow:hidden;}
+  .subj-bar .fill{height:100%; background:var(--primary); border-radius:99px;}
+
+  .goal-row{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+  .goal-row input{width:90px; min-height:44px; font-size:16px; padding:0 10px; border:1px solid var(--border); border-radius:10px;}
+  .progress-line{margin-top:10px;}
+  .progress-line .track{height:10px; background:#EDF0F6; border-radius:99px; overflow:hidden;}
+  .progress-line .fill{height:100%; background:var(--green); border-radius:99px;}
+  .progress-line .lab{display:flex; justify-content:space-between; font-size:12px; color:var(--muted); margin-bottom:4px;}
+
+  .alert{padding:10px 12px; border-radius:12px; border:1px solid #F3C2C4; background:var(--red-weak); color:var(--red); font-size:13px; font-weight:600; margin-bottom:8px;}
+  .alert.ok{border-color:#BFE5D0; background:var(--green-weak); color:var(--green);}
+
+  .modal-mask{display:none; position:fixed; inset:0; background:rgba(18,24,38,.45); z-index:50; align-items:center; justify-content:center; padding:20px;}
+  .modal-mask.show{display:flex;}
+  .modal{background:#fff; border-radius:16px; padding:22px; max-width:380px; width:100%;}
+  .modal h3{font-size:16px; margin-bottom:8px;}
+  .modal p{font-size:14px; color:var(--muted); margin-bottom:18px; word-break:break-all;}
+  .modal .btns{display:flex; gap:10px; justify-content:flex-end;}
+  .modal .btn.danger-solid{background:var(--red); border-color:var(--red); color:#fff;}
+
+  #toast{position:fixed; left:50%; bottom:calc(84px + env(safe-area-inset-bottom)); transform:translateX(-50%) translateY(10px); background:rgba(28,35,51,.92); color:#fff; font-size:14px; padding:10px 18px; border-radius:99px; opacity:0; pointer-events:none; transition:all .25s; z-index:60; max-width:86vw; text-align:center;}
+  #toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+  .bottom-nav{display:none;}
+  @media (max-width:768px){
+    .tabs{display:none;}
+    .bottom-nav{display:flex; position:fixed; left:0; right:0; bottom:0; z-index:40; background:rgba(255,255,255,.97); border-top:1px solid var(--border); padding-bottom:env(safe-area-inset-bottom);}
+    .bottom-nav button{flex:1; min-height:56px; background:none; border:none; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; color:var(--muted); font-size:11px; font-weight:600; cursor:pointer;}
+    .bottom-nav button svg{width:22px; height:22px;}
+    .bottom-nav button.active{color:var(--primary);}
+    form.f{grid-template-columns:repeat(6,1fr);}
+    .col-3,.col-4{grid-column:span 3;} .col-6,.col-8{grid-column:span 6;} .col-9{grid-column:span 6;}
+    header.top h1{font-size:19px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div>
+    <h1>高考自学工作台</h1>
+    <div class="sub" id="todayDate"></div>
+  </div>
+  <div class="top-right">
+    <div class="streak" title="连续打卡天数">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c.7 3.6 4.8 5.1 5 9.6.1 3-2.1 5.4-5 5.4s-5.1-2.4-5-5.4c.1-2.1 1.2-3.4 2.3-5.2.4 1.6 1.1 2.5 2.5 3.1-.9-2.6-.4-5.2.2-7.5zM8.6 14.8c-.2 2 1.3 3.7 3.4 3.7 2 0 3.6-1.7 3.4-3.7-.1-1.3-.9-2.3-1.8-3.4-.3 1.2-1 2-2.1 2.4.3-1.5.1-2.8-.6-4.2-1.3 1.3-2.1 3.1-2.3 5.2z"/></svg>
+      <span id="streakNum">0</span> 天连学
+    </div>
+    <div class="ring-wrap" id="ringWrap"></div>
+  </div>
+</header>
+
+<div class="hint-banner" id="hintBanner">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+  <span id="hintText">数据已积累 30 条，建议导出 JSON 备份一份</span>
+  <button class="x" data-action="dismiss-hint" aria-label="关闭提示">×</button>
+</div>
+
+<div class="card bar">
+  <div class="badge" id="syncBadge"><span class="dot"></span><span id="syncText">正在连接 GitHub…</span></div>
+  <div class="btns">
+    <button class="btn small" data-action="export">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      导出 JSON
+    </button>
+    <button class="btn small" data-action="import">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      导入恢复
+    </button>
+    <button class="btn small" data-action="clear-sample">清空示例</button>
+    <button class="btn small danger" data-action="clear-all">清空全部</button>
+    <button class="btn small" data-action="gh-setup" title="GitHub 同步设置">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+      GitHub 设置
+    </button>
+  </div>
+</div>
+<input type="file" id="importFile" accept=".json,application/json" style="display:none">
+
+<div class="card bar">
+  <div class="badge" id="checkinStatus"></div>
+  <div class="btns">
+    <input class="ci-input" id="ciMinutes" type="number" min="5" max="960" step="5" placeholder="学习分钟" inputmode="numeric" aria-label="今日实际学习分钟数">
+    <button class="btn small primary" data-action="checkin">打卡</button>
+  </div>
+</div>
+<div class="card" style="padding:12px 16px">
+  <div class="goal-row">
+    <span class="muted">每日目标时长</span>
+    <input id="goalInput" type="number" min="30" max="960" step="10" aria-label="每日目标学习分钟">
+    <span class="muted">分钟</span>
+    <button class="btn small" data-action="save-goal">保存</button>
+  </div>
+  <div class="progress-line">
+    <div class="lab"><span id="goalNow">今日 0 分钟</span><span id="goalPct">0%</span></div>
+    <div class="track"><div class="fill" id="goalFill" style="width:0%"></div></div>
+  </div>
+</div>
+
+<section class="card" id="today">
+  <h2>
+    <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    今天要处理 <span class="muted" id="todayCount"></span>
+  </h2>
+  <div id="todayBody"></div>
+</section>
+
+<nav class="tabs" id="deskTabs">
+  <button class="tab-btn active" data-action="tab" data-tab="plan">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    学习计划
+  </button>
+  <button class="tab-btn" data-action="tab" data-tab="mistakes">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.5 15a9 9 0 1 1-2.1-9.4L23 10"/></svg>
+    错题重做本
+  </button>
+  <button class="tab-btn" data-action="tab" data-tab="holes">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+    知识漏洞清单
+  </button>
+  <button class="tab-btn" data-action="tab" data-tab="tests">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+    测试记录
+  </button>
+  <button class="tab-btn" data-action="tab" data-tab="parent">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+    家长看板
+  </button>
+  <button class="tab-btn" data-action="tab" data-tab="stats">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+    学习统计
+  </button>
+</nav>
+
+<main>
+  <section class="panel active" id="panel-plan">
+    <div class="card">
+      <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>添加学习任务</h2>
+      <form class="f" id="planForm">
+        <div class="field col-3"><label>科目</label><select id="pfSubject"></select></div>
+        <div class="field col-9"><label>学习内容</label><input id="pfContent" type="text" maxlength="60" placeholder="例：高一·函数单调性 专项20题" required></div>
+        <div class="field col-3"><label>预计时长（分钟）</label><input id="pfMinutes" type="number" min="5" max="600" step="5" value="40" required></div>
+        <div class="field col-3"><label>日期</label><input id="pfDate" type="date" required></div>
+        <div class="field col-3"><label>优先级</label><select id="pfPriority"><option value="P0">P0 紧急</option><option value="P1" selected>P1 重要</option><option value="P2">P2 常规</option></select></div>
+        <div class="form-actions"><button class="btn primary" type="submit">添加任务</button></div>
+      </form>
+    </div>
+    <div class="card">
+      <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>任务列表</h2>
+      <div class="chips" id="planChips">
+        <button class="chip active" data-action="filter-plan" data-val="today">今天（含逾期顺延）</button>
+        <button class="chip" data-action="filter-plan" data-val="pending">全部未完成</button>
+        <button class="chip" data-action="filter-plan" data-val="done">已完成</button>
+      </div>
+      <div id="planList"></div>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-mistakes">
+    <div class="card">
+      <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>登记错题</h2>
+      <form class="f" id="mistakeForm">
+        <div class="field col-3"><label>科目</label><select id="mfSubject"></select></div>
+        <div class="field col-9"><label>知识点 / 题目简述</label><input id="mfTopic" type="text" maxlength="60" placeholder="例：二次函数含参最值讨论" required></div>
+        <div class="field col-6"><label>做错的原因</label><select id="mfReason"></select></div>
+        <div class="field col-6"><label>正确思路（一句话总结）</label><input id="mfNote" type="text" maxlength="80" placeholder="例：先判对称轴与区间的位置关系再分情况"></div>
+        <div class="form-actions"><button class="btn primary" type="submit">登记（明天起安排重做）</button></div>
+      </form>
+      <p class="muted" style="margin-top:10px">重做间隔：1 → 2 → 4 → 7 → 15 → 30 → 60 天。答对升级间隔，答错退回 1 天，连过 7 轮标记「已掌握」。写清正确思路，才能真正避免低质量重复。</p>
+    </div>
+    <div class="card">
+      <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.5 15a9 9 0 1 1-2.1-9.4L23 10"/></svg>错题列表</h2>
+      <div class="chips" id="mistChips">
+        <button class="chip active" data-action="filter-mist" data-val="due">待复习</button>
+        <button class="chip" data-action="filter-mist" data-val="mastered">已掌握</button>
+        <button class="chip" data-action="filter-mist" data-val="all">全部</button>
+      </div>
+      <div id="mistList"></div>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-holes">
+    <div class="card">
+      <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>登记知识漏洞</h2>
+      <form class="f" id="holeForm">
+        <div class="field col-3"><label>学段</label><select id="hfStage"><option>高一</option><option selected>高二</option><option>高三</option></select></div>
+        <div class="field col-3"><label>科目</label><select id="hfSubject"></select></div>
+        <div class="field col-6"><label>知识点</label><input id="hfTopic" type="text" maxlength="60" placeholder="例：三角函数诱导公式" required></div>
+        <div class="field col-4"><label>当前状态</label><select id="hfStatus"><option value="0" selected>未学</option><option value="1">在学</option><option value="2">已掌握</option></select></div>
+        <div class="form-actions"><button class="btn primary" type="submit">加入清单</button></div>
+      </form>
+      <div class="btns" style="margin-top:12px">
+        <button class="btn small" data-action="import-chapters">一键导入高中核心章节清单</button>
+      </div>
+    </div>
+    <div class="card">
+      <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>科目掌握进度</h2>
+      <div id="subjProgress"></div>
+    </div>
+    <div class="card">
+      <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>漏洞清单</h2>
+      <div class="chips" id="holeChips">
+        <button class="chip active" data-action="filter-hole" data-val="all">全部</button>
+        <button class="chip" data-action="filter-hole" data-val="0">未学</button>
+        <button class="chip" data-action="filter-hole" data-val="1">在学</button>
+        <button class="chip" data-action="filter-hole" data-val="2">已掌握</button>
+      </div>
+      <div id="holeList"></div>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-tests">
+    <div class="card">
+      <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>登记测试成绩</h2>
+      <form class="f" id="testForm">
+        <div class="field col-3"><label>科目</label><select id="tfSubject"></select></div>
+        <div class="field col-3"><label>测试类型</label><select id="tfType"><option>章节小测</option><option>综合套卷</option><option>月考模拟</option><option>高考真题</option></select></div>
+        <div class="field col-6"><label>测试名称</label><input id="tfName" type="text" maxlength="60" placeholder="例：三角函数专项测" required></div>
+        <div class="field col-3"><label>得分</label><input id="tfScore" type="number" min="0" max="750" placeholder="0" required></div>
+        <div class="field col-3"><label>满分</label><input id="tfFull" type="number" min="1" max="750" value="100" required></div>
+        <div class="field col-3"><label>日期</label><input id="tfDate" type="date" required></div>
+        <div class="form-actions"><button class="btn primary" type="submit">登记成绩</button></div>
+      </form>
+      <p class="muted" style="margin-top:10px">小测通过（≥80%）→ 去漏洞清单把对应知识点标「已掌握」；不通过 → 登记进错题本安排重做。这是查漏补缺的闭环。</p>
+    </div>
+    <div class="card">
+      <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>得分率趋势</h2>
+      <div class="chips" id="chartChips">
+        <button class="chip active" data-action="filter-chart" data-val="all">全部</button>
+        <button class="chip" data-action="filter-chart" data-val="语文">语文</button>
+        <button class="chip" data-action="filter-chart" data-val="数学">数学</button>
+        <button class="chip" data-action="filter-chart" data-val="英语">英语</button>
+        <button class="chip" data-action="filter-chart" data-val="物理">物理</button>
+        <button class="chip" data-action="filter-chart" data-val="化学">化学</button>
+        <button class="chip" data-action="filter-chart" data-val="生物">生物</button>
+      </div>
+      <div class="chart-box" id="testChart"></div>
+      <div class="legend">得分率 = 得分 ÷ 满分；虚线为 60% 及格线 / 80% 优良线</div>
+    </div>
+    <div class="card">
+      <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/></svg>测试记录</h2>
+      <div id="testList"></div>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-parent">
+    <div class="card">
+      <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>家长看板（只读）</h2>
+      <div class="muted" id="parentUpdate"></div>
+    </div>
+    <div class="stat-grid" id="parentStats"></div>
+    <div class="card">
+      <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><line x1="12" y1="9" x2="12" y2="13"/></svg>需要关注</h2>
+      <div id="parentAlerts"></div>
+    </div>
+    <div class="card">
+      <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>近 7 天学习时长</h2>
+      <div class="chart-box" id="parentWeek"></div>
+    </div>
+    <div class="card">
+      <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/></svg>今天做了什么</h2>
+      <div id="parentToday"></div>
+    </div>
+    <div class="card">
+      <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>最近测试成绩</h2>
+      <div id="parentTests"></div>
+    </div>
+    <div class="card">
+      <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/></svg>各科补基础进度</h2>
+      <div id="parentHoles"></div>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-stats">
+    <div class="stat-grid" id="statGrid"></div>
+    <div class="card">
+      <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>近 35 天打卡热力图</h2>
+      <div class="chart-box" id="heatmap"></div>
+      <div class="legend">颜色越深 = 当日学习时长越长</div>
+    </div>
+    <div class="card">
+      <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>近 14 天学习时长（分钟/天）</h2>
+      <div class="chart-box" id="barChart"></div>
+    </div>
+  </section>
+</main>
+
+<nav class="bottom-nav" id="bottomNav">
+  <button class="active" data-action="tab" data-tab="plan">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>计划
+  </button>
+  <button data-action="tab" data-tab="mistakes">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.5 15a9 9 0 1 1-2.1-9.4L23 10"/></svg>错题
+  </button>
+  <button data-action="tab" data-tab="holes">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/></svg>漏洞
+  </button>
+  <button data-action="tab" data-tab="tests">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>测试
+  </button>
+  <button data-action="tab" data-tab="parent">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>看板
+  </button>
+  <button data-action="tab" data-tab="stats">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>统计
+  </button>
+</nav>
+
+<div class="modal-mask" id="modalMask">
+  <div class="modal">
+    <h3 id="modalTitle"></h3>
+    <p id="modalMsg"></p>
+    <div class="btns">
+      <button class="btn ghost" data-action="modal-cancel">取消</button>
+      <button class="btn" id="modalOk"></button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-mask" id="ghSetupMask">
+  <div class="modal" style="max-width:420px">
+    <h3>设置 GitHub Token</h3>
+    <p style="margin-bottom:12px">数据存在 GitHub <strong>私有仓库</strong> <code>datafilil/gaokao-workbench-data</code> 的 <code>data.json</code> 中，父子各填一次 Token 即可长期使用。</p>
+    <p style="margin-bottom:8px;font-size:13px;color:var(--muted)">1. 打开 GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic) → Generate new token</p>
+    <p style="margin-bottom:8px;font-size:13px;color:var(--muted)">2. Scopes 勾选 <strong>repo</strong>（覆盖数据读写权限）</p>
+    <p style="margin-bottom:12px;font-size:13px;color:var(--muted)">3. 复制生成的 Token 粘贴到下方</p>
+    <input type="password" id="ghTokenInput" placeholder="ghp_xxxx..." style="width:100%;font-size:16px;padding:10px;border:1px solid var(--border);border-radius:9px;margin-bottom:12px;font-family:monospace">
+    <div class="btns">
+      <button class="btn ghost" data-action="gh-setup-cancel" onclick="document.getElementById('ghSetupMask').classList.remove('show')">取消</button>
+      <button class="btn primary" data-action="gh-save">保存并连接</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+(function(){
+'use strict';
+
+var PREFIX = 'wb_gaokao_';
+var SUBJECTS = ['语文','数学','英语','物理','化学','生物'];
+var REASONS = ['概念不清','思路错误','计算失误','审题失误','记不牢固','其他'];
+var INTERVALS = [1,2,4,7,15,30,60];
+var PRI_LABEL = {P0:'紧急', P1:'重要', P2:'常规'};
+var PRI_CLS = {P0:'red', P1:'blue', P2:'gray'};
+var PRI_IDX = {P0:0, P1:1, P2:2};
+var IDX_PRI = ['P0','P1','P2'];
+var STATUS_LABEL = ['未学','在学','已掌握'];
+var STATUS_CLS = ['gray','amber','green'];
+var HOLE_STATUS = ['待办','在学','已掌握'];
+
+var CHAPTERS = [
+  ['高一','数学','集合与常用逻辑用语'],['高一','数学','不等式与基本不等式'],['高一','数学','函数概念与三要素'],
+  ['高一','数学','函数单调性与奇偶性'],['高一','数学','指数与指数函数'],['高一','数学','对数与对数函数'],
+  ['高一','数学','三角函数概念与诱导公式'],['高一','数学','三角函数图象与性质'],['高一','数学','平面向量线性运算'],
+  ['高一','数学','向量数量积'],['高一','数学','复数'],
+  ['高二','数学','等差等比数列'],['高二','数学','数列求和（裂项/错位相减）'],['高二','数学','导数概念与运算'],
+  ['高二','数学','导数应用（单调性/极值/最值）'],['高二','数学','立体几何（线面平行与垂直）'],['高二','数学','空间向量与空间角'],
+  ['高二','数学','直线与圆方程'],['高二','数学','圆锥曲线（椭圆/双曲线/抛物线）'],['高二','数学','计数原理与排列组合'],
+  ['高二','数学','二项式定理'],['高二','数学','概率与随机变量'],['高二','数学','统计与回归'],
+  ['高一','物理','运动的描述（质点/位移/速度）'],['高一','物理','匀变速直线运动'],['高一','物理','相互作用（重力/弹力/摩擦力）'],
+  ['高一','物理','力的合成与分解'],['高一','物理','牛顿运动定律'],['高一','物理','共点力平衡'],
+  ['高一','物理','曲线运动与平抛'],['高一','物理','圆周运动'],['高一','物理','万有引力与航天'],
+  ['高一','物理','功和功率'],['高一','物理','动能定理'],['高一','物理','机械能守恒'],
+  ['高二','物理','静电场（库仑定律/电场强度）'],['高二','物理','电势能·电势差'],['高二','物理','恒定电流与欧姆定律'],
+  ['高二','物理','电路分析（串并联/电表）'],['高二','物理','磁场与安培力'],['高二','物理','洛伦兹力与带电粒子运动'],
+  ['高二','物理','电磁感应'],['高二','物理','交变电流'],['高二','物理','动量与动量守恒'],
+  ['高二','物理','机械振动与机械波'],['高二','物理','光的折射与全反射'],['高二','物理','原子结构与原子核'],
+  ['高一','化学','物质的分类与转化'],['高一','化学','离子反应'],['高一','化学','氧化还原反应'],
+  ['高一','化学','钠及其化合物'],['高一','化学','氯及其化合物'],['高一','化学','铁及其化合物'],
+  ['高一','化学','物质的量与计算'],['高一','化学','原子结构与元素周期律'],['高一','化学','化学键与分子结构'],
+  ['高二','化学','化学反应与能量变化'],['高二','化学','化学反应速率'],['高二','化学','化学平衡'],
+  ['高二','化学','水溶液中的离子平衡'],['高二','化学','电化学（原电池/电解池）'],['高二','化学','热化学方程式与盖斯定律'],
+  ['高二','化学','烃（烷/烯/炔/苯）'],['高二','化学','烃的衍生物（醇/醛/酸/酯）'],['高二','化学','有机合成与推断'],
+  ['高二','化学','物质结构与性质'],
+  ['高一','生物','细胞的分子组成'],['高一','生物','细胞结构与细胞器'],['高一','生物','细胞膜与物质运输'],
+  ['高一','生物','酶与ATP'],['高一','生物','细胞呼吸'],['高一','生物','光合作用'],
+  ['高一','生物','细胞增殖（有丝分裂）'],['高一','生物','细胞分化·衰老·凋亡'],
+  ['高二','生物','遗传定律（分离/自由组合）'],['高二','生物','减数分裂与受精'],['高二','生物','基因与染色体的关系'],
+  ['高二','生物','DNA结构与复制'],['高二','生物','基因表达（转录/翻译）'],['高二','生物','变异与育种'],
+  ['高二','生物','生物进化'],['高二','生物','内环境稳态'],['高二','生物','神经调节'],
+  ['高二','生物','体液调节（激素）'],['高二','生物','免疫调节'],['高二','生物','种群与群落'],
+  ['高二','生物','生态系统与环境保护'],
+  ['高一','语文','文言文实词推断'],['高一','语文','文言文虚词'],['高一','语文','特殊句式与翻译'],
+  ['高一','语文','古代诗歌鉴赏'],['高一','语文','名句默写'],['高二','语文','现代文阅读Ⅰ（信息类）'],
+  ['高二','语文','现代文阅读Ⅱ（文学类）'],['高二','语文','语言文字运用'],['高二','语文','议论文写作结构'],
+  ['高二','语文','素材积累与运用'],
+  ['高一','英语','高考核心词汇3500'],['高一','英语','语法填空（词性转换）'],['高一','英语','长难句分析'],
+  ['高二','英语','完形填空逻辑'],['高二','英语','阅读理解（主旨/细节/推断）'],['高二','英语','七选五'],
+  ['高二','英语','应用文写作'],['高二','英语','读后续写'],['高二','英语','听力训练']
+];
+
+function $(s){ return document.querySelector(s); }
+function $$(s){ return Array.prototype.slice.call(document.querySelectorAll(s)); }
+function pad(n){ return n < 10 ? '0' + n : '' + n; }
+function fmt(d){ return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()); }
+function today(){ return fmt(new Date()); }
+function parseDate(ds){ var p = String(ds).slice(0,10).split('-').map(Number); return new Date(p[0], p[1]-1, p[2]); }
+function addDays(ds, n){ var d = parseDate(ds); d.setDate(d.getDate() + n); return fmt(d); }
+function dayDiff(a, b){ return Math.round((parseDate(b) - parseDate(a)) / 86400000); }
+function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+function esc(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function load(key, def){ try{ var v = localStorage.getItem(PREFIX + key); return v ? JSON.parse(v) : def; }catch(e){ return def; } }
+function persist(key, val){ try{ localStorage.setItem(PREFIX + key, JSON.stringify(val)); }catch(e){ toast('本地存储写入失败'); } }
+
+var tasks = [], mistakes = [], holes = [], tests = [], days = {};
+var meta = load('meta', {}) || {};
+if (!meta.goalMinutes) meta.goalMinutes = 240;
+var planFilter = 'today', mistFilter = 'due', holeFilter = 'all', chartFilter = 'all';
+
+/* ---------- GitHub 数据层 ---------- */
+var GH_OWNER = 'datafilil';
+var GH_REPO = 'gaokao-workbench-data';
+var GH_PATH = 'data.json';
+var GH_API = 'https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO;
+var GH_RAW = 'https://raw.githubusercontent.com/' + GH_OWNER + '/' + GH_REPO + '/main/' + GH_PATH;
+var GH_PRIVATE = true;
+var ghSha = null, ghBusy = false, ghTimer = null, ghReadOnly = false;
+
+function ghToken(){ return localStorage.getItem(PREFIX + 'token') || ''; }
+function ghConfigured(){ return !!ghToken(); }
+var cloudMode = ghConfigured();
+
+function saveCacheLocal(){
+  persist('tasks', tasks); persist('mistakes', mistakes); persist('holes', holes);
+  persist('tests', tests); persist('days', days); persist('meta', meta);
+}
+function saveCache(){
+  saveCacheLocal();
+  ghSchedule();
+}
+function ghSchedule(){
+  if (!ghConfigured()) return;
+  if (ghTimer) clearTimeout(ghTimer);
+  ghTimer = setTimeout(ghPush, 2000);
+}
+function ghPull(){
+  if (!ghConfigured()) {
+    ghReadOnly = GH_PRIVATE ? false : true;
+    if (GH_PRIVATE) return Promise.resolve(-2);
+    return fetch(GH_RAW + '?t=' + Date.now()).then(function(r){
+      if (!r.ok) return null;
+      return r.text();
+    }).then(function(text){
+      if (!text) return 0;
+      var data = JSON.parse(text);
+      tasks = data.tasks || []; mistakes = data.mistakes || [];
+      holes = data.holes || []; tests = data.tests || [];
+      days = data.days || {}; meta = data.meta || {};
+      if (!meta.goalMinutes) meta.goalMinutes = 240;
+      saveCacheLocal();
+      meta.lastSync = new Date().toISOString();
+      return tasks.length + mistakes.length + holes.length + tests.length;
+    }).catch(function(){ return -1; });
+  }
+  return fetch(GH_API + '/contents/' + GH_PATH, {
+    headers: { 'Authorization': 'Bearer ' + ghToken(), 'Accept': 'application/vnd.github+json' }
+  }).then(function(r){
+    if (r.status === 404) return null;
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  }).then(function(res){
+    if (!res) return 0;
+    ghSha = res.sha;
+    var raw = decodeURIComponent(escape(atob(res.content.replace(/\n/g, ''))));
+    var data = JSON.parse(raw);
+    tasks = data.tasks || []; mistakes = data.mistakes || [];
+    holes = data.holes || []; tests = data.tests || [];
+    days = data.days || {}; meta = data.meta || {};
+    if (!meta.goalMinutes) meta.goalMinutes = 240;
+    saveCacheLocal();
+    meta.lastSync = new Date().toISOString();
+    return tasks.length + mistakes.length + holes.length + tests.length;
+  }).catch(function(){ return -1; });
+}
+function ghPush(){
+  if (!ghConfigured()) { updateSync(); return; }
+  if (ghBusy) { ghSchedule(); return; }
+  ghBusy = true; updateSync();
+  var data = { app:'gaokao-workbench', v:3, ts:Date.now(),
+    tasks:tasks, mistakes:mistakes, holes:holes, tests:tests, days:days, meta:meta };
+  var b64;
+  try { b64 = btoa(unescape(encodeURIComponent(JSON.stringify(data)))); }
+  catch(e){ ghBusy = false; updateSync(); return; }
+  var payload = { message:'auto-save ' + new Date().toLocaleString('zh-CN'), content: b64 };
+  if (ghSha) payload.sha = ghSha;
+  fetch(GH_API + '/contents/' + GH_PATH, {
+    method:'PUT',
+    headers: { 'Authorization': 'Bearer ' + ghToken(), 'Accept': 'application/vnd.github+json', 'Content-Type':'application/json' },
+    body: JSON.stringify(payload)
+  }).then(function(r){ return r.json(); }).then(function(res){
+    if (res && res.content && res.content.sha) ghSha = res.content.sha;
+    meta.lastSync = new Date().toISOString();
+    persist('meta', meta);
+    ghBusy = false; updateSync();
+  }).catch(function(){
+    ghBusy = false; updateSync();
+    toast('GitHub 同步失败，稍后自动重试');
+    ghSchedule();
+  });
+}
+function pushAdd(kind, it){ saveCache(); return Promise.resolve(); }
+function pushUpdate(kind, it){ saveCache(); return Promise.resolve(); }
+function pushDelete(it){ saveCache(); return Promise.resolve(); }
+function pushAll(list){ saveCache(); return Promise.resolve(); }
+
+function updateSync(){
+  var dot = $('#syncBadge .dot'), txt = $('#syncText');
+  if (!ghConfigured()) {
+    dot.className = 'dot err';
+    if (GH_PRIVATE) {
+      txt.innerHTML = '私有仓库需 Token — <a href="#" data-action="gh-setup" style="color:var(--primary);font-weight:600">点此设置</a>';
+    } else if (ghReadOnly) {
+      dot.className = 'dot ok';
+      txt.innerHTML = '只读模式 · <a href="#" data-action="gh-setup" style="color:var(--primary);font-weight:600">设置 Token 可编辑</a>';
+    } else {
+      txt.innerHTML = '未连接 · <a href="#" data-action="gh-setup" style="color:var(--primary);font-weight:600">点此设置</a>';
+    }
+    return;
+  }
+  dot.className = 'dot';
+  if (ghBusy) { dot.classList.add('run'); txt.textContent = '正在同步到 GitHub…'; }
+  else {
+    dot.classList.add('ok');
+    txt.textContent = 'GitHub 已同步 · ' + (meta.lastSync ? new Date(meta.lastSync).toLocaleString('zh-CN') : '刚刚');
+  }
+}
+
+/* ---------- 示例数据 ---------- */
+function seed(){
+  var t = today();
+  tasks = [
+    { id: uid(), subject:'数学', content:'高一·函数单调性 专项20题', minutes:60, date:addDays(t,-2), pri:'P1', done:false, doneAt:'', sample:true },
+    { id: uid(), subject:'英语', content:'高考核心词汇 List 1-2（100词）', minutes:40, date:t, pri:'P1', done:false, doneAt:'', sample:true },
+    { id: uid(), subject:'数学', content:'整理本周错题 + 重做1道', minutes:30, date:t, pri:'P2', done:false, doneAt:'', sample:true },
+    { id: uid(), subject:'物理', content:'匀变速直线运动 例题精做', minutes:45, date:t, pri:'P2', done:false, doneAt:'', sample:true }
+  ];
+  mistakes = [
+    { id: uid(), subject:'数学', topic:'二次函数含参最值讨论', reason:'思路错误', note:'先判对称轴与区间的位置关系，再分三类讨论', level:0, nextDate:addDays(t,-1), total:1, correct:0, mastered:false, created:addDays(t,-3), sample:true },
+    { id: uid(), subject:'数学', topic:'等差数列前n项和公式应用', reason:'计算失误', note:'先写公式再代值，避免心算', level:2, nextDate:t, total:3, correct:3, mastered:false, created:addDays(t,-8), sample:true },
+    { id: uid(), subject:'物理', topic:'牛顿第二定律受力分析', reason:'概念不清', note:'先画受力图，再正交分解列方程', level:3, nextDate:addDays(t,2), total:4, correct:4, mastered:false, created:addDays(t,-12), sample:true }
+  ];
+  holes = [
+    { id: uid(), stage:'高一', subject:'数学', topic:'函数性质（单调性 / 奇偶性）', status:1, sample:true },
+    { id: uid(), stage:'高一', subject:'数学', topic:'集合与常用逻辑用语', status:2, sample:true },
+    { id: uid(), stage:'高一', subject:'数学', topic:'三角函数诱导公式', status:0, sample:true },
+    { id: uid(), stage:'高一', subject:'物理', topic:'匀变速直线运动', status:0, sample:true },
+    { id: uid(), stage:'高二', subject:'数学', topic:'数列求和（裂项 / 错位相减）', status:1, sample:true },
+    { id: uid(), stage:'高二', subject:'化学', topic:'氧化还原反应配平', status:1, sample:true },
+    { id: uid(), stage:'高一', subject:'生物', topic:'细胞结构与细胞器', status:0, sample:true }
+  ];
+  tests = [
+    { id: uid(), subject:'数学', type:'章节小测', name:'函数性质专项测', score:72, full:100, date:addDays(t,-5), sample:true },
+    { id: uid(), subject:'物理', type:'章节小测', name:'运动学基础检测', score:55, full:100, date:addDays(t,-3), sample:true },
+    { id: uid(), subject:'化学', type:'综合套卷', name:'高一综合卷（一）', score:68, full:100, date:addDays(t,-1), sample:true },
+    { id: uid(), subject:'生物', type:'章节小测', name:'细胞结构检测', score:80, full:100, date:t, sample:true }
+  ];
+  days = {};
+  var sm = [50, 80, 0, 120, 65, 40];
+  for (var i = 6; i >= 1; i--) {
+    var d = addDays(t, -i), m = sm[6 - i];
+    if (m > 0) days[d] = { minutes: m, doneCount: 2, sample: true };
+  }
+  saveCacheLocal();
+}
+
+/* ---------- 公共 ---------- */
+var toastTimer = null;
+function toast(msg){
+  var el = $('#toast'); el.textContent = msg; el.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ el.classList.remove('show'); }, 1800);
+}
+var modalCb = null;
+function openModal(title, msg, btnText, danger, cb){
+  $('#modalTitle').textContent = title; $('#modalMsg').textContent = msg;
+  var ok = $('#modalOk'); ok.textContent = btnText; ok.className = 'btn' + (danger ? ' danger-solid' : ' primary');
+  modalCb = cb; $('#modalMask').classList.add('show');
+}
+function closeModal(){ $('#modalMask').classList.remove('show'); modalCb = null; }
+
+function openGhSetup(){
+  $('#ghSetupMask').classList.add('show');
+  var existing = ghToken();
+  if (existing) $('#ghTokenInput').value = existing;
+}
+function closeGhSetup(){ $('#ghSetupMask').classList.remove('show'); }
+function saveGhToken(){
+  var tok = $('#ghTokenInput').value.trim();
+  if (!tok) { toast('请输入 Token'); return; }
+  localStorage.setItem(PREFIX + 'token', tok);
+  cloudMode = true;
+  closeGhSetup();
+  toast('Token 已保存，正在连接 GitHub…');
+  ghPull().then(function(n){
+    if (n === 0) {
+      if (tasks.length === 0 && mistakes.length === 0) { seed(); saveCache(); }
+      renderAll(); toast('GitHub 已连接，数据为空，已加载示例');
+    } else if (n > 0) {
+      renderAll(); toast('已从 GitHub 同步 ' + n + ' 条记录');
+    } else {
+      toast('连接失败，请检查 Token 和网络');
+    }
+    updateSync();
+  });
+}
+
+function activeDay(r){ return !!r && (r.doneCount > 0 || r.checked); }
+function calcStreak(){
+  var s = 0, cur = days[today()], cursor = today();
+  if (activeDay(cur)) { s = 1; cursor = addDays(today(), -1); }
+  while (true) {
+    var r = days[cursor];
+    if (activeDay(r)) { s++; cursor = addDays(cursor, -1); } else break;
+  }
+  return s;
+}
+function dots(level){
+  var out = '<span class="dots">';
+  for (var i = 0; i < INTERVALS.length; i++) out += '<i class="' + (i < level ? 'on' : '') + '"></i>';
+  return out + '</span>';
+}
+
+/* ---------- 顶部 ---------- */
+function renderHeader(){
+  var t = today(), d = new Date();
+  var wd = ['日','一','二','三','四','五','六'][d.getDay()];
+  var gy = d.getFullYear(), gd = gy + '-06-07';
+  if (t > gd) { gy += 1; gd = gy + '-06-07'; }
+  $('#todayDate').textContent = t + ' 周' + wd + ' · 距 ' + gy + ' 年高考 ' + dayDiff(t, gd) + ' 天';
+  $('#streakNum').textContent = calcStreak();
+
+  var doneToday = tasks.filter(function(x){ return x.done && x.doneAt === t; }).length;
+  var pending = tasks.filter(function(x){ return !x.done && x.date <= t; }).length;
+  var total = doneToday + pending;
+  var pct = total > 0 ? Math.round(doneToday / total * 100) : 0;
+  var R = 26, C = 2 * Math.PI * R, off = C * (1 - pct / 100);
+  var color = pct >= 80 ? 'var(--green)' : 'var(--primary)';
+  $('#ringWrap').innerHTML =
+    '<svg viewBox="0 0 64 64" width="64" height="64">' +
+    '<circle cx="32" cy="32" r="' + R + '" fill="none" stroke="#E9EDF5" stroke-width="6"/>' +
+    '<circle cx="32" cy="32" r="' + R + '" fill="none" stroke="' + color + '" stroke-width="6" stroke-linecap="round" stroke-dasharray="' + C + '" stroke-dashoffset="' + off + '" transform="rotate(-90 32 32)"/>' +
+    '</svg><div class="ring-text"><span>' + (total > 0 ? pct + '%' : '—') + '</span><small>今日完成</small></div>';
+}
+
+/* ---------- 打卡与目标 ---------- */
+function renderCheckin(){
+  var t = today(), d = days[t], el = $('#checkinStatus');
+  el.innerHTML = activeDay(d)
+    ? '<span class="tag green">已打卡</span>今日已学习 ' + (d.minutes || 0) + ' 分钟，可多次累加'
+    : '<span class="tag gray">未打卡</span>学完记一笔实际时长，连续打卡天数 +1';
+  $('#goalInput').value = meta.goalMinutes;
+  var m = (d && d.minutes) || 0, g = meta.goalMinutes || 240;
+  var p = Math.min(100, Math.round(m / g * 100));
+  $('#goalNow').textContent = '今日 ' + m + ' / ' + g + ' 分钟';
+  $('#goalPct').textContent = p + '%';
+  $('#goalFill').style.width = p + '%';
+}
+
+function syncDay(){
+  saveCache();
+}
+
+function logDay(minutes, cnt, markChecked){
+  var t = today();
+  var d = days[t] || { minutes: 0, doneCount: 0 };
+  d.minutes += minutes; d.doneCount += cnt;
+  if (markChecked) d.checked = true;
+  days[t] = d;
+  saveCache();
+}
+
+function doCheckin(){
+  var m = parseInt($('#ciMinutes').value, 10);
+  if (!m || m < 5) { toast('先填今天实际学习的分钟数（≥5）'); return; }
+  $('#ciMinutes').value = '';
+  logDay(m, 0, true);
+  toast('打卡成功，今日累计 ' + (days[today()].minutes) + ' 分钟');
+  renderAll();
+}
+
+/* ---------- 今天要处理 ---------- */
+function renderToday(){
+  var t = today();
+  var overdue = tasks.filter(function(x){ return !x.done && x.date < t; });
+  var todayTasks = tasks.filter(function(x){ return !x.done && x.date === t; });
+  var dueMist = mistakes.filter(function(m){ return !m.mastered && m.nextDate && m.nextDate <= t; });
+  var soon = mistakes.filter(function(m){ return !m.mastered && m.nextDate === addDays(t, 1); });
+
+  var html = '';
+  if (!overdue.length && !todayTasks.length && !dueMist.length && !soon.length) {
+    html = '<div class="empty">今天没有待处理事项，去「学习计划」安排点新任务吧</div>';
+  }
+  if (overdue.length) {
+    html += '<div class="grp-title overdue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>逾期未完成（自动顺延到今天）</div>';
+    overdue.forEach(function(x){ html += taskRow(x, true); });
+  }
+  if (dueMist.length) {
+    html += '<div class="grp-title duetoday"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.5 15a9 9 0 1 1-2.1-9.4L23 10"/></svg>错题重做到期</div>';
+    dueMist.forEach(function(m){
+      var late = m.nextDate < t;
+      html += '<div class="row' + (late ? ' overdue' : '') + '">' +
+        '<div class="body"><div class="title"><span class="tag ' + (late ? 'red' : 'blue') + '">' + (late ? '逾期' : '今日') + '</span>' + esc(m.subject) + ' · ' + esc(m.topic) + '</div>' +
+        '<div class="meta">' + esc(m.reason) + ' · 第' + (m.level + 1) + '轮复习 · 已复习' + m.total + '次</div></div>' +
+        '<div class="acts"><button class="btn-right" data-action="mistake-right" data-id="' + m.id + '">答对</button>' +
+        '<button class="btn-wrong" data-action="mistake-wrong" data-id="' + m.id + '">答错</button></div></div>';
+    });
+  }
+  if (todayTasks.length) {
+    html += '<div class="grp-title duetoday"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>今日任务</div>';
+    todayTasks.forEach(function(x){ html += taskRow(x, false); });
+  }
+  if (soon.length) {
+    html += '<div class="grp-title upcoming"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>快到期（明天）</div>';
+    soon.forEach(function(m){
+      html += '<div class="row"><div class="body"><div class="title"><span class="tag gray">明天</span>' + esc(m.subject) + ' · ' + esc(m.topic) + '</div>' +
+        '<div class="meta">' + esc(m.reason) + ' · 第' + (m.level + 1) + '轮复习</div></div>' +
+        '<div class="acts"><button class="btn small" data-action="mistake-right" data-id="' + m.id + '">提前重做</button></div></div>';
+    });
+  }
+  $('#todayBody').innerHTML = html;
+  var n = overdue.length + todayTasks.length + dueMist.length;
+  $('#todayCount').textContent = n > 0 ? '共 ' + n + ' 项' : '';
+}
+
+function taskRow(x, isOverdue){
+  return '<div class="row' + (isOverdue ? ' overdue' : '') + '">' +
+    '<div class="body"><div class="title"><span class="tag ' + PRI_CLS[x.pri] + '">' + PRI_LABEL[x.pri] + '</span>' +
+    (isOverdue ? '<span class="tag red">逾期·原定' + String(x.date).slice(5) + '</span>' : '') +
+    esc(x.subject) + ' · ' + esc(x.content) + '</div>' +
+    '<div class="meta">预计 ' + x.minutes + ' 分钟</div></div>' +
+    '<div class="acts"><button class="btn-done" data-action="task-done" data-id="' + x.id + '" aria-label="完成">' +
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button></div></div>';
+}
+
+/* ---------- 学习计划 ---------- */
+function renderPlan(){
+  var t = today(), list;
+  if (planFilter === 'today') list = tasks.filter(function(x){ return !x.done && x.date <= t; });
+  else if (planFilter === 'pending') list = tasks.filter(function(x){ return !x.done; });
+  else {
+    list = tasks.filter(function(x){ return x.done; });
+    list.sort(function(a, b){ return String(b.doneAt || '').localeCompare(String(a.doneAt || '')); });
+  }
+  list.sort(function(a, b){ return (!a.done && !b.done) ? String(a.date).localeCompare(String(b.date)) : 0; });
+  if (!list.length) {
+    $('#planList').innerHTML = '<div class="empty">' + (planFilter === 'done' ? '还没有完成的任务' : '这里空空的，添加一个学习任务吧') + '</div>';
+    return;
+  }
+  var html = '';
+  list.forEach(function(x){
+    var over = !x.done && x.date < t;
+    html += '<div class="row' + (over ? ' overdue' : '') + '">' +
+      '<div class="body"><div class="title"><span class="tag ' + PRI_CLS[x.pri] + '">' + PRI_LABEL[x.pri] + '</span>' +
+      (x.done ? '<span class="tag green">已完成</span>' : (over ? '<span class="tag red">逾期·原定' + String(x.date).slice(5) + '</span>' : '<span class="tag blue">' + String(x.date).slice(5) + '</span>')) +
+      esc(x.subject) + ' · ' + esc(x.content) + '</div>' +
+      '<div class="meta">预计 ' + x.minutes + ' 分钟' + (x.done && x.doneAt ? ' · 完成于 ' + x.doneAt : '') + '</div></div>' +
+      '<div class="acts">' +
+      (x.done ? '' : '<button class="btn-done" data-action="task-done" data-id="' + x.id + '" aria-label="完成"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button>') +
+      '<button class="btn small danger" data-action="task-del" data-id="' + x.id + '">删除</button></div></div>';
+  });
+  $('#planList').innerHTML = html;
+}
+
+/* ---------- 错题本 ---------- */
+function renderMistakes(){
+  var t = today(), list;
+  if (mistFilter === 'due') {
+    list = mistakes.filter(function(m){ return !m.mastered; });
+    list.sort(function(a, b){ return String(a.nextDate || '').localeCompare(String(b.nextDate || '')); });
+  } else if (mistFilter === 'mastered') {
+    list = mistakes.filter(function(m){ return m.mastered; });
+  } else {
+    list = mistakes.slice().sort(function(a, b){ return String(a.nextDate || '9999').localeCompare(String(b.nextDate || '9999')); });
+  }
+  if (!list.length) {
+    $('#mistList').innerHTML = '<div class="empty">' + (mistFilter === 'mastered' ? '还没有已掌握的错题，继续坚持重做' : '错题本是空的，做错题后随手登记进来') + '</div>';
+    return;
+  }
+  var html = '';
+  list.forEach(function(m){
+    var dueInfo = '', acts = '';
+    if (m.mastered) {
+      dueInfo = '<span class="tag green">已掌握</span>连过 ' + INTERVALS.length + ' 轮，可放下了';
+    } else {
+      var diff = dayDiff(t, m.nextDate);
+      if (diff <= 0) {
+        dueInfo = '<span class="tag ' + (diff < 0 ? 'red' : 'blue') + '">' + (diff < 0 ? '已逾期 ' + (-diff) + ' 天' : '今天到期') + '</span>第' + (m.level + 1) + '轮复习';
+        acts = '<button class="btn-right" data-action="mistake-right" data-id="' + m.id + '">答对</button><button class="btn-wrong" data-action="mistake-wrong" data-id="' + m.id + '">答错</button>';
+      } else {
+        dueInfo = '下次重做 ' + m.nextDate + '（' + diff + ' 天后）· 第' + (m.level + 1) + '轮' + dots(m.level);
+      }
+    }
+    html += '<div class="row"><div class="body"><div class="title"><span class="tag blue">' + esc(m.subject) + '</span>' + esc(m.topic) + '</div>' +
+      '<div class="meta">' + esc(m.reason) + ' · ' + dueInfo + ' · 复习' + m.total + '次/答对' + m.correct + '次' + (m.note ? ' · 思路：' + esc(m.note) : '') + '</div></div>' +
+      '<div class="acts">' + acts + '<button class="btn small danger" data-action="mistake-del" data-id="' + m.id + '">删除</button></div></div>';
+  });
+  $('#mistList').innerHTML = html;
+}
+
+/* ---------- 漏洞清单 ---------- */
+function renderHoles(){
+  var bySubj = {};
+  holes.forEach(function(h){
+    if (!bySubj[h.subject]) bySubj[h.subject] = { total: 0, ok: 0 };
+    bySubj[h.subject].total++;
+    if (h.status === 2) bySubj[h.subject].ok++;
+  });
+  var keys = Object.keys(bySubj);
+  if (!keys.length) $('#subjProgress').innerHTML = '<div class="empty">登记知识漏洞后，这里会显示各科掌握进度</div>';
+  else {
+    var html = '';
+    keys.forEach(function(k){
+      var p = Math.round(bySubj[k].ok / bySubj[k].total * 100);
+      html += '<div class="subj-bar"><div class="top"><span>' + esc(k) + '</span><span>' + bySubj[k].ok + ' / ' + bySubj[k].total + ' · ' + p + '%</span></div>' +
+        '<div class="track"><div class="fill" style="width:' + p + '%"></div></div></div>';
+    });
+    $('#subjProgress').innerHTML = html;
+  }
+
+  var list = holeFilter === 'all' ? holes.slice() : holes.filter(function(h){ return String(h.status) === holeFilter; });
+  if (!list.length) { $('#holeList').innerHTML = '<div class="empty">没有这一状态的条目</div>'; return; }
+  var order = { '高一': 0, '高二': 1, '高三': 2 };
+  list.sort(function(a, b){ return (order[a.stage] - order[b.stage]) || String(a.subject).localeCompare(String(b.subject), 'zh'); });
+  var html2 = '';
+  list.forEach(function(h){
+    html2 += '<div class="row"><div class="body"><div class="title"><span class="tag gray">' + esc(h.stage) + '</span><span class="tag blue">' + esc(h.subject) + '</span>' + esc(h.topic) + '</div>' +
+      '<div class="meta">当前状态：<span class="tag ' + STATUS_CLS[h.status] + '">' + STATUS_LABEL[h.status] + '</span>点右侧按钮切换</div></div>' +
+      '<div class="acts"><button class="btn small" data-action="hole-cycle" data-id="' + h.id + '" title="未学→在学→已掌握">' + STATUS_LABEL[(h.status + 1) % 3] + '</button>' +
+      '<button class="btn small danger" data-action="hole-del" data-id="' + h.id + '">删除</button></div></div>';
+  });
+  $('#holeList').innerHTML = html2;
+}
+
+/* ---------- 测试 ---------- */
+function rateOf(x){ return x.full > 0 ? Math.round(x.score / x.full * 100) : 0; }
+function rateTag(r){
+  if (r >= 80) return '<span class="tag green">' + r + '%</span>';
+  if (r >= 60) return '<span class="tag amber">' + r + '%</span>';
+  return '<span class="tag red">' + r + '%</span>';
+}
+function renderTests(){
+  var list = tests.slice().sort(function(a, b){ return String(b.date).localeCompare(String(a.date)); });
+  if (!list.length) $('#testList').innerHTML = '<div class="empty">还没有测试记录，做完一张小测就登记进来</div>';
+  else {
+    var html = '';
+    list.forEach(function(x){
+      html += '<div class="row"><div class="body"><div class="title"><span class="tag gray">' + String(x.date).slice(5) + '</span><span class="tag blue">' + esc(x.subject) + '</span><span class="tag gray">' + esc(x.type) + '</span>' + esc(x.name) + '</div>' +
+        '<div class="meta">得分 ' + x.score + ' / ' + x.full + ' · 得分率 ' + rateTag(rateOf(x)) + '</div></div>' +
+        '<div class="acts"><button class="btn small danger" data-action="test-del" data-id="' + x.id + '">删除</button></div></div>';
+    });
+    $('#testList').innerHTML = html;
+  }
+  renderTestChart();
+}
+function renderTestChart(){
+  var data = tests.slice();
+  if (chartFilter !== 'all') data = data.filter(function(x){ return x.subject === chartFilter; });
+  data.sort(function(a, b){ return String(a.date).localeCompare(String(b.date)); });
+  if (!data.length) { $('#testChart').innerHTML = '<div class="empty">该科目还没有测试数据</div>'; return; }
+  var W = 560, H = 190, padL = 40, padR = 14, padT = 16, padB = 30;
+  var iw = W - padL - padR, ih = H - padT - padB;
+  var yOf = function(r){ return padT + ih - (r / 100) * ih; };
+  var html = '<svg viewBox="0 0 ' + W + ' ' + H + '">';
+  [0, 25, 50, 75, 100].forEach(function(g){
+    var y = yOf(g).toFixed(1);
+    html += '<line x1="' + padL + '" y1="' + y + '" x2="' + (W - padR) + '" y2="' + y + '" stroke="#EDF0F6" stroke-width="1"/>';
+    html += '<text x="' + (padL - 6) + '" y="' + (yOf(g) + 3.5).toFixed(1) + '" font-size="10" fill="#9AA3B2" text-anchor="end">' + g + '%</text>';
+  });
+  [60, 80].forEach(function(g){
+    var y = yOf(g).toFixed(1);
+    html += '<line x1="' + padL + '" y1="' + y + '" x2="' + (W - padR) + '" y2="' + y + '" stroke="#C6CCDA" stroke-width="1" stroke-dasharray="4 4"/>';
+  });
+  var pts = [];
+  data.forEach(function(x, i){
+    var cx = data.length === 1 ? padL + iw / 2 : padL + (i / (data.length - 1)) * iw;
+    pts.push([cx, yOf(rateOf(x))]);
+  });
+  if (data.length > 1) {
+    var line = '';
+    pts.forEach(function(p){ line += p[0].toFixed(1) + ',' + p[1].toFixed(1) + ' '; });
+    html += '<polyline points="' + line.trim() + '" fill="none" stroke="#2B5CE6" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>';
+  }
+  data.forEach(function(x, i){
+    var r = rateOf(x);
+    var col = r >= 80 ? '#1F9D61' : (r >= 60 ? '#B45309' : '#E5484D');
+    html += '<circle cx="' + pts[i][0].toFixed(1) + '" cy="' + pts[i][1].toFixed(1) + '" r="4.5" fill="' + col + '" stroke="#fff" stroke-width="1.5"><title>' + x.date + ' · ' + esc(x.name) + ' · ' + r + '%</title></circle>';
+    if (i === 0 || i === data.length - 1 || data.length <= 8) {
+      html += '<text x="' + pts[i][0].toFixed(1) + '" y="' + (H - 10) + '" font-size="10" fill="#9AA3B2" text-anchor="middle">' + String(x.date).slice(5) + '</text>';
+    }
+  });
+  html += '</svg>';
+  $('#testChart').innerHTML = html;
+}
+
+/* ---------- 家长看板 ---------- */
+function renderParent(){
+  var t = today();
+  var last = meta.lastSync ? new Date(meta.lastSync).toLocaleString('zh-CN') : '尚未同步';
+  var mode = ghConfigured() ? '已连接（可读写同步）' : (GH_PRIVATE ? '需设置 Token' : '只读模式');
+  $('#parentUpdate').textContent = '数据来源：GitHub 私有仓库 · ' + mode + ' · 最近同步：' + last;
+
+  var weekMin = 0, weekDays = 0;
+  for (var i = 0; i < 7; i++) {
+    var ds = addDays(t, -i), d = days[ds];
+    if (d && d.minutes > 0) { weekMin += d.minutes; weekDays++; }
+  }
+  var doneToday = tasks.filter(function(x){ return x.done && x.doneAt === t; }).length;
+  var todayPool = tasks.filter(function(x){ return !x.done && x.date <= t; }).length + doneToday;
+  var avgRate = tests.length ? Math.round(tests.reduce(function(s, x){ return s + rateOf(x); }, 0) / tests.length) : null;
+  var unmastered = holes.filter(function(h){ return h.status < 2; }).length;
+  var pendingMist = mistakes.filter(function(m){ return !m.mastered; }).length;
+
+  var icons = {
+    clock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+    target: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>',
+    check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+    file: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>',
+    repeat: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.5 15a9 9 0 1 1-2.1-9.4L23 10"/></svg>',
+    flame: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c.7 3.6 4.8 5.1 5 9.6.1 3-2.1 5.4-5 5.4s-5.1-2.4-5-5.4c.1-2.1 1.2-3.4 2.3-5.2.4 1.6 1.1 2.5 2.5 3.1-.9-2.6-.4-5.2.2-7.5z"/></svg>'
+  };
+  var cards = [
+    ['clock', '今日学习', ((days[t] && days[t].minutes) || 0) + '<small> 分钟 / 目标 ' + meta.goalMinutes + '</small>'],
+    ['target', '近 7 天学习', (weekMin / 60).toFixed(1) + '<small> 小时</small>'],
+    ['check', '近 7 天打卡', weekDays + '<small> / 7 天</small>'],
+    ['file', '平均得分率', (avgRate === null ? '—' : avgRate + '<small> %</small>')],
+    ['repeat', '待重做错题', pendingMist + '<small> 道</small>'],
+    ['flame', '连续自学', calcStreak() + '<small> 天</small>']
+  ];
+  $('#parentStats').innerHTML = cards.map(function(c){
+    return '<div class="stat"><div class="k">' + icons[c[0]] + c[1] + '</div><div class="v">' + c[2] + '</div></div>';
+  }).join('');
+
+  var alerts = [];
+  var overdueTasks = tasks.filter(function(x){ return !x.done && x.date < t; });
+  var overdueMist = mistakes.filter(function(m){ return !m.mastered && m.nextDate && m.nextDate < t; });
+  var lowTests = tests.filter(function(x){ return rateOf(x) < 60; }).slice(0, 3);
+  if (overdueTasks.length) alerts.push(['red', '有 ' + overdueTasks.length + ' 个任务逾期未完成（例如：' + esc(overdueTasks[0].content) + '，原定 ' + overdueTasks[0].date + '）']);
+  if (overdueMist.length) alerts.push(['red', '有 ' + overdueMist.length + ' 道错题逾期未重做，间隔复习断掉了']);
+  lowTests.forEach(function(x){ alerts.push(['red', '近期测试偏低：' + esc(x.subject) + '《' + esc(x.name) + '》得分率 ' + rateOf(x) + '%（' + x.date + '）']); });
+  if (!activeDay(days[t])) alerts.push(['red', '今天还没打卡 —— 尚未记录学习时长']);
+  if (!alerts.length) alerts.push(['ok', '目前没有异常：任务不逾期、错题按时重做、测试都在 60% 以上，今天也已打卡']);
+  $('#parentAlerts').innerHTML = alerts.map(function(a){
+    return '<div class="alert' + (a[0] === 'ok' ? ' ok' : '') + '">' + a[1] + '</div>';
+  }).join('');
+
+  renderWeekChart();
+
+  var doneList = tasks.filter(function(x){ return x.done && x.doneAt === t; });
+  var dueMist = mistakes.filter(function(m){ return !m.mastered && m.nextDate && m.nextDate <= t; });
+  var todayMin = (days[t] && days[t].minutes) || 0;
+  var pHtml = '<div class="row"><div class="body"><div class="title">今日任务完成 ' + doneToday + ' / ' + todayPool + ' · 学习 ' + todayMin + ' 分钟</div>' +
+    '<div class="meta">' + (unmastered ? '待补漏洞 ' + unmastered + ' 个' : '漏洞清单已全部掌握') + ' · 待重做错题 ' + pendingMist + ' 道</div></div></div>';
+  pHtml += doneList.map(function(x){
+    return '<div class="row"><div class="body"><div class="title"><span class="tag green">完成</span><span class="tag blue">' + esc(x.subject) + '</span>' + esc(x.content) + '</div>' +
+      '<div class="meta">预计 ' + x.minutes + ' 分钟 · ' + x.doneAt + '</div></div></div>';
+  }).join('');
+  pHtml += dueMist.map(function(m){
+    return '<div class="row"><div class="body"><div class="title"><span class="tag amber">错题重做</span><span class="tag blue">' + esc(m.subject) + '</span>' + esc(m.topic) + '</div>' +
+      '<div class="meta">' + esc(m.reason) + ' · 第 ' + (m.level + 1) + ' 轮</div></div></div>';
+  }).join('');
+  $('#parentToday').innerHTML = pHtml;
+
+  var recent = tests.slice().sort(function(a, b){ return String(b.date).localeCompare(String(a.date)); }).slice(0, 5);
+  $('#parentTests').innerHTML = recent.length
+    ? recent.map(function(x){
+        return '<div class="row"><div class="body"><div class="title"><span class="tag gray">' + String(x.date).slice(5) + '</span><span class="tag blue">' + esc(x.subject) + '</span>' + esc(x.name) + '</div>' +
+          '<div class="meta">' + esc(x.type) + ' · ' + x.score + '/' + x.full + ' · 得分率 ' + rateTag(rateOf(x)) + '</div></div></div>';
+      }).join('')
+    : '<div class="empty">还没有测试记录</div>';
+
+  var bySubj = {};
+  holes.forEach(function(h){
+    if (!bySubj[h.subject]) bySubj[h.subject] = { total: 0, ok: 0 };
+    bySubj[h.subject].total++;
+    if (h.status === 2) bySubj[h.subject].ok++;
+  });
+  var keys = Object.keys(bySubj);
+  $('#parentHoles').innerHTML = keys.length
+    ? keys.map(function(k){
+        var p = Math.round(bySubj[k].ok / bySubj[k].total * 100);
+        return '<div class="subj-bar"><div class="top"><span>' + esc(k) + '</span><span>已掌握 ' + bySubj[k].ok + '/' + bySubj[k].total + ' · ' + p + '%</span></div>' +
+          '<div class="track"><div class="fill" style="width:' + p + '%"></div></div></div>';
+      }).join('')
+    : '<div class="empty">还没有登记知识漏洞</div>';
+}
+
+function renderWeekChart(){
+  var t = today(), data = [];
+  for (var i = 6; i >= 0; i--) {
+    var ds = addDays(t, -i);
+    data.push({ d: ds, m: (days[ds] && days[ds].minutes) || 0 });
+  }
+  var max = 60;
+  data.forEach(function(x){ if (x.m > max) max = x.m; });
+  var W = 560, H = 160, padB = 26, padT = 10;
+  var bw = W / 7 * 0.45;
+  var html = '<svg viewBox="0 0 ' + W + ' ' + H + '">';
+  html += '<line x1="0" y1="' + (H - padB) + '" x2="' + W + '" y2="' + (H - padB) + '" stroke="#E5E8F0" stroke-width="1"/>';
+  data.forEach(function(x, i){
+    var cx = (i + 0.5) * (W / 7);
+    var bh = x.m > 0 ? Math.max(4, (x.m / max) * (H - padB - padT)) : 0;
+    var y = H - padB - bh;
+    html += '<rect x="' + (cx - bw / 2).toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + bw.toFixed(1) + '" height="' + bh.toFixed(1) + '" rx="3" fill="' + (x.m > 0 ? '#2B5CE6' : '#EBEEF4') + '"><title>' + x.d + ' · ' + x.m + ' 分钟</title></rect>';
+    html += '<text x="' + cx.toFixed(1) + '" y="' + (H - 8) + '" font-size="10" fill="#9AA3B2" text-anchor="middle">' + x.d.slice(5) + '</text>';
+  });
+  html += '</svg>';
+  $('#parentWeek').innerHTML = html;
+}
+
+/* ---------- 统计 ---------- */
+function heatColor(min){
+  if (!min || min <= 0) return '#EBEEF4';
+  if (min < 30) return '#C9D8FB';
+  if (min < 60) return '#93B0F5';
+  if (min < 120) return '#5B84EE';
+  return '#2B5CE6';
+}
+function renderHeatmap(){
+  var t = parseDate(today());
+  var start = new Date(t); start.setDate(start.getDate() - 34);
+  var cell = 22, gap = 5;
+  var w = 5 * cell + 4 * gap, h = 7 * cell + 6 * gap;
+  var html = '<svg viewBox="0 0 ' + w + ' ' + h + '" width="' + w + '" style="max-width:340px">';
+  var idx = 0;
+  for (var col = 0; col < 5; col++) {
+    for (var row = 0; row < 7; row++) {
+      var d = new Date(start); d.setDate(start.getDate() + idx);
+      var ds = fmt(d), min = (days[ds] && days[ds].minutes) || 0;
+      html += '<rect x="' + (col * (cell + gap)) + '" y="' + (row * (cell + gap)) + '" width="' + cell + '" height="' + cell + '" rx="5" fill="' + heatColor(min) + '" opacity="' + (ds > today() ? 0.3 : 1) + '"><title>' + ds + (min > 0 ? ' · ' + min + ' 分钟' : ' · 未学习') + '</title></rect>';
+      idx++;
+    }
+  }
+  html += '</svg>';
+  $('#heatmap').innerHTML = html;
+}
+function renderBars(){
+  var t = today(), data = [];
+  for (var i = 13; i >= 0; i--) {
+    var ds = addDays(t, -i);
+    data.push({ d: ds, m: (days[ds] && days[ds].minutes) || 0 });
+  }
+  var max = 60;
+  data.forEach(function(x){ if (x.m > max) max = x.m; });
+  var W = 560, H = 170, padB = 26, padT = 10;
+  var bw = W / 14 * 0.55;
+  var html = '<svg viewBox="0 0 ' + W + ' ' + H + '">';
+  html += '<line x1="0" y1="' + (H - padB) + '" x2="' + W + '" y2="' + (H - padB) + '" stroke="#E5E8F0" stroke-width="1"/>';
+  data.forEach(function(x, i){
+    var cx = (i + 0.5) * (W / 14);
+    var bh = x.m > 0 ? Math.max(4, (x.m / max) * (H - padB - padT)) : 0;
+    var y = H - padB - bh;
+    html += '<rect x="' + (cx - bw / 2).toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + bw.toFixed(1) + '" height="' + bh.toFixed(1) + '" rx="3" fill="' + (x.m > 0 ? '#2B5CE6' : '#EBEEF4') + '"><title>' + x.d + ' · ' + x.m + ' 分钟</title></rect>';
+    if (i % 2 === 1) html += '<text x="' + cx.toFixed(1) + '" y="' + (H - 8) + '" font-size="10" fill="#9AA3B2" text-anchor="middle">' + x.d.slice(5) + '</text>';
+  });
+  html += '</svg>';
+  $('#barChart').innerHTML = html;
+}
+function renderStats(){
+  var t = today();
+  var todayMin = (days[t] && days[t].minutes) || 0;
+  var totalMin = 0;
+  Object.keys(days).forEach(function(k){ if (days[k] && days[k].minutes > 0) totalMin += days[k].minutes; });
+  var doneCount = tasks.filter(function(x){ return x.done; }).length;
+  var mastered = mistakes.filter(function(m){ return m.mastered; }).length;
+  var avgRate = tests.length ? Math.round(tests.reduce(function(s, x){ return s + rateOf(x); }, 0) / tests.length) : null;
+  var icons = {
+    clock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+    target: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>',
+    check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+    file: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>',
+    repeat: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.5 15a9 9 0 1 1-2.1-9.4L23 10"/></svg>',
+    flame: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c.7 3.6 4.8 5.1 5 9.6.1 3-2.1 5.4-5 5.4s-5.1-2.4-5-5.4c.1-2.1 1.2-3.4 2.3-5.2.4 1.6 1.1 2.5 2.5 3.1-.9-2.6-.4-5.2.2-7.5z"/></svg>'
+  };
+  var cards = [
+    ['clock', '今日学习', todayMin + '<small> 分钟</small>'],
+    ['target', '累计学习', (totalMin / 60).toFixed(1) + '<small> 小时</small>'],
+    ['check', '累计完成任务', doneCount + '<small> 个</small>'],
+    ['file', '平均得分率', (avgRate === null ? '—' : avgRate + '<small> %</small>')],
+    ['repeat', '错题已掌握', mastered + '<small> / ' + mistakes.length + ' 道</small>'],
+    ['flame', '连续自学', calcStreak() + '<small> 天</small>']
+  ];
+  $('#statGrid').innerHTML = cards.map(function(c){
+    return '<div class="stat"><div class="k">' + icons[c[0]] + c[1] + '</div><div class="v">' + c[2] + '</div></div>';
+  }).join('');
+  renderHeatmap(); renderBars();
+}
+
+function renderHint(){
+  var total = tasks.length + mistakes.length + holes.length + tests.length;
+  var el = $('#hintBanner');
+  if (total >= 30 && !meta.backupHintDismissed) {
+    $('#hintText').textContent = '数据已积累 ' + total + ' 条，建议导出 JSON 备份一份';
+    el.classList.add('show');
+  } else el.classList.remove('show');
+}
+
+/* ---------- 交互 ---------- */
+function switchTab(name){
+  $$('#deskTabs .tab-btn').forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-tab') === name); });
+  $$('#bottomNav button').forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-tab') === name); });
+  $$('.panel').forEach(function(p){ p.classList.toggle('active', p.id === 'panel-' + name); });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function findById(arr, id){
+  for (var i = 0; i < arr.length; i++) if (arr[i].id === id) return arr[i];
+  return null;
+}
+function removeById(arr, id){
+  for (var i = 0; i < arr.length; i++) {
+    if (arr[i].id === id) { var it = arr[i]; arr.splice(i, 1); return it; }
+  }
+  return null;
+}
+
+function completeTask(id){
+  var x = findById(tasks, id);
+  if (!x || x.done) return;
+  x.done = true; x.doneAt = today();
+  logDay(x.minutes, 1);
+  pushUpdate('任务', x);
+  toast('完成：' + x.content);
+  renderAll();
+}
+function reviewMistake(id, ok){
+  var m = findById(mistakes, id);
+  if (!m) return;
+  m.total++;
+  if (ok) {
+    m.correct++; m.level++;
+    if (m.level >= INTERVALS.length) { m.mastered = true; m.nextDate = null; toast('「' + m.topic + '」已掌握，从重做队列毕业'); }
+    else { m.nextDate = addDays(today(), INTERVALS[m.level]); toast('答对，' + INTERVALS[m.level] + ' 天后再重做'); }
+  } else {
+    m.level = 0; m.correct = 0; m.nextDate = addDays(today(), INTERVALS[0]);
+    toast('答错，明天再重做一次');
+  }
+  logDay(10, 1);
+  pushUpdate('错题', m);
+  renderAll();
+}
+function cycleHole(id){
+  var h2 = findById(holes, id);
+  if (!h2) return;
+  h2.status = (h2.status + 1) % 3;
+  toast('「' + h2.topic + '」→ ' + STATUS_LABEL[h2.status]);
+  saveCache();
+  pushUpdate('漏洞', h2);
+  renderAll();
+}
+
+function importChapters(){
+  var exist = {};
+  holes.forEach(function(h){ exist[h.subject + '|' + h.topic] = true; });
+  var add = [];
+  CHAPTERS.forEach(function(c){
+    if (!exist[c[1] + '|' + c[2]]) add.push({ id: uid(), stage: c[0], subject: c[1], topic: c[2], status: 0 });
+  });
+  if (!add.length) { toast('章节清单已在列表中，无需重复导入'); return; }
+  openModal('一键导入章节清单', '将新增 ' + add.length + ' 条高中核心章节（语数英 + 物化生），全部标记为「未学」，可逐条改为在学 / 已掌握。', '导入', false, function(){
+    closeModal();
+    add.forEach(function(it){ holes.push(it); });
+    saveCache(); renderAll();
+    toast('已导入 ' + add.length + ' 条章节，正在同步到 GitHub…');
+  });
+}
+
+function exportData(){
+  var data = { app: 'gaokao-workbench', version: 2, exportedAt: new Date().toISOString(), tasks: tasks, mistakes: mistakes, holes: holes, tests: tests, days: days };
+  var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'gaokao_backup_' + today() + '.json';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function(){ URL.revokeObjectURL(a.href); }, 1000);
+  toast('已导出备份文件');
+}
+function importData(file){
+  var reader = new FileReader();
+  reader.onload = function(){
+    try {
+      var data = JSON.parse(reader.result);
+      if (!data || !Array.isArray(data.tasks) || !Array.isArray(data.mistakes) || !Array.isArray(data.holes)) throw new Error('format');
+      var n = data.tasks.length + data.mistakes.length + data.holes.length + (Array.isArray(data.tests) ? data.tests.length : 0);
+      openModal('导入恢复', '将用备份文件覆盖当前全部数据（当前数据会丢失），共 ' + n + ' 条。确定继续吗？', '覆盖导入', true, function(){
+        tasks = data.tasks; mistakes = data.mistakes; holes = data.holes;
+        tests = Array.isArray(data.tests) ? data.tests : []; days = data.days || {};
+        saveCache(); closeModal();
+        toast('导入成功，共恢复 ' + n + ' 条数据');
+        renderAll();
+      });
+    } catch (e) { toast('文件格式不对，导入失败'); }
+  };
+  reader.readAsText(file);
+}
+function clearSample(){
+  var before = tasks.length + mistakes.length + holes.length + tests.length;
+  var removed = [];
+  [['任务', tasks], ['错题', mistakes], ['漏洞', holes], ['测试', tests]].forEach(function(pair){
+    var arr = pair[1];
+    for (var i = arr.length - 1; i >= 0; i--) {
+      if (arr[i].sample) { removed.push(arr[i]); arr.splice(i, 1); }
+    }
+  });
+  Object.keys(days).forEach(function(k){ if (days[k] && days[k].sample) delete days[k]; });
+  saveCache();
+  var after = tasks.length + mistakes.length + holes.length + tests.length;
+  toast(after === 0 ? '示例已清空，从零开始' : '已清空 ' + (before - after) + ' 条示例数据');
+  renderAll();
+}
+function clearAll(){
+  openModal('清空全部数据', '所有任务、错题、漏洞清单、测试成绩和学习记录将被删除，且无法恢复（除非之前导出过备份）。', '清空全部', true, function(){
+    openModal('再次确认', '真的要清空吗？此操作不可恢复。', '确认清空', true, function(){
+      closeModal();
+      tasks = []; mistakes = []; holes = []; tests = []; days = {};
+      saveCache(); renderAll();
+      toast('已清空全部数据');
+    });
+  });
+}
+
+document.addEventListener('click', function(e){
+  var el = e.target.closest ? e.target.closest('[data-action]') : null;
+  if (!el) return;
+  var a = el.getAttribute('data-action'), id = el.getAttribute('data-id');
+  if (a === 'tab') switchTab(el.getAttribute('data-tab'));
+  else if (a === 'task-done') completeTask(id);
+  else if (a === 'task-del') { var t1 = removeById(tasks, id); if (t1) { pushDelete(t1); saveCache(); toast('已删除任务'); renderAll(); } }
+  else if (a === 'mistake-right') reviewMistake(id, true);
+  else if (a === 'mistake-wrong') reviewMistake(id, false);
+  else if (a === 'mistake-del') { var m1 = removeById(mistakes, id); if (m1) { pushDelete(m1); saveCache(); toast('已删除错题'); renderAll(); } }
+  else if (a === 'hole-cycle') cycleHole(id);
+  else if (a === 'hole-del') { var h1 = removeById(holes, id); if (h1) { pushDelete(h1); saveCache(); toast('已删除漏洞条目'); renderAll(); } }
+  else if (a === 'test-del') { var s1 = removeById(tests, id); if (s1) { pushDelete(s1); saveCache(); toast('已删除测试记录'); renderAll(); } }
+  else if (a === 'filter-plan') { planFilter = el.getAttribute('data-val'); $$('#planChips .chip').forEach(function(c){ c.classList.toggle('active', c === el); }); renderPlan(); }
+  else if (a === 'filter-mist') { mistFilter = el.getAttribute('data-val'); $$('#mistChips .chip').forEach(function(c){ c.classList.toggle('active', c === el); }); renderMistakes(); }
+  else if (a === 'filter-hole') { holeFilter = el.getAttribute('data-val'); $$('#holeChips .chip').forEach(function(c){ c.classList.toggle('active', c === el); }); renderHoles(); }
+  else if (a === 'filter-chart') { chartFilter = el.getAttribute('data-val'); $$('#chartChips .chip').forEach(function(c){ c.classList.toggle('active', c === el); }); renderTestChart(); }
+  else if (a === 'checkin') doCheckin();
+  else if (a === 'save-goal') {
+    var g = parseInt($('#goalInput').value, 10);
+    if (!g || g < 30) { toast('目标时长至少 30 分钟'); return; }
+    meta.goalMinutes = g; saveCache(); renderCheckin(); toast('每日目标已设为 ' + g + ' 分钟');
+  }
+  else if (a === 'import-chapters') importChapters();
+  else if (a === 'export') exportData();
+  else if (a === 'import') $('#importFile').click();
+  else if (a === 'clear-sample') clearSample();
+  else if (a === 'clear-all') clearAll();
+  else if (a === 'dismiss-hint') { meta.backupHintDismissed = true; saveCache(); renderHint(); }
+  else if (a === 'modal-cancel') closeModal();
+  else if (a === 'gh-setup') openGhSetup();
+  else if (a === 'gh-setup-cancel') closeGhSetup();
+  else if (a === 'gh-save') saveGhToken();
+});
+
+$('#modalOk').addEventListener('click', function(){ if (modalCb) { var cb = modalCb; modalCb = null; cb(); } });
+
+$('#planForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  var content = $('#pfContent').value.trim();
+  if (!content) return;
+  var it = { id: uid(), subject: $('#pfSubject').value, content: content, minutes: parseInt($('#pfMinutes').value, 10) || 30,
+    date: $('#pfDate').value || today(), pri: $('#pfPriority').value, done: false, doneAt: '' };
+  tasks.push(it); saveCache();
+  this.reset(); $('#pfDate').value = today(); $('#pfMinutes').value = 40;
+  pushAdd('任务', it);
+  toast('任务已添加'); renderAll();
+});
+$('#mistakeForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  var topic = $('#mfTopic').value.trim();
+  if (!topic) return;
+  var it = { id: uid(), subject: $('#mfSubject').value, topic: topic, reason: $('#mfReason').value,
+    note: $('#mfNote').value.trim(), level: 0, nextDate: addDays(today(), 1), total: 0, correct: 0, mastered: false, created: today() };
+  mistakes.push(it); saveCache();
+  this.reset();
+  pushAdd('错题', it);
+  toast('已登记，明天安排第一轮重做'); renderAll();
+});
+$('#holeForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  var topic = $('#hfTopic').value.trim();
+  if (!topic) return;
+  var it = { id: uid(), stage: $('#hfStage').value, subject: $('#hfSubject').value, topic: topic, status: parseInt($('#hfStatus').value, 10) };
+  holes.push(it); saveCache(); this.reset();
+  pushAdd('漏洞', it);
+  toast('已加入漏洞清单'); renderAll();
+});
+$('#testForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  var name = $('#tfName').value.trim();
+  if (!name) return;
+  var score = parseFloat($('#tfScore').value), full = parseFloat($('#tfFull').value);
+  if (isNaN(score) || isNaN(full) || full <= 0 || score < 0 || score > full) { toast('得分需要在 0 到满分之间'); return; }
+  var it = { id: uid(), subject: $('#tfSubject').value, type: $('#tfType').value, name: name, score: score, full: full, date: $('#tfDate').value || today() };
+  tests.push(it); saveCache();
+  this.reset(); $('#tfFull').value = 100; $('#tfDate').value = today();
+  pushAdd('测试', it);
+  toast('成绩已登记'); renderAll();
+});
+$('#importFile').addEventListener('change', function(){ if (this.files && this.files[0]) { importData(this.files[0]); this.value = ''; } });
+
+/* ---------- 渲染总入口 ---------- */
+function renderAll(){
+  renderHeader(); renderCheckin(); renderToday(); renderPlan(); renderMistakes();
+  renderHoles(); renderTests(); renderParent(); renderStats(); renderHint(); updateSync();
+}
+
+function fillSelect(sel, arr, def){
+  sel.innerHTML = arr.map(function(x){ return '<option' + (x === def ? ' selected' : '') + '>' + x + '</option>'; }).join('');
+}
+fillSelect($('#pfSubject'), SUBJECTS, '数学');
+fillSelect($('#mfSubject'), SUBJECTS, '数学');
+fillSelect($('#hfSubject'), SUBJECTS, '数学');
+fillSelect($('#tfSubject'), SUBJECTS, '数学');
+fillSelect($('#mfReason'), REASONS, '概念不清');
+$('#pfDate').value = today(); $('#tfDate').value = today();
+
+/* ---------- 启动 ---------- */
+var cached = load('tasks', null);
+if (cached !== null) {
+  tasks = cached || [];
+  mistakes = load('mistakes', []); holes = load('holes', []);
+  tests = load('tests', []); days = load('days', {});
+}
+renderAll();
+
+if (ghConfigured()) {
+  ghPull().then(function(n){
+    if (n === 0 && cached === null) {
+      seed();
+      renderAll();
+      saveCache();
+      toast('示例数据已就绪，点「清空示例」即可从零开始');
+    } else if (n > 0) {
+      renderAll();
+      toast('已从 GitHub 同步 ' + n + ' 条记录');
+    } else if (n < 0) {
+      if (cached === null) seed();
+      renderAll();
+      toast('GitHub 连接失败，显示本地缓存');
+    } else {
+      renderAll();
+    }
+    updateSync();
+  });
+} else {
+  if (cached === null) seed();
+  renderAll();
+  updateSync();
+  if (!GH_PRIVATE) {
+    ghPull().then(function(n){
+      if (n > 0) { renderAll(); toast('已从 GitHub 拉取 ' + n + ' 条（只读模式）'); }
+      else if (n === 0 && cached === null) { seed(); renderAll(); }
+      updateSync();
+    });
+  }
+}
+})();
+</script>
+</body>
+</html>
