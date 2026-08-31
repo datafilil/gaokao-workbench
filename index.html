@@ -126,6 +126,16 @@
   .q-opts{margin-top:10px; display:flex; flex-direction:column; gap:6px;}
   .q-opt{display:flex; gap:8px; align-items:flex-start; font-size:14px; padding:8px 10px; border:1px solid var(--border); border-radius:9px; background:#fff; line-height:1.5;}
   .q-opt b{color:var(--primary); flex:none;}
+  button.q-opt.pick{width:100%; text-align:left; cursor:pointer; transition:border-color .15s, background .15s; font-family:inherit;}
+  button.q-opt.pick:hover{border-color:var(--primary); background:var(--primary-weak);}
+  .q-opt.correct{border-color:#BFE5D0; background:var(--green-weak);}
+  .q-opt.correct b{color:var(--green);}
+  .q-opt.wrong{border-color:#F3C2C4; background:var(--red-weak);}
+  .q-opt.wrong b{color:var(--red);}
+  .q-opt.dim{opacity:.55;}
+  .q-stats{display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:12px; padding:10px 12px; border-radius:10px; background:var(--primary-weak); font-size:13px; color:var(--muted);}
+  .q-stats b{color:var(--primary-deep); font-weight:800;}
+  .q-stats .sep{opacity:.4;}
   .q-answer{display:none; margin-top:10px; padding:10px 12px; border-radius:9px; background:var(--primary-weak); font-size:14px;}
   .q-answer.show{display:block;}
   .q-answer .ans{font-weight:700; color:var(--primary-deep);}
@@ -301,6 +311,7 @@
   <section class="panel" id="panel-question">
     <div class="card">
       <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>各科题库</h2>
+      <div class="q-stats" id="qStats"></div>
       <div class="chips" id="qChips">
         <button class="chip active" data-action="filter-q-subj" data-val="全部">全部</button>
         <button class="chip" data-action="filter-q-subj" data-val="语文">语文</button>
@@ -1138,6 +1149,7 @@ function renderTestChart(){
 
 /* ---------- 题库 ---------- */
 function renderQuestions(){
+  renderQStats();
   var list = questions.slice();
   if (qSubjFilter !== '全部') list = list.filter(function(q){ return q.subject === qSubjFilter; });
   if (qStatusFilter !== 'all') list = list.filter(function(q){ return String(q.done) === qStatusFilter; });
@@ -1153,42 +1165,112 @@ function renderQuestions(){
     var cls = q.done === 1 ? ' done-ok' : (q.done === 2 ? ' done-wrong' : '');
     var flag = q.done === 1 ? '<span class="q-flag" style="background:var(--green-weak);color:var(--green)">已做对</span>'
       : q.done === 2 ? '<span class="q-flag" style="background:var(--red-weak);color:var(--red)">做错·已进错题本</span>' : '';
+    var isChoice = q.options && q.options.length;
+    var answered = q.done !== 0;
     var opts = '';
-    if (q.options && q.options.length) {
+    if (isChoice) {
       var ohtml = '';
-      q.options.forEach(function(o, i){ ohtml += '<div class="q-opt"><b>' + letters[i] + '.</b><span>' + esc(o) + '</span></div>'; });
+      q.options.forEach(function(o, i){
+        var letter = letters[i];
+        var txt = '<b>' + letter + '.</b><span>' + esc(o) + '</span>';
+        if (!answered) {
+          ohtml += '<button class="q-opt pick" data-action="q-pick" data-id="' + q.id + '" data-letter="' + letter + '">' + txt + '</button>';
+        } else {
+          var c = letter === q.answer ? ' correct' : (q.picked === letter ? ' wrong' : ' dim');
+          var mark = letter === q.answer ? ' ✓' : (q.picked === letter ? ' ✗' : '');
+          ohtml += '<div class="q-opt' + c + '">' + txt + '<span style="flex:none;font-weight:700">' + mark + '</span></div>';
+        }
+      });
       opts = '<div class="q-opts">' + ohtml + '</div>';
     }
     var builtinTag = q.builtin ? '<span class="tag gray">内置</span>' : '';
+    var actions = isChoice
+      ? (answered ? '<button class="btn small" data-action="q-reset" data-id="' + q.id + '">重做</button>' : '') +
+        '<button class="btn small" data-action="q-reveal" data-id="' + q.id + '">显示答案</button>' +
+        '<button class="btn small danger" data-action="q-del" data-id="' + q.id + '">删</button>'
+      : '<button class="btn small" data-action="q-reveal" data-id="' + q.id + '">显示答案</button>' +
+        '<button class="btn small" data-action="q-right" data-id="' + q.id + '" style="color:var(--green);border-color:#BFE5D0">我答对了</button>' +
+        '<button class="btn small" data-action="q-wrong" data-id="' + q.id + '" style="color:var(--red);border-color:#F3C2C4">我答错了</button>' +
+        '<button class="btn small danger" data-action="q-del" data-id="' + q.id + '">删</button>';
     html += '<div class="q-card' + cls + '">' +
       '<div class="q-top"><span class="tag blue">' + esc(q.subject) + '</span><span class="tag gray">' + esc(q.stage || '') + '</span><span class="tag gray">' + esc(q.chapter || '') + '</span><span class="tag gray">' + esc(q.type || '选择') + '</span>' + builtinTag + flag + '</div>' +
       '<div class="q-stem">' + esc(q.stem) + '</div>' + opts +
       '<div class="q-answer" id="qans-' + q.id + '"><span class="ans">答案：' + esc(q.answer) + '</span>' +
         (q.analysis ? '<div class="q-analysis">' + esc(q.analysis) + '</div>' : '') + '</div>' +
-      '<div class="q-actions">' +
-        '<button class="btn small" data-action="q-reveal" data-id="' + q.id + '">显示答案</button>' +
-        '<button class="btn small" data-action="q-right" data-id="' + q.id + '" style="color:var(--green);border-color:#BFE5D0">我答对了</button>' +
-        '<button class="btn small" data-action="q-wrong" data-id="' + q.id + '" style="color:var(--red);border-color:#F3C2C4">我答错了</button>' +
-        '<button class="btn small danger" data-action="q-del" data-id="' + q.id + '">删</button>' +
-      '</div></div>';
+      '<div class="q-actions">' + actions + '</div></div>';
   });
   $('#qList').innerHTML = html;
+}
+function renderQStats(){
+  var t = today(), d = days[t];
+  var todayTotal = (d && d.qTotal) || 0;
+  var todayRight = (d && d.qRight) || 0;
+  var todayWrong = (d && d.qWrong) || 0;
+  var doneRight = questions.filter(function(q){ return q.done === 1; }).length;
+  var doneWrong = questions.filter(function(q){ return q.done === 2; }).length;
+  var doneTotal = doneRight + doneWrong;
+  var rate = doneTotal ? Math.round(doneRight / doneTotal * 100) : null;
+  $('#qStats').innerHTML =
+    '<span>今日刷题 <b>' + todayTotal + '</b> 题</span>' +
+    (todayTotal ? '<span class="sep">|</span><span>对 <b>' + todayRight + '</b> · 错 <b>' + todayWrong + '</b></span>' : '') +
+    '<span class="sep">|</span><span>累计已做 <b>' + doneTotal + '</b> 题</span>' +
+    '<span class="sep">|</span><span>正确率 <b>' + (rate === null ? '—' : rate + '%') + '</b></span>';
 }
 function toggleAnswer(id){
   var el = $('#qans-' + id);
   if (el) el.classList.toggle('show');
+}
+function logQuestion(ok){
+  var t = today();
+  var d = days[t] || { minutes: 0, doneCount: 0 };
+  d.qTotal = (d.qTotal || 0) + 1;
+  if (ok) d.qRight = (d.qRight || 0) + 1;
+  else d.qWrong = (d.qWrong || 0) + 1;
+  d.minutes = (d.minutes || 0) + 5;
+  d.doneCount = (d.doneCount || 0) + 1;
+  days[t] = d;
+  saveCache();
+}
+function pickOption(id, letter){
+  var q = findById(questions, id);
+  if (!q || q.done !== 0) return;
+  var correct = letter === q.answer;
+  q.picked = letter;
+  if (correct) {
+    q.done = 1;
+    logQuestion(true);
+    toast('回答正确！');
+  } else {
+    q.done = 2;
+    logQuestion(false);
+    var topic = (q.chapter ? q.chapter + ' · ' : '') + String(q.stem).slice(0, 24);
+    var dup = mistakes.some(function(m){ return m.subject === q.subject && m.topic === topic && !m.mastered; });
+    if (!dup) {
+      mistakes.push({ id: uid(), subject:q.subject, topic: topic, reason:'题库做错', note:String(q.analysis || q.answer || '').slice(0, 80), level:0, nextDate:addDays(today(), 1), total:0, correct:0, mastered:false, created:today() });
+    }
+    toast('答错了，正确答案是 ' + q.answer + '，已自动登记进错题本');
+  }
+  saveCache();
+  renderQuestions();
+}
+function resetQuestion(id){
+  var q = findById(questions, id);
+  if (!q) return;
+  q.done = 0; q.picked = '';
+  saveCache();
+  renderQuestions();
 }
 function judgeQuestion(id, ok){
   var q = findById(questions, id);
   if (!q) return;
   if (ok) {
     q.done = 1;
-    logDay(5, 1);
+    logQuestion(true);
     toast('做对了，保持手感');
   } else {
     var firstWrong = q.done !== 2;
     q.done = 2;
-    logDay(5, 1);
+    logQuestion(false);
     if (firstWrong) {
       var topic = (q.chapter ? q.chapter + ' · ' : '') + String(q.stem).slice(0, 24);
       mistakes.push({ id: uid(), subject:q.subject, topic: topic, reason:'题库做错', note:String(q.analysis || q.answer || '').slice(0, 80), level:0, nextDate:addDays(today(), 1), total:0, correct:0, mastered:false, created:today() });
@@ -1386,11 +1468,14 @@ function renderStats(){
   var doneCount = tasks.filter(function(x){ return x.done; }).length;
   var mastered = mistakes.filter(function(m){ return m.mastered; }).length;
   var avgRate = tests.length ? Math.round(tests.reduce(function(s, x){ return s + rateOf(x); }, 0) / tests.length) : null;
+  var qRight = questions.filter(function(q){ return q.done === 1; }).length;
+  var qDone = questions.filter(function(q){ return q.done !== 0; }).length;
   var icons = {
     clock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
     target: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>',
     check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
     file: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>',
+    book: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
     repeat: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.5 15a9 9 0 1 1-2.1-9.4L23 10"/></svg>',
     flame: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c.7 3.6 4.8 5.1 5 9.6.1 3-2.1 5.4-5 5.4s-5.1-2.4-5-5.4c.1-2.1 1.2-3.4 2.3-5.2.4 1.6 1.1 2.5 2.5 3.1-.9-2.6-.4-5.2.2-7.5z"/></svg>'
   };
@@ -1399,6 +1484,7 @@ function renderStats(){
     ['target', '累计学习', (totalMin / 60).toFixed(1) + '<small> 小时</small>'],
     ['check', '累计完成任务', doneCount + '<small> 个</small>'],
     ['file', '平均得分率', (avgRate === null ? '—' : avgRate + '<small> %</small>')],
+    ['book', '累计刷题', qRight + '<small> 对 / ' + qDone + ' 题</small>'],
     ['repeat', '错题已掌握', mastered + '<small> / ' + mistakes.length + ' 道</small>'],
     ['flame', '连续自学', calcStreak() + '<small> 天</small>']
   ];
@@ -1561,6 +1647,8 @@ document.addEventListener('click', function(e){
   else if (a === 'filter-q-subj') { qSubjFilter = el.getAttribute('data-val'); $$('#qChips .chip').forEach(function(c){ c.classList.toggle('active', c === el); }); renderQuestions(); }
   else if (a === 'filter-q-status') { qStatusFilter = el.getAttribute('data-val'); $$('#qStatusChips .chip').forEach(function(c){ c.classList.toggle('active', c === el); }); renderQuestions(); }
   else if (a === 'q-reveal') toggleAnswer(id);
+  else if (a === 'q-pick') pickOption(id, el.getAttribute('data-letter'));
+  else if (a === 'q-reset') resetQuestion(id);
   else if (a === 'q-right') judgeQuestion(id, true);
   else if (a === 'q-wrong') judgeQuestion(id, false);
   else if (a === 'q-del') { var q1 = removeById(questions, id); if (q1) { saveCache(); toast('已删除题目'); renderQuestions(); } }
