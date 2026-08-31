@@ -133,6 +133,10 @@
   .q-opt.wrong{border-color:#F3C2C4; background:var(--red-weak);}
   .q-opt.wrong b{color:var(--red);}
   .q-opt.dim{opacity:.55;}
+  button.q-opt.pick.selected{border-color:var(--primary); background:var(--primary-weak); box-shadow:inset 0 0 0 1px var(--primary);}
+  button.q-opt.pick.selected b{color:var(--primary-deep);}
+  .q-multi-bar{display:flex; align-items:center; gap:10px; margin-top:8px;}
+  .q-multi-hint{font-size:12px; color:var(--muted);}
   .q-stats{display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:12px; padding:10px 12px; border-radius:10px; background:var(--primary-weak); font-size:13px; color:var(--muted);}
   .q-stats b{color:var(--primary-deep); font-weight:800;}
   .q-stats .sep{opacity:.4;}
@@ -651,7 +655,28 @@ var BUILTIN_QUESTIONS = [
   {subject:'数学',stage:'高三',chapter:'立体几何',stem:'已知圆柱和圆锥的底面半径相等，侧面积相等，且它们的高均为 √3，则圆锥的体积为（ ）',options:['2√3π','3√3π','6√3π','9√3π'],answer:'B',analysis:'侧面积相等：2πr·√3=πr·√(r²+3)，解得 r=3；圆锥体积 V=(1/3)πr²·√3=3√3π。',exam:true},
   {subject:'数学',stage:'高三',chapter:'函数与导数',stem:'已知函数 f(x)={ -x²-2ax-a, x<0；eˣ+ln(x+1), x≥0 } 在 R 上单调递增，则 a 的取值范围是（ ）',options:['(-∞,0]','[-1,0]','[-1,1]','[0,+∞)'],answer:'B',analysis:'x<0 段 f(x)=-x²-2ax-a，要单调递增需其顶点横坐标不小于 0，即 -a≥0 得 a≤0；又左极限 f(0⁻)=-a 不超过 f(0)=1，得 a≥-1。综上 a∈[-1,0]。',exam:true},
   {subject:'数学',stage:'高三',chapter:'三角函数',stem:'当 x∈[0,2π] 时，曲线 y=sin x 与 y=2sin(3x-π/6) 的交点个数为（ ）',options:['3','4','6','8'],answer:'C',analysis:'在 [0,2π] 上 y=sin x 与 y=2sin(3x-π/6) 共有 6 个交点（画图或数值可验证）。',exam:true},
-  {subject:'数学',stage:'高三',chapter:'函数与导数',stem:'已知函数 f(x) 的定义域为 R，f(x)>f(x-1)+f(x-2)，且当 x<3 时 f(x)=x，则下列结论中一定正确的是（ ）',options:['f(10)>100','f(20)>1000','f(10)<1000','f(20)<10000'],answer:'B',analysis:'由递推 f(20)>f(19)+f(18)>…>10946>1000，故 B 一定正确；其余选项不能保证。',exam:true}
+  {subject:'数学',stage:'高三',chapter:'函数与导数',stem:'已知函数 f(x) 的定义域为 R，f(x)>f(x-1)+f(x-2)，且当 x<3 时 f(x)=x，则下列结论中一定正确的是（ ）',options:['f(10)>100','f(20)>1000','f(10)<1000','f(20)<10000'],answer:'B',analysis:'由递推 f(20)>f(19)+f(18)>…>10946>1000，故 B 一定正确；其余选项不能保证。',exam:true},
+
+  // 高考真题·物理（广东卷，2024/2025 新高考，答案经逐题核对）
+  {subject:'物理',stage:'高三',chapter:'交变电流',stem:'将阻值为 50 Ω 的电阻接在正弦式交流电源上，电阻两端电压随时间的变化规律如图所示。下列说法正确的是（ ）',options:['该交流电的频率为 100 Hz','通过电阻电流的峰值为 0.2 A','电阻在 1 秒内消耗的电能为 1 J','电阻两端电压表达式为 u = 10√2·sin(100πt) V'],answer:'D',analysis:'由图知周期 T=0.02 s，频率 f=1/T=50 Hz，A 错；电压峰值 10√2 V，电流峰值 Im=10√2/50=0.2√2 A，B 错；电流有效值 I=0.2 A，1 s 内消耗电能 W=I²Rt=0.04×50×1=2 J，C 错；ω=2π/T=100π rad/s，故 u=10√2·sin(100πt) V，D 对。',exam:true},
+  {subject:'物理',stage:'高三',chapter:'原子核·核反应',stem:'我国正在建设的大科学装置——"强流重离子加速器"，其科学目标之一是探寻神秘的"119 号"元素。科学家尝试使用核反应 Y + ²⁴³₉₅Am → ᴬ₁₁₉X + 2¹₀n 产生该元素。关于原子核 Y 和质量数 A，下列选项正确的是（ ）',options:['Y 为 ⁵⁸₂₆Fe，A = 299','Y 为 ⁵⁸₂₆Fe，A = 301','Y 为 ⁵⁴₂₄Cr，A = 295','Y 为 ⁵⁴₂₄Cr，A = 297'],answer:'C',analysis:'电荷数守恒：设 Y 的质子数为 y，则 y+95=119+0，得 y=24，即 Y 为 ⁵⁴₂₄Cr；质量数守恒：54+243=A+2，得 A=295。',exam:true},
+  {subject:'物理',stage:'高三',chapter:'机械波',stem:'一列简谐横波沿 x 轴正方向传播，波速为 1 m/s，t=0 时的波形如图所示。t=1 s 时，x=1.5 m 处的质点相对平衡位置的位移为（ ）',options:['0','0.1 m','-0.1 m','0.2 m'],answer:'B',analysis:'由图知波长 λ=2 m，周期 T=λ/v=2 s。t=1 s 即经过半个周期，x=1.5 m 处质点到达波峰，相对平衡位置的位移为 0.1 m。',exam:true},
+  {subject:'物理',stage:'高三',chapter:'电磁感应',stem:'电磁俘能器可在汽车发动机振动时利用电磁感应发电实现能量回收。两对永磁铁可随发动机一起上下振动，每对永磁铁间有水平方向的匀强磁场，磁感应强度大小均为 B。磁场中，边长为 L 的正方形线圈竖直固定在减震装置上，永磁铁振动时磁场分界线不会离开线圈。下列说法正确的是（ ）',options:['穿过线圈的磁通量为 BL²','永磁铁相对线圈上升越高，线圈中感应电动势越大','永磁铁相对线圈上升越快，线圈中感应电动势越小','永磁铁相对线圈下降时，线圈中感应电流的方向为顺时针方向'],answer:'D',analysis:'图示位置穿过线圈的磁通量为 0，A 错；由法拉第电磁感应定律，磁通量变化越快感应电动势越大，与位置"越高"无关，B、C 错；永磁铁相对线圈下降时，由楞次定律可知感应电流方向为顺时针，D 对。',exam:true},
+  {subject:'物理',stage:'高三',chapter:'圆周运动',stem:'在细绳的拉动下，半径为 r 的卷轴可绕其固定的中心点 O 在水平面内转动。卷轴上沿半径方向固定着长度为 l 的细管，管底在 O 点。细管内有一根原长为 l/2、劲度系数为 k 的轻质弹簧，弹簧底端固定在管底，顶端连接质量为 m、可视为质点的插销。当以速度 v 匀速拉动细绳时，插销做匀速圆周运动。若 v 过大，插销会卡进固定的端盖，使卷轴转动停止。忽略摩擦力，弹簧在弹性限度内。要使卷轴转动不停止，v 的最大值为（ ）',options:['r·√(k/2m)','l·√(k/2m)','r·√(2k/m)','l·√(2k/m)'],answer:'A',analysis:'插销刚卡紧端盖时弹簧伸长量 Δx=l/2，弹力 F=k·Δx=kl/2；弹力提供向心力 F=ml·ω²，且 v=rω，联立解得 v=r·√(k/2m)。',exam:true},
+  {subject:'物理',stage:'高三',chapter:'光的折射与全反射',stem:'红绿两束单色光，同时从空气中沿同一路径以 θ 角从 MN 面射入某长方体透明均匀介质，折射光束在 NP 面发生全反射，反射光射向 PQ 面。若 θ 逐渐增大，两束光在 NP 面上的全反射现象会先后消失。已知在该介质中红光的折射率小于绿光的折射率。下列说法正确的是（ ）',options:['在 PQ 面上，红光比绿光更靠近 P 点','θ 逐渐增大时，红光的全反射现象先消失','θ 逐渐增大时，入射光可能在 MN 面发生全反射','θ 逐渐减小时，两束光在 MN 面折射的折射角逐渐增大'],answer:'B',analysis:'红光折射率较小，在 MN 面折射角较大，故绿光比红光更靠近 P 点，A 错；红光全反射临界角较大，θ 增大时红光在 NP 面的入射角先小于临界角，全反射先消失，B 对；MN 面光从光疏介质射入光密介质，不可能发生全反射，C 错；θ 减小时折射角减小，D 错。',exam:true},
+  {subject:'物理',stage:'高三',chapter:'机械振动·多普勒',stem:'关于受迫振动和多普勒效应，下列说法正确的是（ ）',options:['系统的固有频率与驱动力频率有关','只要驱动力足够大，共振就能发生','应用多普勒效应可以测量车辆的速度','观察者与波源相互远离时，接收到的波的频率比波源的频率大'],answer:'C',analysis:'固有频率只与系统本身有关，与驱动力频率无关，A 错；只有驱动力频率等于固有频率时才发生共振，B 错；观察者与波源相互远离时接收到的频率比波源频率小、靠近时接收频率大，故可应用多普勒效应测车速，C 对、D 错。',exam:true},
+  {subject:'物理',stage:'高三',chapter:'交变电流·变压器',stem:'某光伏电站输出功率 1000 kW、电压 400 V 的交流电，经理想变压器升压至 10 kV 后，通过输电线输送到变电站，输电线的等效电阻 R 为 5 Ω。下列说法正确的是（ ）',options:['变压器原、副线圈匝数比为 1∶100','输电线上由 R 造成的电压损失为 500 V','变压器原线圈中的电流为 100 A','变压器原、副线圈中电流的频率不同'],answer:'B',analysis:'匝数比 n₁/n₂=400/10000=1/25，A 错；副线圈电流 I₂=P/U₂=1000000/10000=100 A，输电线电压损失 ΔU=I₂R=500 V，B 对；原线圈电流 I₁=P/U₁=1000000/400=2500 A，C 错；变压器不改变交变电流频率，D 错。',exam:true},
+  {subject:'物理',stage:'高三',chapter:'光电效应',stem:'有甲、乙两种金属，甲的逸出功小于乙的逸出功。使用某频率的光分别照射这两种金属，只有甲发射光电子，其最大初动能为 Ek。下列说法正确的是（ ）',options:['使用频率更小的光，可能使乙也发射光电子','使用频率更小的光，若仍能使甲发射光电子，则其最大初动能小于 Ek','频率不变，减弱光强，可能使乙也发射光电子','频率不变，减弱光强，若仍能使甲发射光电子，则其最大初动能小于 Ek'],answer:'B',analysis:'某频率的光不能使乙发生光电效应，说明其频率小于乙的截止频率，换用更小频率的光更不能使乙发射，A 错；由 Ek=hν-W₀，频率越小最大初动能越小，B 对；频率不变仍小于乙截止频率，C 错；频率不变则最大初动能不变，D 错。',exam:true},
+  {subject:'物理',stage:'高三',chapter:'光的折射',stem:'某单色光从空气垂直射入顶角为 α 的玻璃棱镜，出射光相对于入射光的偏转角为 β，该棱镜的折射率为（ ）',options:['sin(α+β) / sinα','sin(α+β) / sinβ','sinα / sinβ','sinβ / sinα'],answer:'A',analysis:'由光路图可知光线在出射面的入射角为 α、折射角为 α+β，由折射定律得 n = sin(α+β)/sinα。',exam:true},
+  {subject:'物理',stage:'高三',chapter:'万有引力与天体',stem:'一颗绕太阳运行的小行星，其轨道近日点和远日点到太阳的距离分别约为地球到太阳距离的 5 倍和 7 倍。关于该小行星，下列说法正确的是（ ）',options:['公转周期约为 6 年','从远日点到近日点所受太阳引力大小逐渐减小','从远日点到近日点线速度大小逐渐减小','在近日点加速度大小约为地球公转加速度的 1/25'],answer:'D',analysis:'半长轴 a=(5R+7R)/2=6R，由开普勒第三定律 T²/T地²=(6R/R)³，得 T=6√6 年，A 错；从远日点到近日点距离减小、太阳引力增大、线速度增大，B、C 错；由 a=GM/r² 得 a近/a地=(R/5R)²=1/25，D 对。',exam:true},
+  {subject:'物理',stage:'高三',chapter:'磁场·洛伦兹力',stem:'某同步加速器简化模型中，仅直通道 PQ 内有加速电场，三段圆弧内均有可调的匀强偏转磁场 B。带电荷量为 -q、质量为 m 的离子以初速度 v₀ 从 P 处进入加速电场后，沿顺时针方向在加速器内循环加速。已知加速电压为 U，磁场区域中离子的偏转半径均为 R。忽略离子重力和相对论效应。下列说法正确的是（ ）',options:['偏转磁场的方向垂直纸面向里','第 1 次加速后，离子的动能增加了 2qU','第 k 次加速后，离子的速度大小变为 √(v₀² + kqU/m)','第 k 次加速后，偏转磁场的磁感应强度大小应为 √(mv₀² - 2kqU)/qR'],answer:'A',analysis:'粒子带负电、沿顺时针方向运动，由左手定则知磁场垂直纸面向里，A 对；每加速一次动能增加 qU，B 错；加速 k 次后 kqU=(1/2)mv²-(1/2)mv₀²，得 v=√(v₀²+2kqU/m)，C 错；D 选项表达式亦不成立，D 错。',exam:true},
+  // 物理多选题（广东卷，多选，答案经逐题核对）
+  {subject:'物理',stage:'高三',chapter:'静电场',stem:'污水中的污泥絮体经处理后带负电，可利用电泳技术对其进行沉淀去污。涂有绝缘层的金属圆盘和金属棒分别接电源正、负极，金属圆盘置于底部、金属棒插入污水中，形成如图所示的电场分布，其中实线为电场线，虚线为等势面。M 点和 N 点在同一电场线上，M 点和 P 点在同一等势面上。下列说法正确的有（ ）',options:['M 点的电势比 N 点的低','N 点的电场强度比 P 点的大','污泥絮体从 M 点移到 N 点，电场力对其做正功','污泥絮体在 N 点的电势能比其在 P 点的大'],answer:'AC',multi:true,analysis:'沿电场线方向电势降低，M 点电势比 N 点低，A 对；污泥絮体带负电，从 M 到 N 电势降低、电势能减小，电场力做正功，C 对；N 点电场线比 P 点疏、场强更小，B 错；M、P 在同一等势面，负电荷在 N 点电势能比 P 点小，D 错。',exam:true},
+  {subject:'物理',stage:'高三',chapter:'万有引力与天体',stem:'探测器及其保护背罩通过弹性轻绳连接降落伞，在接近某行星表面时以 60 m/s 的速度竖直匀速下落。此时启动"背罩分离"，探测器与背罩断开连接，背罩与降落伞保持连接。已知探测器质量为 1000 kg，背罩质量为 50 kg，该行星的质量和半径分别为地球的 1/10 和 1/2，地球表面重力加速度 g=10 m/s²，忽略大气对探测器和背罩的阻力。下列说法正确的有（ ）',options:['该行星表面的重力加速度大小为 4 m/s²','该行星的第一宇宙速度为 7.9 km/s','"背罩分离"后瞬间，背罩的加速度大小为 80 m/s²','"背罩分离"后瞬间，探测器所受重力对其做功的功率为 30 kW'],answer:'AC',multi:true,analysis:'g′=GM/R²，质量取 1/10、半径取 1/2，得 g′=(1/10)/(1/2)²×g=4 m/s²，A 对；第一宇宙速度 v=√(GM/R)，v′=√((1/10)/(1/2))×v地=√(1/5)×7.9≈3.5 km/s，B 错；分离前探测器与背罩间作用力 F=mg′=4000 N，分离后背罩合力 4000 N，a=4000/50=80 m/s²，C 对；探测器重力功率 P=mg′v=1000×4×60=240 kW，D 错。',exam:true},
+  {subject:'物理',stage:'高三',chapter:'动量·碰撞',stem:'光滑斜坡上，可视为质点的甲、乙两个相同滑块，分别从 H甲、H乙 高度同时由静止开始下滑。斜坡与水平面在 O 处平滑相接，滑块与水平面间的动摩擦因数为 μ，乙在水平面上追上甲时发生弹性碰撞，忽略空气阻力。下列说法正确的有（ ）',options:['甲在斜坡上运动时与乙相对静止','碰撞后瞬间甲的速度等于碰撞前瞬间乙的速度','乙的运动时间与 H乙 无关','甲最终停止位置与 O 处相距 H乙/μ'],answer:'ABD',multi:true,analysis:'两滑块在斜坡上加速度相同、同时静止下滑，相对速度为零，A 对；质量相同的两滑块弹性碰撞交换速度，B 对；乙下滑时间 t₁ 与 H乙 有关，故总时间与 H乙 有关，C 错；碰撞交换速度后，甲最终停止位置等于乙不发生碰撞时的停止位置，由 mgH乙=μmgx 得 x=H乙/μ，D 对。',exam:true},
+  {subject:'物理',stage:'高三',chapter:'圆周运动',stem:'将可视为质点的小球沿光滑冰坑内壁推出，使小球在水平面内做匀速圆周运动。已知圆周运动半径 R=0.4 m，小球所在位置处的切面与水平面夹角 θ=45°，小球质量 0.1 kg，重力加速度 g=10 m/s²。关于该小球，下列说法正确的有（ ）',options:['角速度为 5 rad/s','线速度大小为 4 m/s','向心加速度大小为 10 m/s²','所受支持力大小为 1 N'],answer:'AC',multi:true,analysis:'受力分析，向心力 F向=mgtan45°=mRω²，解得 ω=5 rad/s，A 对；v=ωR=2 m/s，B 错；a向=ω²R=10 m/s²，C 对；支持力 N=mg/cos45°=√2 N，D 错。',exam:true},
+  {subject:'物理',stage:'高三',chapter:'电磁感应·安培力',stem:'一种精确测量质量的装置：竖直平面内，质量恒为 M 的称重框架由托盘和矩形线圈组成，线圈的一边始终处于垂直线圈平面的匀强磁场中。测量分两个步骤：步骤①，托盘内放置待测物块（质量 m），线圈中通大小为 I 的电流，使称重框架受力平衡；步骤②，线圈处于断开状态，取下物块，保持线圈不动，磁场以速率 v 匀速向下运动，测得线圈中感应电动势为 E。重力加速度为 g。下列说法正确的有（ ）',options:['线圈电阻为 E/I','I 越大，表明 m 越大','v 越大，则 E 越小','m = EI/(vg) - M'],answer:'BD',multi:true,analysis:'E 是断开时切割磁感线产生的感应电动势，E/I 并非线圈电阻，A 错；平衡条件 (M+m)g=BIL，I 越大 m 越大，B 对；E=BLv，v 越大 E 越大，C 错；联立 (M+m)g=BIL 与 E=BLv 得 m=EI/(vg)-M，D 对。',exam:true},
+  {subject:'物理',stage:'高三',chapter:'力的平衡·冲量',stem:'无人机在空中作业时，受到一个方向不变、大小随时间变化的拉力，经飞控系统实时调控，在拉力、空气作用力和重力作用下沿水平方向做匀速直线运动。已知拉力与水平面成 30° 角，其大小 F 随时间 t 的变化关系为 F=F₀-kt（F₀、k 均为大于 0 的常量），无人机质量为 m，重力加速度为 g。在 0 到 T 时间段内（T 是满足 F>0 的任一时刻），下列说法正确的有（ ）',options:['受到空气作用力的方向会变化','受到拉力的冲量大小为 (F₀ - kT/2)·T','受到重力和拉力的合力的冲量大小为 mgT + (F₀ - kT/2)·T','T 时刻受到空气作用力的大小为 √[3/4·(F₀-kT)² + (mg - (F₀-kT)/2)²]'],answer:'AB',multi:true,analysis:'无人机做匀速直线运动，空气作用力与重力、拉力的合力等大反向，随 F 减小该合力方向改变，A 对；拉力冲量为 F–t 图线下面积 I=(F₀-kT/2)T，B 对；C、D 表达式与严格推导不符，均错。',exam:true}
 ];
 
 function $(s){ return document.querySelector(s); }
@@ -1182,7 +1207,10 @@ function renderQuestions(){
     var flag = q.done === 1 ? '<span class="q-flag" style="background:var(--green-weak);color:var(--green)">已做对</span>'
       : q.done === 2 ? '<span class="q-flag" style="background:var(--red-weak);color:var(--red)">做错·已进错题本</span>' : '';
     var isChoice = q.options && q.options.length;
+    var isMulti = q.multi === true;
     var answered = q.done !== 0;
+    var ansSet = String(q.answer).split('');
+    var pickedSet = (q.picked || '').split('');
     var opts = '';
     if (isChoice) {
       var ohtml = '';
@@ -1190,13 +1218,23 @@ function renderQuestions(){
         var letter = letters[i];
         var txt = '<b>' + letter + '.</b><span>' + esc(o) + '</span>';
         if (!answered) {
-          ohtml += '<button class="q-opt pick" data-action="q-pick" data-id="' + q.id + '" data-letter="' + letter + '">' + txt + '</button>';
+          if (isMulti) {
+            var sel = pickedSet.indexOf(letter) >= 0 ? ' selected' : '';
+            ohtml += '<button class="q-opt pick' + sel + '" data-action="q-toggle" data-id="' + q.id + '" data-letter="' + letter + '">' + txt + '</button>';
+          } else {
+            ohtml += '<button class="q-opt pick" data-action="q-pick" data-id="' + q.id + '" data-letter="' + letter + '">' + txt + '</button>';
+          }
         } else {
-          var c = letter === q.answer ? ' correct' : (q.picked === letter ? ' wrong' : ' dim');
-          var mark = letter === q.answer ? ' ✓' : (q.picked === letter ? ' ✗' : '');
+          var inAns = ansSet.indexOf(letter) >= 0;
+          var inPick = pickedSet.indexOf(letter) >= 0;
+          var c = inAns ? ' correct' : (inPick ? ' wrong' : ' dim');
+          var mark = inAns ? ' ✓' : (inPick ? ' ✗' : '');
           ohtml += '<div class="q-opt' + c + '">' + txt + '<span style="flex:none;font-weight:700">' + mark + '</span></div>';
         }
       });
+      if (isMulti && !answered) {
+        ohtml += '<div class="q-multi-bar"><button class="btn small primary" data-action="q-submit" data-id="' + q.id + '">确认答案</button><span class="q-multi-hint">已选 ' + (pickedSet.join('') || '无') + ' · 多选题</span></div>';
+      }
       opts = '<div class="q-opts">' + ohtml + '</div>';
     }
     var builtinTag = q.builtin ? '<span class="tag gray">内置</span>' : '';
@@ -1210,7 +1248,7 @@ function renderQuestions(){
         '<button class="btn small" data-action="q-wrong" data-id="' + q.id + '" style="color:var(--red);border-color:#F3C2C4">我答错了</button>' +
         '<button class="btn small danger" data-action="q-del" data-id="' + q.id + '">删</button>';
     html += '<div class="q-card' + cls + '">' +
-      '<div class="q-top"><span class="tag blue">' + esc(q.subject) + '</span><span class="tag gray">' + esc(q.stage || '') + '</span><span class="tag gray">' + esc(q.chapter || '') + '</span><span class="tag gray">' + esc(q.type || '选择') + '</span>' + builtinTag + examTag + flag + '</div>' +
+      '<div class="q-top"><span class="tag blue">' + esc(q.subject) + '</span><span class="tag gray">' + esc(q.stage || '') + '</span><span class="tag gray">' + esc(q.chapter || '') + '</span><span class="tag gray">' + esc(isMulti ? '多选' : (q.type || '选择')) + '</span>' + builtinTag + examTag + flag + '</div>' +
       '<div class="q-stem">' + esc(q.stem) + '</div>' + opts +
       '<div class="q-answer" id="qans-' + q.id + '"><span class="ans">答案：' + esc(q.answer) + '</span>' +
         (q.analysis ? '<div class="q-analysis">' + esc(q.analysis) + '</div>' : '') + '</div>' +
@@ -1277,6 +1315,40 @@ function resetQuestion(id){
   saveCache();
   renderQuestions();
 }
+function togglePick(id, letter){
+  var q = findById(questions, id);
+  if (!q || q.done !== 0) return;
+  var picked = (q.picked || '').split('');
+  var i = picked.indexOf(letter);
+  if (i >= 0) picked.splice(i, 1);
+  else picked.push(letter);
+  picked.sort();
+  q.picked = picked.join('');
+  renderQuestions();
+}
+function submitMulti(id){
+  var q = findById(questions, id);
+  if (!q || q.done !== 0) return;
+  var picked = (q.picked || '').split('').sort().join('');
+  if (!picked) { toast('请先选择至少一个选项'); return; }
+  var ans = String(q.answer).split('').sort().join('');
+  if (picked === ans) {
+    q.done = 1;
+    logQuestion(true);
+    toast('回答正确！');
+  } else {
+    q.done = 2;
+    logQuestion(false);
+    var topic = (q.chapter ? q.chapter + ' · ' : '') + String(q.stem).slice(0, 24);
+    var dup = mistakes.some(function(m){ return m.subject === q.subject && m.topic === topic && !m.mastered; });
+    if (!dup) {
+      mistakes.push({ id: uid(), subject:q.subject, topic: topic, reason:'题库做错', note:String(q.analysis || q.answer || '').slice(0, 80), level:0, nextDate:addDays(today(), 1), total:0, correct:0, mastered:false, created:today() });
+    }
+    toast('答错了，正确答案是 ' + q.answer + '，已自动登记进错题本');
+  }
+  saveCache();
+  renderQuestions();
+}
 function judgeQuestion(id, ok){
   var q = findById(questions, id);
   if (!q) return;
@@ -1305,7 +1377,7 @@ function importBuiltinQuestions(){
   var add = [];
   BUILTIN_QUESTIONS.forEach(function(q){
     var key = q.subject + '|' + q.chapter + '|' + q.stem;
-    if (!exist[key]) add.push({ id: uid(), subject:q.subject, stage:q.stage, chapter:q.chapter, stem:q.stem, options:q.options || [], answer:q.answer, analysis:q.analysis || '', type:'选择', builtin:true, exam: q.exam === true, done:0 });
+    if (!exist[key]) add.push({ id: uid(), subject:q.subject, stage:q.stage, chapter:q.chapter, stem:q.stem, options:q.options || [], answer:q.answer, analysis:q.analysis || '', type: q.multi ? '多选' : '选择', builtin:true, exam: q.exam === true, multi: q.multi === true, done:0 });
   });
   if (!add.length) { toast('内置题库已全部在列表中'); return; }
   add.forEach(function(it){ questions.push(it); });
@@ -1665,6 +1737,8 @@ document.addEventListener('click', function(e){
   else if (a === 'filter-q-status') { qStatusFilter = el.getAttribute('data-val'); $$('#qStatusChips .chip').forEach(function(c){ c.classList.toggle('active', c === el); }); renderQuestions(); }
   else if (a === 'q-reveal') toggleAnswer(id);
   else if (a === 'q-pick') pickOption(id, el.getAttribute('data-letter'));
+  else if (a === 'q-toggle') togglePick(id, el.getAttribute('data-letter'));
+  else if (a === 'q-submit') submitMulti(id);
   else if (a === 'q-reset') resetQuestion(id);
   else if (a === 'q-right') judgeQuestion(id, true);
   else if (a === 'q-wrong') judgeQuestion(id, false);
