@@ -300,19 +300,6 @@
 
   <section class="panel" id="panel-question">
     <div class="card">
-      <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>录入题目（可选）</h2>
-      <form class="f" id="qForm">
-        <div class="field col-3"><label>科目</label><select id="qfSubject"></select></div>
-        <div class="field col-3"><label>学段</label><select id="qfStage"><option>高一</option><option selected>高二</option><option>高三</option></select></div>
-        <div class="field col-6"><label>知识点 / 章节</label><input id="qfChapter" type="text" maxlength="40" placeholder="例：函数单调性"></div>
-        <div class="field col-12"><label>题干（选择题可直接把 A/B/C/D 选项写进题干）</label><textarea id="qfStem" maxlength="400" placeholder="例：函数 f(x)=x² 的奇偶性是（ ）" required></textarea></div>
-        <div class="field col-8"><label>答案</label><input id="qfAnswer" type="text" maxlength="120" placeholder="例：B / 偶函数 / 2x" required></div>
-        <div class="field col-4"><label>题型</label><select id="qfType"><option>选择</option><option>填空</option><option>简答</option></select></div>
-        <div class="field col-12"><label>解析（可选，写清思路才能真正会做）</label><textarea id="qfAnalysis" maxlength="400" placeholder="例：f(-x)=(-x)²=x²=f(x)，故为偶函数"></textarea></div>
-        <div class="form-actions"><button class="btn primary" type="submit">加入题库</button></div>
-      </form>
-    </div>
-    <div class="card">
       <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>各科题库</h2>
       <div class="chips" id="qChips">
         <button class="chip active" data-action="filter-q-subj" data-val="全部">全部</button>
@@ -1157,7 +1144,7 @@ function renderQuestions(){
   var order = { '高一': 0, '高二': 1, '高三': 2 };
   list.sort(function(a, b){ return (order[a.stage] - order[b.stage]) || String(a.subject).localeCompare(String(b.subject), 'zh'); });
   if (!list.length) {
-    $('#qList').innerHTML = '<div class="empty">' + (questions.length ? '没有符合当前筛选的题目' : '题库是空的，点「导入内置基础题库」或在上方录入题目') + '</div>';
+    $('#qList').innerHTML = '<div class="empty">' + (questions.length ? '没有符合当前筛选的题目' : '题库是空的，点「导入内置基础题库」即可开始') + '</div>';
     return;
   }
   var letters = ['A','B','C','D','E','F'];
@@ -1642,17 +1629,6 @@ $('#testForm').addEventListener('submit', function(e){
   toast('成绩已登记'); renderAll();
 });
 $('#importFile').addEventListener('change', function(){ if (this.files && this.files[0]) { importData(this.files[0]); this.value = ''; } });
-$('#qForm').addEventListener('submit', function(e){
-  e.preventDefault();
-  var stem = $('#qfStem').value.trim();
-  if (!stem) return;
-  var it = { id: uid(), subject: $('#qfSubject').value, stage: $('#qfStage').value, chapter: $('#qfChapter').value.trim() || '未分类',
-    stem: stem, options: [], answer: $('#qfAnswer').value.trim() || '（见解析）', analysis: $('#qfAnalysis').value.trim(), type: $('#qfType').value, builtin:false, done:0 };
-  questions.push(it); saveCache();
-  this.reset(); $('#qfSubject').value = '数学';
-  toast('已加入题库'); renderQuestions();
-});
-
 /* ---------- 渲染总入口 ---------- */
 function renderAll(){
   renderHeader(); renderCheckin(); renderToday(); renderPlan(); renderMistakes();
@@ -1666,7 +1642,6 @@ fillSelect($('#pfSubject'), SUBJECTS, '数学');
 fillSelect($('#mfSubject'), SUBJECTS, '数学');
 fillSelect($('#hfSubject'), SUBJECTS, '数学');
 fillSelect($('#tfSubject'), SUBJECTS, '数学');
-fillSelect($('#qfSubject'), SUBJECTS, '数学');
 fillSelect($('#mfReason'), REASONS, '概念不清');
 $('#pfDate').value = today(); $('#tfDate').value = today();
 
