@@ -188,6 +188,18 @@
     .col-3,.col-4{grid-column:span 3;} .col-6,.col-8{grid-column:span 6;} .col-9{grid-column:span 6;}
     header.top h1{font-size:19px;}
   }
+  .mastery-box{margin:12px 0 4px; padding:12px 14px; border:1px solid var(--border); border-radius:var(--radius); background:var(--card);}
+  .m-head{display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:6px;}
+  .m-title{font-size:14px; font-weight:600;}
+  .m-legend{font-size:12px; color:var(--muted);}
+  .m-sub{margin:10px 0 0;}
+  .m-subj{display:inline-block; font-size:12px; font-weight:600; color:var(--muted); margin-bottom:6px; padding-left:2px;}
+  .m-pills{display:flex; flex-wrap:wrap; gap:6px;}
+  .m-pill{display:inline-flex; align-items:center; gap:6px; padding:5px 11px; border:1px solid var(--border); border-radius:999px; background:var(--card); cursor:pointer; font-size:12px; color:var(--text); font-family:inherit;}
+  .m-pill:hover{border-color:var(--primary);}
+  .m-pill.m-active{border-color:var(--primary); background:var(--primary-weak);}
+  .m-dot{width:9px; height:9px; border-radius:50%; flex:none;}
+  .m-stat{font-size:11px; color:var(--muted); flex:none;}
 </style>
 </head>
 <body data-page-node-id="ssoS2l8nbqn8nXL8gqA1P3">
@@ -344,6 +356,7 @@
         <button data-page-node-id="pWq9xN3Yt5Kf7qQbMdY2h" class="btn small" data-action="import-q-file"><!--pnid:wB7q3jZxTvYh8dRkLsXa6-->导入题库 JSON</button>
         <button data-page-node-id="cYx8rZ6vN4hJtGmWfD3kQ" class="btn small" data-action="export-q"><!--pnid:mQ6e5wTbY7iKjHsVpLcZ9-->导出题库 JSON</button>
       </div>
+      <div data-page-node-id="mst000000000000000000000" id="masteryBox" class="mastery-box"></div>
       <div data-page-node-id="CIhKT2HbzrCWiKZhRLgcAk" id="qList"></div>
     </div>
   </section>
@@ -739,7 +752,7 @@ var tasks = [], mistakes = [], holes = [], tests = [], questions = [], days = {}
 var meta = load('meta', {}) || {};
 if (!meta.goalMinutes) meta.goalMinutes = 240;
 var planFilter = 'today', mistFilter = 'due', holeFilter = 'all', chartFilter = 'all';
-var qSubjFilter = '全部', qStatusFilter = 'all';
+var qSubjFilter = '全部', qStatusFilter = 'all', qChapterFilter = '';
 
 /* ---------- GitHub 数据层 ---------- */
 var GH_OWNER = 'datafilil';
@@ -1235,8 +1248,10 @@ function renderTestChart(){
 /* ---------- 题库 ---------- */
 function renderQuestions(){
   renderQStats();
+  renderMastery();
   var list = questions.slice();
   if (qSubjFilter !== '全部') list = list.filter(function(q){ return q.subject === qSubjFilter; });
+  if (qChapterFilter) list = list.filter(function(q){ return q.chapter === qChapterFilter; });
   if (qStatusFilter !== 'all') list = list.filter(function(q){ return String(q.done) === qStatusFilter; });
   var order = { '高一': 0, '高二': 1, '高三': 2 };
   list.sort(function(a, b){ return (order[a.stage] - order[b.stage]) || String(a.subject).localeCompare(String(b.subject), 'zh'); });
@@ -1314,6 +1329,66 @@ function renderQStats(){
     (todayTotal ? '<span class="sep">|</span><span>对 <b>' + todayRight + '</b> · 错 <b>' + todayWrong + '</b></span>' : '') +
     '<span class="sep">|</span><span>累计已做 <b>' + doneTotal + '</b> 题</span>' +
     '<span class="sep">|</span><span>正确率 <b>' + (rate === null ? '—' : rate + '%') + '</b></span>';
+}
+function renderMastery(){
+  var box = $('#masteryBox');
+  if (!box) return;
+  var groups = {};
+  questions.forEach(function(q){
+    var s = q.subject || '', c = q.chapter || '综合';
+    if (!groups[s]) groups[s] = {};
+    var g = groups[s][c] || (groups[s][c] = { right:0, wrong:0, todo:0 });
+    if (q.done === 1) g.right++;
+    else if (q.done === 2) g.wrong++;
+    else g.todo++;
+  });
+  function light(r, w){
+    var att = r + w;
+    if (att === 0) return { c:'#C4C9D4', label:'未摸底' };
+    var rate = r / att;
+    if (att < 3) {
+      if (rate >= 1) return { c:'#1F9D61', label:'全对·样本少' };
+      if (rate === 0) return { c:'#E5484D', label:'薄弱' };
+      return { c:'#EF9F27', label:'不稳·样本少' };
+    }
+    if (rate >= 0.8) return { c:'#1F9D61', label:'已掌握' };
+    if (rate >= 0.4) return { c:'#EF9F27', label:'不稳' };
+    return { c:'#E5484D', label:'薄弱' };
+  }
+  function rank(r, w){
+    var att = r + w;
+    if (att === 0) return 3;
+    var rate = r / att;
+    if (rate >= 0.8) return 2;
+    if (rate >= 0.4) return 1;
+    return 0;
+  }
+  var order = ['物理','化学','生物','数学','语文','英语'];
+  var html = '<div class="m-head"><span class="m-title">章节掌握度（摸底诊断）</span>' +
+    '<span class="m-legend">点击章节筛选下方题目 · 红=薄弱 黄=不稳 绿=已掌握 灰=未摸底</span>';
+  if (qChapterFilter) html += '<button class="btn small" data-action="clear-q-chapter">清除章节筛选</button>';
+  html += '</div>';
+  var any = false;
+  order.forEach(function(s){
+    var g = groups[s];
+    if (!g) return;
+    var keys = Object.keys(g).sort(function(a, b){
+      return rank(g[a].right, g[a].wrong) - rank(g[b].right, g[b].wrong) || (g[b].right + g[b].wrong) - (g[a].right + g[a].wrong);
+    });
+    any = true;
+    html += '<div class="m-sub"><span class="m-subj">' + esc(s) + '</span><div class="m-pills">';
+    keys.forEach(function(c){
+      var o = g[c], att = o.right + o.wrong, l = light(o.right, o.wrong);
+      var active = (qChapterFilter === c && qSubjFilter === s) ? ' m-active' : '';
+      html += '<button class="m-pill' + active + '" data-action="filter-q-chapter" data-subj="' + esc(s) + '" data-val="' + esc(c) + '">' +
+        '<span class="m-dot" style="background:' + l.c + '"></span>' +
+        '<span>' + esc(c) + '</span>' +
+        '<span class="m-stat" title="' + esc(l.label) + '">' + (att ? o.right + '/' + att : o.todo + '未做') + '</span></button>';
+    });
+    html += '</div></div>';
+  });
+  if (!any) html += '<div class="empty">导入题库后，这里会按章节显示掌握度红绿灯</div>';
+  box.innerHTML = html;
 }
 function toggleAnswer(id){
   var el = $('#qans-' + id);
@@ -1923,8 +1998,10 @@ document.addEventListener('click', function(e){
   else if (a === 'filter-mist') { mistFilter = el.getAttribute('data-val'); $$('#mistChips .chip').forEach(function(c){ c.classList.toggle('active', c === el); }); renderMistakes(); }
   else if (a === 'filter-hole') { holeFilter = el.getAttribute('data-val'); $$('#holeChips .chip').forEach(function(c){ c.classList.toggle('active', c === el); }); renderHoles(); }
   else if (a === 'filter-chart') { chartFilter = el.getAttribute('data-val'); $$('#chartChips .chip').forEach(function(c){ c.classList.toggle('active', c === el); }); renderTestChart(); }
-  else if (a === 'filter-q-subj') { qSubjFilter = el.getAttribute('data-val'); $$('#qChips .chip').forEach(function(c){ c.classList.toggle('active', c === el); }); renderQuestions(); }
+  else if (a === 'filter-q-subj') { qSubjFilter = el.getAttribute('data-val'); qChapterFilter = ''; $$('#qChips .chip').forEach(function(c){ c.classList.toggle('active', c === el); }); renderQuestions(); }
   else if (a === 'filter-q-status') { qStatusFilter = el.getAttribute('data-val'); $$('#qStatusChips .chip').forEach(function(c){ c.classList.toggle('active', c === el); }); renderQuestions(); }
+  else if (a === 'filter-q-chapter') { qSubjFilter = el.getAttribute('data-subj'); qChapterFilter = el.getAttribute('data-val'); $$('#qChips .chip').forEach(function(c){ c.classList.toggle('active', c.getAttribute('data-val') === qSubjFilter); }); renderQuestions(); }
+  else if (a === 'clear-q-chapter') { qChapterFilter = ''; renderQuestions(); }
   else if (a === 'q-reveal') toggleAnswer(id);
   else if (a === 'q-pick') pickOption(id, el.getAttribute('data-letter'));
   else if (a === 'q-toggle') togglePick(id, el.getAttribute('data-letter'));
