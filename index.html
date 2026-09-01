@@ -562,7 +562,11 @@
     <p data-page-node-id="aiSetupP2000000000000000005" class="ai-setup-hint" style="margin-bottom:6px">1. 打开 <b>aistudio.google.com/apikey</b> → Create API key 生成 Key</p>
     <p data-page-node-id="aiSetupP3000000000000000006" class="ai-setup-hint" style="margin-bottom:12px">2. 复制粘贴到下方，选好模型点保存（推荐 Flash，免费额度够用）</p>
     <input data-page-node-id="aiSetupInp00000000000000007" id="aiKeyInput" placeholder="AIza..." type="password" style="width:100%; font-size:16px; padding:10px; border:1px solid var(--border); border-radius:9px; margin-bottom:12px; font-family:monospace">
-    <select data-page-node-id="aiSetupSel00000000000000008" id="aiModelInput" style="width:100%; font-size:15px; padding:10px; border:1px solid var(--border); border-radius:9px; margin-bottom:14px; background:#fff; color:var(--text); font-family:inherit"></select>
+    <div data-page-node-id="aiSetupRow0000000000000000c" style="display:flex; gap:8px; align-items:center; margin-bottom:6px">
+      <select data-page-node-id="aiSetupSel00000000000000008" id="aiModelInput" style="flex:1; min-width:0; font-size:15px; padding:10px; border:1px solid var(--border); border-radius:9px; background:#fff; color:var(--text); font-family:inherit"></select>
+      <button data-page-node-id="aiSetupRfr0000000000000000d" class="btn small" data-action="ai-refresh-models" style="flex:none" title="向 Google 重新拉取当前可用模型">拉取模型</button>
+    </div>
+    <p data-page-node-id="aiSetupHint0000000000000000e" id="aiModelHint" class="ai-setup-hint" style="margin:0 0 14px; min-height:16px; color:var(--muted)">填好 Key 点「拉取模型」，自动同步 Google 当前可用模型</p>
     <div data-page-node-id="aiSetupBtns0000000000000009" class="btns">
       <button data-page-node-id="aiSetupCxl0000000000000000a" class="btn ghost" data-action="ai-setup-cancel"><!--pnid:aiSetupCxl-->取消</button>
       <button data-page-node-id="aiSetupSave000000000000000b" class="btn primary" data-action="ai-save"><!--pnid:aiSetupSave-->保存</button>
@@ -1002,10 +1006,84 @@ var AI_MODELS = [
 function aiKey(){ return localStorage.getItem(PREFIX + 'ai_key') || ''; }
 function aiModel(){ return localStorage.getItem(PREFIX + 'ai_model') || 'gemini-3.7-flash'; }
 function aiConfigured(){ return !!aiKey(); }
+
+function aiModelId(name){ return String(name || '').replace(/^models\//, ''); }
+function aiModelLabel(id, displayName){
+  var known = {
+    'gemini-3.7-flash': 'Gemini 3.7 Flash（最新）',
+    'gemini-3.6-flash': 'Gemini 3.6 Flash',
+    'gemini-3.5-flash': 'Gemini 3.5 Flash',
+    'gemini-3.5-flash-lite': 'Gemini 3.5 Flash-Lite（最省）',
+    'gemini-3.1-flash-lite': 'Gemini 3.1 Flash-Lite（省）',
+    'gemini-3.1-pro-preview': 'Gemini 3.1 Pro（更强）',
+    'gemini-3-flash-preview': 'Gemini 3 Flash（预览）',
+    'gemini-2.5-flash': 'Gemini 2.5 Flash（旧版）',
+    'gemini-2.5-flash-lite': 'Gemini 2.5 Flash-Lite（旧版）',
+    'gemini-2.5-pro': 'Gemini 2.5 Pro（旧版）'
+  };
+  return known[id] || (displayName || id);
+}
+// 只保留纯文本对话模型，过滤图片/TTS/语音/视频/embedding 等
+function aiIsChatModel(id){
+  return /^gemini-/.test(id) && !/(image|tts|embedding|transcribe|audio|live|vision|banana|veo|lyria|nano|whisk|video|music|speech|native-audio)/.test(id);
+}
+function aiModelRank(id){
+  var r = 0;
+  var m = /^gemini-(\d+)\.(\d+)/.exec(id);
+  if (m) r = parseInt(m[1], 10) * 10000 + parseInt(m[2], 10) * 100;
+  if (/flash-lite/.test(id)) r += 1;
+  else if (/flash/.test(id)) r += 6;
+  else if (/pro/.test(id)) r += 4;
+  else r += 2;
+  return r;
+}
+function aiRenderModelSelect(models, hint){
+  var cur = aiModel();
+  var html = models.map(function(m){ return '<option value="' + esc(m.id) + '">' + esc(m.label) + '</option>'; }).join('');
+  $('#aiModelInput').innerHTML = html;
+  var found = false;
+  for (var i = 0; i < models.length; i++) if (models[i].id === cur) { found = true; break; }
+  if (found) $('#aiModelInput').value = cur;
+  else if (models.length) $('#aiModelInput').value = models[0].id;
+  var h = $('#aiModelHint'); if (h) h.textContent = hint || '';
+}
+function aiFallbackModels(){ return AI_MODELS.map(function(m){ return { id: m[0], label: m[1] }; }); }
+function fetchAiModels(key){
+  return fetch('https://generativelanguage.googleapis.com/v1beta/models?pageSize=1000&key=' + encodeURIComponent(key))
+    .then(function(r){
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    })
+    .then(function(d){
+      var out = [];
+      (d.models || []).forEach(function(m){
+        var id = aiModelId(m.name);
+        if (!aiIsChatModel(id)) return;
+        var methods = m.supportedGenerationMethods || [];
+        if (methods.indexOf('generateContent') < 0) return;
+        out.push({ id: id, label: aiModelLabel(id, m.displayName) });
+      });
+      out.sort(function(a, b){ return aiModelRank(b.id) - aiModelRank(a.id); });
+      return out;
+    });
+}
+function refreshAiModels(key){
+  key = String(key == null ? '' : key).trim() || aiKey().trim();
+  if (!key) { aiRenderModelSelect(aiFallbackModels(), '先填 Key，再点「拉取模型」同步可用模型'); return Promise.resolve(); }
+  var h = $('#aiModelHint'); if (h) h.textContent = '正在向 Google 拉取当前可用模型…';
+  return fetchAiModels(key).then(function(models){
+    if (!models.length) { aiRenderModelSelect(aiFallbackModels(), '该 Key 下没有可用的文本模型'); return; }
+    var seen = {};
+    models.forEach(function(m){ seen[m.id] = true; });
+    AI_MODELS.forEach(function(m){ if (!seen[m[0]]) models.push({ id: m[0], label: m[1] }); });
+    aiRenderModelSelect(models, '已同步 ' + models.length + ' 个可用模型（Google 实时列表）');
+  }).catch(function(e){
+    aiRenderModelSelect(aiFallbackModels(), '拉取失败（' + (e && e.message ? e.message : '网络错误') + '），已回退内置名单');
+  });
+}
 function openAiSetup(){
-  $('#aiModelInput').innerHTML = AI_MODELS.map(function(m){ return '<option value="' + m[0] + '">' + m[1] + '</option>'; }).join('');
-  $('#aiModelInput').value = aiModel();
-  var k = aiKey(); if (k) $('#aiKeyInput').value = k;
+  aiRenderModelSelect(aiFallbackModels(), '打开先显示内置名单，点「拉取模型」获取最新');
+  var k = aiKey(); if (k) { $('#aiKeyInput').value = k; refreshAiModels(k); }
   $('#aiSetupMask').classList.add('show');
 }
 function closeAiSetup(){ $('#aiSetupMask').classList.remove('show'); }
@@ -2178,6 +2256,7 @@ document.addEventListener('click', function(e){
   else if (a === 'ai-setup') openAiSetup();
   else if (a === 'ai-setup-cancel') closeAiSetup();
   else if (a === 'ai-save') saveAiKey();
+  else if (a === 'ai-refresh-models') refreshAiModels($('#aiKeyInput').value);
   else if (a === 'ai-explain') aiExplain(id);
   else if (a === 'ai-quiz') { if (!qChapterFilter) { toast('先在下方点选一个薄弱章节（红/黄灯），再点 AI 组卷'); } else { aiQuiz(qSubjFilter, qChapterFilter); } }
   else if (a === 'ai-close') { var c = $('#ai-' + id); if (c) { c.classList.remove('show'); c.innerHTML = ''; } }
@@ -2230,6 +2309,7 @@ $('#testForm').addEventListener('submit', function(e){
 });
 $('#importFile').addEventListener('change', function(){ if (this.files && this.files[0]) { importData(this.files[0]); this.value = ''; } });
 $('#importQFile').addEventListener('change', function(){ if (this.files && this.files[0]) { importQuestionsFile(this.files[0]); this.value = ''; } });
+$('#aiKeyInput').addEventListener('change', function(){ refreshAiModels(this.value); });
 /* ---------- 渲染总入口 ---------- */
 function renderAll(){
   renderHeader(); renderCheckin(); renderToday(); renderPlan(); renderMistakes();
