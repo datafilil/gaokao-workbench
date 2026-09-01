@@ -200,6 +200,16 @@
   .m-pill.m-active{border-color:var(--primary); background:var(--primary-weak);}
   .m-dot{width:9px; height:9px; border-radius:50%; flex:none;}
   .m-stat{font-size:11px; color:var(--muted); flex:none;}
+  .ai-box{display:none; margin-top:10px; padding:12px 14px; border:1px dashed var(--primary); border-radius:10px; background:var(--primary-weak);}
+  .ai-box.show{display:block;}
+  .ai-loading{display:flex; align-items:center; gap:9px; font-size:13px; color:var(--primary-deep);}
+  .spinner{width:16px; height:16px; border:2px solid #C9D6F7; border-top-color:var(--primary); border-radius:50%; animation:spin .8s linear infinite; flex:none;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .ai-resp{font-size:14px; line-height:1.75; white-space:pre-wrap; word-break:break-word; color:var(--text);}
+  .ai-err{color:var(--red);}
+  .ai-box .btn.small.ghost{margin-top:8px;}
+  .ai-setup-hint{font-size:13px; color:var(--muted); margin-bottom:10px; line-height:1.6;}
+  .ai-setup-hint b{color:var(--amber);}
 </style>
 </head>
 <body data-page-node-id="ssoS2l8nbqn8nXL8gqA1P3">
@@ -240,6 +250,10 @@
     <button data-page-node-id="59qleNj5sDnOc9Ws3apove" class="btn small" data-action="gh-setup" title="GitHub 同步设置">
       <svg data-page-node-id="w7msT8UlDqztUcl85R6mEO" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path data-page-node-id="AOeZ6yZhKTNBYDpNPdBfiE" d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg><!--pnid:J6tuSEWPV8Vlmb1NNLzd0A-->
       GitHub 设置
+    </button>
+    <button data-page-node-id="aiSetupBtn000000000000000001" class="btn small" data-action="ai-setup" title="AI 讲题/组卷设置（Gemini）">
+      <svg data-page-node-id="aiSetupIco00000000000000002" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path data-page-node-id="aiSetupP100000000000000003" d="M12 3l1.9 4.6L18.5 9l-4.6 1.9L12 15.5l-1.9-4.6L5.5 9l4.6-1.4z"/><path data-page-node-id="aiSetupP200000000000000004" d="M19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9z"/></svg>
+      AI 设置
     </button>
   </div>
 </div>
@@ -357,6 +371,7 @@
         <button data-page-node-id="cYx8rZ6vN4hJtGmWfD3kQ" class="btn small" data-action="export-q"><!--pnid:mQ6e5wTbY7iKjHsVpLcZ9-->导出题库 JSON</button>
       </div>
       <div data-page-node-id="mst000000000000000000000" id="masteryBox" class="mastery-box"></div>
+      <div data-page-node-id="aiQuiz0000000000000000000001" id="aiQuiz" class="ai-box" style="margin-top:0;margin-bottom:10px"></div>
       <div data-page-node-id="CIhKT2HbzrCWiKZhRLgcAk" id="qList"></div>
     </div>
   </section>
@@ -536,6 +551,21 @@
     <div data-page-node-id="B8EuhTZBGUq93FLn72mWQO" class="btns">
       <button data-page-node-id="FlAlSlv4fZWgmRnQRCJVaP" class="btn ghost" data-action="gh-setup-cancel" onclick="document.getElementById('ghSetupMask').classList.remove('show')"><!--pnid:x1g3TehGHXQvAeboArS6hq-->取消</button>
       <button data-page-node-id="EQk4VhPqXATgRRqNFiOzTj" class="btn primary" data-action="gh-save"><!--pnid:tBpSbuvrogsAp7x4uEuk0f-->保存并连接</button>
+    </div>
+  </div>
+</div>
+
+<div data-page-node-id="aiSetupMask0000000000000001" class="modal-mask" id="aiSetupMask">
+  <div data-page-node-id="aiSetupMod00000000000000002" class="modal" style="max-width:440px">
+    <h3 data-page-node-id="aiSetupTit00000000000000003"><!--pnid:aiSetupTit-->设置 Gemini API Key（AI 讲题 / AI 组卷）</h3>
+    <p data-page-node-id="aiSetupP1000000000000000004" class="ai-setup-hint">Key 只保存在<b>你本机浏览器</b>里，<b>不会上传到任何仓库</b>；网页直接调用 Google 的 Gemini 接口。仅你自己这台设备的浏览器能调用，别人打开同一网页看不到你的 Key。</p>
+    <p data-page-node-id="aiSetupP2000000000000000005" class="ai-setup-hint" style="margin-bottom:6px">1. 打开 <b>aistudio.google.com/apikey</b> → Create API key 生成 Key</p>
+    <p data-page-node-id="aiSetupP3000000000000000006" class="ai-setup-hint" style="margin-bottom:12px">2. 复制粘贴到下方，选好模型点保存（推荐 Flash，免费额度够用）</p>
+    <input data-page-node-id="aiSetupInp00000000000000007" id="aiKeyInput" placeholder="AIza..." type="password" style="width:100%; font-size:16px; padding:10px; border:1px solid var(--border); border-radius:9px; margin-bottom:12px; font-family:monospace">
+    <select data-page-node-id="aiSetupSel00000000000000008" id="aiModelInput" style="width:100%; font-size:15px; padding:10px; border:1px solid var(--border); border-radius:9px; margin-bottom:14px; background:#fff; color:var(--text); font-family:inherit"></select>
+    <div data-page-node-id="aiSetupBtns0000000000000009" class="btns">
+      <button data-page-node-id="aiSetupCxl0000000000000000a" class="btn ghost" data-action="ai-setup-cancel"><!--pnid:aiSetupCxl-->取消</button>
+      <button data-page-node-id="aiSetupSave000000000000000b" class="btn primary" data-action="ai-save"><!--pnid:aiSetupSave-->保存</button>
     </div>
   </div>
 </div>
@@ -957,6 +987,113 @@ function saveGhToken(){
 }
 
 function activeDay(r){ return !!r && (r.doneCount > 0 || r.checked); }
+
+/* ---------- Gemini AI 讲题 / AI 组卷 ---------- */
+var AI_MODELS = [
+  ['gemini-2.5-flash', 'Gemini 2.5 Flash（推荐 · 快）'],
+  ['gemini-2.5-flash-lite', 'Gemini 2.5 Flash-Lite（最省）'],
+  ['gemini-2.5-pro', 'Gemini 2.5 Pro（更强 · 慢）']
+];
+function aiKey(){ return localStorage.getItem(PREFIX + 'ai_key') || ''; }
+function aiModel(){ return localStorage.getItem(PREFIX + 'ai_model') || 'gemini-2.5-flash'; }
+function aiConfigured(){ return !!aiKey(); }
+function openAiSetup(){
+  $('#aiModelInput').innerHTML = AI_MODELS.map(function(m){ return '<option value="' + m[0] + '">' + m[1] + '</option>'; }).join('');
+  $('#aiModelInput').value = aiModel();
+  var k = aiKey(); if (k) $('#aiKeyInput').value = k;
+  $('#aiSetupMask').classList.add('show');
+}
+function closeAiSetup(){ $('#aiSetupMask').classList.remove('show'); }
+function saveAiKey(){
+  var k = $('#aiKeyInput').value.trim();
+  if (!k) { toast('请输入 Gemini API Key'); return; }
+  localStorage.setItem(PREFIX + 'ai_key', k);
+  localStorage.setItem(PREFIX + 'ai_model', $('#aiModelInput').value);
+  closeAiSetup();
+  toast('AI Key 已保存（仅存本机浏览器）');
+}
+function callGemini(prompt){
+  var url = 'https://generativelanguage.googleapis.com/v1beta/models/' + encodeURIComponent(aiModel()) + ':generateContent?key=' + encodeURIComponent(aiKey());
+  return fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+  }).then(function(r){
+    if (!r.ok) {
+      return r.text().then(function(t){
+        var msg = 'HTTP ' + r.status;
+        try { var j = JSON.parse(t); if (j && j.error && j.error.message) msg = j.error.message; } catch(e) {}
+        if (r.status === 400 && msg.indexOf('API key') >= 0) msg = 'Key 无效或未启用 Gemini API';
+        if (r.status === 403) msg = 'Key 无效或未启用 Gemini API';
+        if (r.status === 404) msg = '模型名不可用，请在设置里换个模型';
+        if (r.status === 429) msg = '请求过频或配额用尽，请稍后再试';
+        throw new Error(msg);
+      });
+    }
+    return r.json();
+  }).then(function(d){
+    var parts = d && d.candidates && d.candidates[0] && d.candidates[0].content && d.candidates[0].content.parts;
+    var txt = '';
+    if (parts) parts.forEach(function(p){ if (p && p.text) txt += p.text; });
+    if (!txt) throw new Error('模型返回为空');
+    return txt;
+  });
+}
+function aiSetLoading(id, on){
+  var el = $('#ai-' + id);
+  if (!el) return;
+  if (on) el.innerHTML = '<div class="ai-loading"><span class="spinner"></span>AI 正在思考…</div>';
+  el.classList.add('show');
+}
+function aiSetResult(id, text){
+  var el = $('#ai-' + id);
+  if (!el) return;
+  el.innerHTML = '<div class="ai-resp">' + esc(text) + '</div><button class="btn small ghost" data-action="ai-close" data-id="' + id + '">收起</button>';
+}
+function aiSetError(id, msg){
+  var el = $('#ai-' + id);
+  if (!el) return;
+  el.innerHTML = '<div class="ai-resp ai-err">' + esc(msg) + '</div><button class="btn small ghost" data-action="ai-close" data-id="' + id + '">收起</button>';
+}
+function aiExplain(id){
+  var q = findById(questions, id);
+  if (!q) return;
+  if (!aiConfigured()) { openAiSetup(); toast('请先填入 Gemini API Key'); return; }
+  aiSetLoading('q-' + id, true);
+  var optsTxt = q.options && q.options.length ? q.options.map(function(o, i){ return ['A','B','C','D','E','F'][i] + '. ' + o; }).join('\n') : '';
+  var prompt =
+    '你是高考' + q.subject + '辅导老师，学生基础薄弱、时间紧，请用最通俗的大白话把下面这道题讲透。\n' +
+    '【科目】' + q.subject + '\n【章节】' + (q.chapter || '综合') + '\n' +
+    '【题干】' + q.stem + '\n' +
+    (optsTxt ? '【选项】\n' + optsTxt + '\n' : '') +
+    '【正确答案】' + q.answer + '\n' +
+    '【学生作答】' + (q.picked || '未作答') + '\n' +
+    (q.analysis ? '【官方解析】' + q.analysis + '\n' : '') +
+    '\n请严格按下面 4 行结构回答，总字数 300 字以内，别堆术语：\n' +
+    '1. 一句话：这题考什么\n' +
+    '2. 为什么选 ' + q.answer + '（大白话推理）\n' +
+    '3. 易错点 / 常见坑\n' +
+    '4. 记忆口诀或判断技巧';
+  callGemini(prompt).then(function(txt){
+    aiSetResult('q-' + id, txt);
+  }).catch(function(e){
+    aiSetError('q-' + id, 'AI 调用失败：' + (e && e.message ? e.message : '未知错误'));
+  });
+}
+function aiQuiz(subj, chapter){
+  if (!aiConfigured()) { openAiSetup(); toast('请先填入 Gemini API Key'); return; }
+  aiSetLoading('quiz', true);
+  var prompt =
+    '你是高考' + subj + '出题老师。请针对章节【' + chapter + '】出 5 道单项选择题，难度从基础到中等（贴近高考真题风格，不要偏难怪），每题 4 个选项。\n' +
+    '严格按下面格式输出，纯文本，题与题之间空一行：\n' +
+    '第1题：<题干>\nA. <选项>\nB. <选项>\nC. <选项>\nD. <选项>\n答案：<字母>\n解析：<一句话>\n';
+  callGemini(prompt).then(function(txt){
+    aiSetResult('quiz', '【' + subj + ' · ' + chapter + '】AI 组卷（5 题，答案在每题末尾）\n\n' + txt);
+  }).catch(function(e){
+    aiSetError('quiz', 'AI 调用失败：' + (e && e.message ? e.message : '未知错误'));
+  });
+}
+
 function calcStreak(){
   var s = 0, cur = days[today()], cursor = today();
   if (activeDay(cur)) { s = 1; cursor = addDays(today(), -1); }
@@ -1298,20 +1435,22 @@ function renderQuestions(){
     }
     var builtinTag = q.builtin ? '<span class="tag gray">内置</span>' : '';
     var examTag = q.exam ? '<span class="tag" style="background:var(--red-weak);color:var(--red)">真题</span>' : '';
-    var actions = isChoice
+    var aiBtn = '<button class="btn small" style="color:var(--primary);border-color:#B9CCF5" data-action="ai-explain" data-id="' + q.id + '">AI 讲题</button>';
+    var actions = aiBtn + (isChoice
       ? (answered ? '<button class="btn small" data-action="q-reset" data-id="' + q.id + '">重做</button>' : '') +
         '<button class="btn small" data-action="q-reveal" data-id="' + q.id + '">显示答案</button>' +
         '<button class="btn small danger" data-action="q-del" data-id="' + q.id + '">删</button>'
       : '<button class="btn small" data-action="q-reveal" data-id="' + q.id + '">显示答案</button>' +
         '<button class="btn small" data-action="q-right" data-id="' + q.id + '" style="color:var(--green);border-color:#BFE5D0">我答对了</button>' +
         '<button class="btn small" data-action="q-wrong" data-id="' + q.id + '" style="color:var(--red);border-color:#F3C2C4">我答错了</button>' +
-        '<button class="btn small danger" data-action="q-del" data-id="' + q.id + '">删</button>';
+        '<button class="btn small danger" data-action="q-del" data-id="' + q.id + '">删</button>');
     html += '<div class="q-card' + cls + '">' +
       '<div class="q-top"><span class="tag blue">' + esc(q.subject) + '</span><span class="tag gray">' + esc(q.stage || '') + '</span><span class="tag gray">' + esc(q.chapter || '') + '</span><span class="tag gray">' + esc(isMulti ? '多选' : (q.type || '选择')) + '</span>' + builtinTag + examTag + flag + '</div>' +
       '<div class="q-stem">' + esc(q.stem) + '</div>' + opts +
       '<div class="q-answer" id="qans-' + q.id + '"><span class="ans">答案：' + esc(q.answer) + '</span>' +
         (q.analysis ? '<div class="q-analysis">' + esc(q.analysis) + '</div>' : '') + '</div>' +
-      '<div class="q-actions">' + actions + '</div></div>';
+      '<div class="q-actions">' + actions + '</div>' +
+      '<div class="ai-box" id="ai-q-' + q.id + '"></div></div>';
   });
   $('#qList').innerHTML = html;
 }
@@ -1365,7 +1504,8 @@ function renderMastery(){
   }
   var order = ['物理','化学','生物','数学','语文','英语'];
   var html = '<div class="m-head"><span class="m-title">章节掌握度（摸底诊断）</span>' +
-    '<span class="m-legend">点击章节筛选下方题目 · 红=薄弱 黄=不稳 绿=已掌握 灰=未摸底</span>';
+    '<span class="m-legend">点击章节筛选下方题目 · 红=薄弱 黄=不稳 绿=已掌握 灰=未摸底</span>' +
+    '<button class="btn small primary" data-action="ai-quiz">AI 组卷</button>';
   if (qChapterFilter) html += '<button class="btn small" data-action="clear-q-chapter">清除章节筛选</button>';
   html += '</div>';
   var any = false;
@@ -2030,6 +2170,12 @@ document.addEventListener('click', function(e){
   else if (a === 'gh-setup') openGhSetup();
   else if (a === 'gh-setup-cancel') closeGhSetup();
   else if (a === 'gh-save') saveGhToken();
+  else if (a === 'ai-setup') openAiSetup();
+  else if (a === 'ai-setup-cancel') closeAiSetup();
+  else if (a === 'ai-save') saveAiKey();
+  else if (a === 'ai-explain') aiExplain(id);
+  else if (a === 'ai-quiz') { if (!qChapterFilter) { toast('先在下方点选一个薄弱章节（红/黄灯），再点 AI 组卷'); } else { aiQuiz(qSubjFilter, qChapterFilter); } }
+  else if (a === 'ai-close') { var c = $('#ai-' + id); if (c) { c.classList.remove('show'); c.innerHTML = ''; } }
 });
 
 $('#modalOk').addEventListener('click', function(){ if (modalCb) { var cb = modalCb; modalCb = null; cb(); } });
