@@ -208,6 +208,19 @@
   .ai-resp{font-size:14px; line-height:1.75; white-space:pre-wrap; word-break:break-word; color:var(--text);}
   .ai-err{color:var(--red);}
   .ai-box .btn.small.ghost{margin-top:8px;}
+  .ai-sim-h{font-weight:700; font-size:13px; color:var(--primary-deep); margin-bottom:8px; display:flex; align-items:center; gap:6px;}
+  .ai-sim-h::before{content:'▸'; color:var(--primary); font-weight:900;}
+  .ai-sim{display:flex; align-items:center; gap:8px; width:100%; text-align:left; padding:8px 10px; margin-bottom:6px; border:1px solid var(--border); border-radius:8px; background:#fff; cursor:pointer; font-family:inherit; transition:border-color .15s, background .15s;}
+  .ai-sim:hover{border-color:var(--primary); background:var(--primary-weak);}
+  .ai-sim-n{flex:none; width:20px; height:20px; border-radius:50%; background:var(--primary); color:#fff; font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center;}
+  .ai-sim-s{flex:1; font-size:13px; color:var(--text); line-height:1.5; word-break:break-word;}
+  .ai-sim-tag{flex:none; font-size:11px; padding:2px 7px; border-radius:20px; background:var(--red-weak); color:var(--red); white-space:nowrap;}
+  .ai-sim-tag.todo{background:var(--primary-weak); color:var(--primary-deep);}
+  .ai-sim-empty{font-size:13px; color:var(--muted); margin-bottom:6px;}
+  .ai-diag-h{font-weight:700; font-size:13px; color:#7C4DFF; margin-top:12px; margin-bottom:6px; display:flex; align-items:center; gap:6px;}
+  .ai-diag-h::before{content:'◆'; color:#7C4DFF; font-size:10px;}
+  .q-card.flash{animation:qflash 1.6s ease;}
+  @keyframes qflash{0%{box-shadow:0 0 0 2px var(--primary); background:var(--primary-weak);} 100%{box-shadow:0 0 0 0 transparent;}}
   .ai-setup-hint{font-size:13px; color:var(--muted); margin-bottom:10px; line-height:1.6;}
   .ai-setup-hint b{color:var(--amber);}
 </style>
@@ -1177,6 +1190,83 @@ function aiQuiz(subj, chapter){
   });
 }
 
+/* ---------- L2 错因归因 + 同类题推送 ---------- */
+// 从本地题库找「同科 + 同章 + 未掌握」的同类题（做错的优先），最多 3 道
+function aiSimilarQuestions(id){
+  var q = findById(questions, id);
+  if (!q) return [];
+  var out = [];
+  questions.forEach(function(x){
+    if (x.id === id) return;
+    if (x.subject !== q.subject) return;
+    if ((x.chapter || '综合') !== (q.chapter || '综合')) return;
+    if (x.done === 1) return;
+    out.push(x);
+  });
+  out.sort(function(a, b){ return (b.done === 2 ? 1 : 0) - (a.done === 2 ? 1 : 0); });
+  return out.slice(0, 3);
+}
+function aiSimHtml(q, sim){
+  var html = '<div class="ai-sim-h">同类题 · ' + esc(q.chapter || '综合') + '（先做这些，再回来验证）</div>';
+  if (!sim.length) return html + '<div class="ai-sim-empty">本章暂无可推送的同类题，可点「AI 组卷」补几道</div>';
+  html += sim.map(function(x, i){
+    var tag = x.done === 2 ? '<span class="ai-sim-tag">做错过</span>' : '<span class="ai-sim-tag todo">未做</span>';
+    return '<button class="ai-sim" data-action="ai-goto-q" data-id="' + esc(x.id) + '">' +
+      '<span class="ai-sim-n">' + (i + 1) + '</span>' +
+      '<span class="ai-sim-s">' + esc(String(x.stem).slice(0, 34)) + (String(x.stem).length > 34 ? '…' : '') + '</span>' + tag +
+      '</button>';
+  }).join('');
+  return html;
+}
+function aiDiagnose(id){
+  var q = findById(questions, id);
+  if (!q) return;
+  if (!aiConfigured()) { openAiSetup(); toast('请先填入 Gemini API Key'); return; }
+  var box = $('#ai-d-' + id);
+  if (!box) return;
+  var sim = aiSimilarQuestions(id);
+  var simHtml = aiSimHtml(q, sim);
+  // 同类题本地即时渲染，诊断部分异步填充
+  box.innerHTML = '<div class="ai-resp">' + simHtml +
+    '<div class="ai-diag-h">AI 错因诊断 <span class="spinner" style="display:inline-block"></span></div></div>' +
+    '<button class="btn small ghost" data-action="ai-close" data-id="d-' + id + '">收起</button>';
+  box.classList.add('show');
+  var optsTxt = q.options && q.options.length ? q.options.map(function(o, i){ return ['A','B','C','D','E','F'][i] + '. ' + o; }).join('\n') : '';
+  var prompt =
+    '你是高考' + q.subject + '错题诊断老师。学生做错了下面这道题，请判断错因并给补救建议。\n' +
+    '【章节】' + (q.chapter || '综合') + '\n' +
+    '【题干】' + q.stem + '\n' +
+    (optsTxt ? '【选项】\n' + optsTxt + '\n' : '') +
+    '【正确答案】' + q.answer + '\n' +
+    '【学生作答】' + (q.picked || '未作答') + '\n' +
+    (q.analysis ? '【官方解析】' + q.analysis + '\n' : '') +
+    '\n请严格按下面 3 行结构回答，总字数 200 字以内：\n' +
+    '错因：<从「概念不清/思路错误/计算失误/审题不清/记忆遗忘」中选一个最贴切的>\n' +
+    '诊断：<一句话说清哪里出了问题>\n' +
+    '补救：<一句话给出该补的知识点或练法>';
+  callGemini(prompt).then(function(txt){
+    var b = $('#ai-d-' + id);
+    if (!b) return;
+    b.innerHTML = '<div class="ai-resp">' + simHtml + '<div class="ai-diag-h">AI 错因诊断</div>' + esc(txt) + '</div>' +
+      '<button class="btn small ghost" data-action="ai-close" data-id="d-' + id + '">收起</button>';
+  }).catch(function(e){
+    var b = $('#ai-d-' + id);
+    if (!b) return;
+    b.innerHTML = '<div class="ai-resp">' + simHtml + '<div class="ai-diag-h">AI 错因诊断</div><div class="ai-err">调用失败：' + esc(e && e.message ? e.message : '未知错误') + '</div></div>' +
+      '<button class="btn small ghost" data-action="ai-close" data-id="d-' + id + '">收起</button>';
+  });
+}
+function aiGotoQuestion(id){
+  qSubjFilter = '全部'; qChapterFilter = ''; qStatusFilter = 'all';
+  renderQuestions();
+  var card = document.querySelector('.q-card[data-qid="' + id + '"]');
+  if (card) {
+    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    card.classList.add('flash');
+    setTimeout(function(){ card.classList.remove('flash'); }, 1700);
+  }
+}
+
 function calcStreak(){
   var s = 0, cur = days[today()], cursor = today();
   if (activeDay(cur)) { s = 1; cursor = addDays(today(), -1); }
@@ -1519,7 +1609,8 @@ function renderQuestions(){
     var builtinTag = q.builtin ? '<span class="tag gray">内置</span>' : '';
     var examTag = q.exam ? '<span class="tag" style="background:var(--red-weak);color:var(--red)">真题</span>' : '';
     var aiBtn = '<button class="btn small" style="color:var(--primary);border-color:#B9CCF5" data-action="ai-explain" data-id="' + q.id + '">AI 讲题</button>';
-    var actions = aiBtn + (isChoice
+    var diagBtn = q.done === 2 ? '<button class="btn small" style="color:#7C4DFF;border-color:#D8CCFF" data-action="ai-diagnose" data-id="' + q.id + '">错因诊断</button>' : '';
+    var actions = aiBtn + diagBtn + (isChoice
       ? (answered ? '<button class="btn small" data-action="q-reset" data-id="' + q.id + '">重做</button>' : '') +
         '<button class="btn small" data-action="q-reveal" data-id="' + q.id + '">显示答案</button>' +
         '<button class="btn small danger" data-action="q-del" data-id="' + q.id + '">删</button>'
@@ -1527,13 +1618,14 @@ function renderQuestions(){
         '<button class="btn small" data-action="q-right" data-id="' + q.id + '" style="color:var(--green);border-color:#BFE5D0">我答对了</button>' +
         '<button class="btn small" data-action="q-wrong" data-id="' + q.id + '" style="color:var(--red);border-color:#F3C2C4">我答错了</button>' +
         '<button class="btn small danger" data-action="q-del" data-id="' + q.id + '">删</button>');
-    html += '<div class="q-card' + cls + '">' +
+    html += '<div class="q-card' + cls + '" data-qid="' + esc(q.id) + '">' +
       '<div class="q-top"><span class="tag blue">' + esc(q.subject) + '</span><span class="tag gray">' + esc(q.stage || '') + '</span><span class="tag gray">' + esc(q.chapter || '') + '</span><span class="tag gray">' + esc(isMulti ? '多选' : (q.type || '选择')) + '</span>' + builtinTag + examTag + flag + '</div>' +
       '<div class="q-stem">' + esc(q.stem) + '</div>' + opts +
       '<div class="q-answer" id="qans-' + q.id + '"><span class="ans">答案：' + esc(q.answer) + '</span>' +
         (q.analysis ? '<div class="q-analysis">' + esc(q.analysis) + '</div>' : '') + '</div>' +
       '<div class="q-actions">' + actions + '</div>' +
-      '<div class="ai-box" id="ai-q-' + q.id + '"></div></div>';
+      '<div class="ai-box" id="ai-q-' + q.id + '"></div>' +
+      '<div class="ai-box" id="ai-d-' + q.id + '"></div></div>';
   });
   $('#qList').innerHTML = html;
 }
@@ -2258,6 +2350,8 @@ document.addEventListener('click', function(e){
   else if (a === 'ai-save') saveAiKey();
   else if (a === 'ai-refresh-models') refreshAiModels($('#aiKeyInput').value);
   else if (a === 'ai-explain') aiExplain(id);
+  else if (a === 'ai-diagnose') aiDiagnose(id);
+  else if (a === 'ai-goto-q') aiGotoQuestion(id);
   else if (a === 'ai-quiz') { if (!qChapterFilter) { toast('先在下方点选一个薄弱章节（红/黄灯），再点 AI 组卷'); } else { aiQuiz(qSubjFilter, qChapterFilter); } }
   else if (a === 'ai-close') { var c = $('#ai-' + id); if (c) { c.classList.remove('show'); c.innerHTML = ''; } }
 });
