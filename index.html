@@ -1415,7 +1415,7 @@ function judgeQuestion(id, ok){
   saveCache();
   renderQuestions();
 }
-function importBuiltinQuestions(){
+function mergeBuiltinQuestions(quiet){
   var exist = {};
   questions.forEach(function(q){ if (q.builtin) exist[q.subject + '|' + q.chapter + '|' + q.stem] = true; });
   var add = [];
@@ -1423,12 +1423,14 @@ function importBuiltinQuestions(){
     var key = q.subject + '|' + q.chapter + '|' + q.stem;
     if (!exist[key]) add.push({ id: uid(), subject:q.subject, stage:q.stage, chapter:q.chapter, stem:q.stem, options:q.options || [], answer:q.answer, analysis:q.analysis || '', type: q.type || (q.multi ? '多选' : (q.options && q.options.length ? '选择' : '解答')), builtin:true, exam: q.exam === true, multi: q.multi === true, done:0 });
   });
-  if (!add.length) { toast('内置题库已全部在列表中'); return; }
+  if (!add.length) { if (!quiet) toast('内置题库已全部在列表中'); return 0; }
   add.forEach(function(it){ questions.push(it); });
   saveCache();
   renderQuestions();
-  toast('已导入 ' + add.length + ' 道内置题');
+  if (!quiet) toast('已导入 ' + add.length + ' 道内置题');
+  return add.length;
 }
+function importBuiltinQuestions(){ mergeBuiltinQuestions(false); }
 
 /* ---------- 自备题库 JSON 导入 / 导出 ---------- */
 var Q_KEY_ALIAS = {
@@ -2114,11 +2116,13 @@ if (ghConfigured()) {
     } else {
       renderAll();
     }
+    mergeBuiltinQuestions(true);
     updateSync();
   });
 } else {
   if (cached === null) seed();
   renderAll();
+  mergeBuiltinQuestions(true);
   updateSync();
   if (!GH_PRIVATE) {
     ghPull().then(function(n){
