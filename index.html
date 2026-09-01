@@ -990,12 +990,17 @@ function activeDay(r){ return !!r && (r.doneCount > 0 || r.checked); }
 
 /* ---------- Gemini AI 讲题 / AI 组卷 ---------- */
 var AI_MODELS = [
-  ['gemini-2.5-flash', 'Gemini 2.5 Flash（推荐 · 快）'],
-  ['gemini-2.5-flash-lite', 'Gemini 2.5 Flash-Lite（最省）'],
-  ['gemini-2.5-pro', 'Gemini 2.5 Pro（更强 · 慢）']
+  ['gemini-3.7-flash', 'Gemini 3.7 Flash（推荐 · 最新）'],
+  ['gemini-3.6-flash', 'Gemini 3.6 Flash'],
+  ['gemini-3.5-flash', 'Gemini 3.5 Flash'],
+  ['gemini-3.5-flash-lite', 'Gemini 3.5 Flash-Lite（最省）'],
+  ['gemini-3.1-pro-preview', 'Gemini 3.1 Pro（更强 · 预览）'],
+  ['gemini-3-flash-preview', 'Gemini 3 Flash（预览）'],
+  ['gemini-2.5-flash', 'Gemini 2.5 Flash（旧版 · 兜底）'],
+  ['gemini-2.5-flash-lite', 'Gemini 2.5 Flash-Lite（旧版 · 兜底）']
 ];
 function aiKey(){ return localStorage.getItem(PREFIX + 'ai_key') || ''; }
-function aiModel(){ return localStorage.getItem(PREFIX + 'ai_model') || 'gemini-2.5-flash'; }
+function aiModel(){ return localStorage.getItem(PREFIX + 'ai_model') || 'gemini-3.7-flash'; }
 function aiConfigured(){ return !!aiKey(); }
 function openAiSetup(){
   $('#aiModelInput').innerHTML = AI_MODELS.map(function(m){ return '<option value="' + m[0] + '">' + m[1] + '</option>'; }).join('');
